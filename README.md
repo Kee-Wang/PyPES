@@ -4,26 +4,25 @@ PyPES is a Python module that will be develped into a Python-based independend s
 
 This package is a product of Bowman Group and is curretly developed by Kee.
 
+# Dependency requirement
 
 
-#Dependency requirement
-####### Dependency requirement #######
-#Those are the dependencies that reqired to fully functionalize PyPES.
+Those are the dependencies that reqired to fully functionalize PyPES.
 
-###### Requirements without Version Specifiers ######
+##Requirements without Version Specifiers ######
 get-pip.py
 numpy
 matplotlib
 
-###### Requirements with Version Specifiers ######
-#For python download: https://www.python.org/downloads/
+## Requirements with Version Specifiers ######
+For python download: https://www.python.org/downloads/
 python >= 3             # Recomended version python 3.5.2
 
-###### Recommended user interface ######
+## Recommended user interface ######
 ipython
 
-##### Module Installation Instruction ######
-####All dependencies will be installed automaticallyi without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
+# Module Installation Instruction ######
+##All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
 
 1. First install anaconda3 (meaning with Python 3 distribution)
 
