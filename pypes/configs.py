@@ -1,14 +1,7 @@
 #!/usr/bin/env python
 #import configs
 
-"""TODO:
-        1. Add info method
-        2. Give hint on type, consistency checking
-        3. Add plot distribution method (urgent)
-        4. Add random selection method
-        5. In __init__, check the same config
-        6. To speed up, use Numpy whenever possible, for example in sorting.
-        """
+
 
 class configs():
     '''Read configuraitons and do stuff.
@@ -208,6 +201,17 @@ class configs():
 
         f.close()
 
+    def todo(self):
+        print("""
+        TODO:
+
+        1. Add feature so that input can be formated string.
+                """)
+
+#    def read(self,config_string):
+        #for line in string:
+
+
     def logo(self):
         print("""
 
@@ -219,13 +223,12 @@ class configs():
         .##...........##....##........##.......##....##
         .##...........##....##........########..######.
 
-                                            Version 0.0.1
+                                            Version 0.0.4
 
                                 --A Bowman Group Product
                                     """
                 )
         """--Developed by Kee"""
-
 
     def info(self,configs=False):
 
@@ -247,6 +250,35 @@ class configs():
         print('Configuration that contains highest energy: ')
         self.prt(self.configs_sorted[-1])
         print('========END OF INFO=======\n')
+
+    def feature(self):
+        print('''
+            Those are important features:
+                1. Sorted configs according to energy and pretty writing.
+                    a=configs('input.xyz')
+                    a.write('output.xyz',a.sort())
+
+                2. Sorted configs according to energy and print first 10 on screen.
+                    a=configs('input.xyz')
+                    b=a.list()[0:10] #Turn all a configs into a list and choose first 10 of it
+                    a.prt(b) #Pretty printing
+
+                3. Sort configs and see then using molden.
+                    a=configs('input.xyz')
+                    a.write('output.xyz',a.sort())
+
+                4. Resize distance between monomers.
+                    a=configs('input.xyz')
+                    a.resize() #(Then follow the structure)
+
+                *5. Plot energy distribution with binwith (defaut is 50 cm-1).
+                    a=configs('input.xyz')
+                    a = configs('input.xyz')
+                    a.plot(binwith=10)
+
+                *Might not work well. Still testing.
+
+                ''')
 
     def order(self,monomer = False, configs=False):
         """TODO: Add feature to show the group of monomers"""
@@ -297,7 +329,7 @@ class configs():
             a.order()
                 *Show the order of atoms
 
-            a.add_expand(self, n_configs=False,configs=False, first_n_configs=False, monomer=False, dis_lower=False, dis_uppder=False, dis_new_lower=False, dis_new_upper=False)
+            a.resize(self, n_configs=False,configs=False, first_n_configs=False, monomer=False, dis_lower=False, dis_uppder=False, dis_new_lower=False, dis_new_upper=False)
                 *Select configs randomly in the given region[dis_lower, dis_upper], then separate them along given two atoms to the given new distance [dis_new_lower, dis_new_upper].
 
 
@@ -614,16 +646,16 @@ class configs():
                 monomers = self.monomer_AB
                  #Meaning monomer has already been assigned. Once assigned forever assigned.
         except:
-            print('Monomer is not determined.')
+            print('Monomer is not determined. Please specify monomers')
             #if monomer_A is False: #For the convinience of other function's usage
             try:
-                a = raw_input()#To try out if can catch input
-                self.order('Hit Enter to continue:')
+                #a = raw_input()#To try out if can catch input
+                self.order()
                 print('(Enter integers and separate them by whitespace)')
                 str1 = raw_input('What atoms are in first monomer: ')
                 str2 = raw_input('Waht atoms are in second monomer: ')
             except:
-                print('Warming: Using test arguments. Please use terminal to catch input.')
+                print('Warning: Using test arguments. Please use terminal to catch input.')
                 atom_A= 3# Arguemnt for test
                 atom_B= 6# Argument for test
                 str1 = '3 4 5'# Argument for test
@@ -661,29 +693,48 @@ class configs():
             #for dis in range(0,10,0.5):
         #        self.translate(configs=False,atom_A=3, atom_B = 6, monomer_A = '4 5', monomer_B = '1 2', dis_lower = 2, dis_upper = 10, dis_new_lower=dis, dis_new_upper=dis)
 
-    def add_expand(self, n_configs=False,configs=False,  first_n_configs=False, monomer=False, dis_lower=False, dis_uppder=False, dis_new_lower=False, dis_new_upper=False):
+    def chosen_atom(self,atom_A=False,atom_B=False):
+        if atom_A is False:
+            try:
+                atom_A = int(raw_input('Please specify reference atom in first monomer: '))
+                atom_B = int(raw_input('Please specify reference atom in second monomer: '))
+            except:
+                print('Using defualt atom')
+                atom_A = 3
+                atom_B = 6
+        #else:
+        #    pass
+        return (atom_A,atom_B)
+
+
+    def resize(self, n_configs=False,configs=False,  first_n_configs=False, monomer=False, dis_lower=False, dis_upper=False, dis_new_lower=False, dis_new_upper=False):
         import numpy as np
         configs_new = list()
         configs = self.configs_check(configs)
 
-        if dis_lower is not False:
+        if dis_lower is False:
             try:
-                a = raw_input()
+                #a = raw_input('')
+                n_configs = float(raw_input('The number of new configuration you want is : '))
                 dis_lower = float(raw_input('The original distance_min (Angstrom) you want is : '))
                 dis_upper = float(raw_input('The original distance_max (Angstrom) you want is: '))
                 dis_new_lower = float(raw_input('The original distance_new_min (Angstrom) you want is: '))
-                dis_new_lower = float(raw_input('The original distance_new_man (Angstrom) you want is: '))
+                dis_new_upper = float(raw_input('The original distance_new_max (Angstrom) you want is: '))
             except:
                 print('Using default dis boundaries')
-                dis_new_lower = float(6)
-                dis_upper = float(5)
                 dis_lower = float(2)
+                dis_upper = float(5)
+                dis_new_lower = float(6)
                 dis_new_upper = float(9)
 
         monomers = self.monomers(configs)
-        print(monomers[0])
-        atom_A = monomers[0][0]
-        atom_B = monomers[1][0]
+        (atom_A,atom_B) = self.chosen_atom()
+        #print a
+        #print b
+        #atom_A = monom
+        #atom_B = monomers[1][b-1]
+
+
 
         if n_configs is not False:
             n_configs = int(n_configs)
@@ -705,8 +756,8 @@ class configs():
                 config_new = self.translate(atom_A,atom_B,dis_new,config)
                 configs_new.append(config_new)
                 #print('{:5.2f} {:5.2f} {:5.2f} {:5.2f}'.format(self.distance(config,atom_A,atom_B),self.distance(config_new,atom_A,atom_B),dis_new,self.distance(config_new,atom_A,atom_B)-self.distance(config,atom_A,atom_B)))
-                print('New distance: {:5.2f}'.format(self.distance(config_new,atom_A,atom_B)))
-        print('{:d}/{:d} configurations are returned as list.'.format(len(configs_new),configs_ok_count))
+                print('New distance ({:5d}): {:5.2f}'.format(configs_ok_count,self.distance(config_new,atom_A,atom_B)))
+        print('{:d}/{:d} configurations are returned as list.'.format(len(configs_new),configs_count))
         print('*Add point: Expand finished.')
         return configs_new #List of configs that have just been expanded.
 
@@ -826,20 +877,13 @@ class configs():
 
 """Test arguemnts"""
 
-
-
-
-
 #dis_new_lower = float(6)
 #dis_upper = float(5)
 #dis_lower = float(2)
 #dis_new_upper = float(9)
-
-train_x = 'testpoint_v2b_co2h2o.dat'
-
+#train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'dimer_47358.abE'
-
-a = configs(train_x,first_n_configs=2000)
+#a = configs(train_x,first_n_configs=2000)
 #a = configs(train_x)
 #a.plot()
 #b = a.list()
@@ -853,7 +897,7 @@ a = configs(train_x,first_n_configs=2000)
 #a.monomers()
 #print(a.monomer_AB)
 #a.monomers()
-#a.add_expand(1000,dis_lower=dis_lower,dis_uppder=dis_upper,dis_new_lower=dis_new_lower,dis_new_upper=dis_new_upper)
+#a.resize(1000,dis_lower=2,dis_upper=5,dis_new_lower=6,dis_new_upper=9)
 
 #new = a.v2b()
 #a.switch(b)
@@ -863,7 +907,7 @@ a = configs(train_x,first_n_configs=2000)
 #a.prt(b)
 
 #a.prt(b)
-#c = a.add_expand(2000,configs=b)
+#c = a.resize(2000,configs=b)
 #a.prt(c)
 #a.monomer()
 #a.write('6-9A_2000.xyz',a.sort(c))
