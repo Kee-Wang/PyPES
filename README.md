@@ -4,14 +4,16 @@ PyPES is a Python module that will be develped into a Python-based independend s
 
 This package is a product of Bowman Group and is curretly developed by Kee.
 
-# Dependency requirement
+## Dependency requirement
 
 
 Those are the dependencies that reqired to fully functionalize PyPES.
 
 ##Requirements without Version Specifiers ######
 get-pip.py
+
 numpy
+
 matplotlib
 
 ## Requirements with Version Specifiers ######
