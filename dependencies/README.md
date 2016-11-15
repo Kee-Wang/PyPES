@@ -36,3 +36,6 @@ ipython
 
 	`from pypes.configs import configs`
 
+5. To uninstall:
+
+	`pip uninstall <dependency_name>`
