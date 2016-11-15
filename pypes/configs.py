@@ -109,7 +109,6 @@ class configs():
         '''
         """Constants"""
         self.hartree_to_cm = 219474.63
-
         self.logo()
         print('Reading file...\n')
         f = open(train_x)
