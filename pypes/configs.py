@@ -210,16 +210,18 @@ class configs():
 
     def logo(self):
         print("""
-                ######        ######  #######  #####
-                #     # #   # #     # #       #     #
-                #     #  # #  #     # #       #
-                ######    #   ######  #####    #####
-                #         #   #       #             #
-                #         #   #       #       #     #
-                #         #   #       #######  #####
+
+        .########..##....##.########..########..######.
+        .##.....##..##..##..##.....##.##.......##....##
+        .##.....##...####...##.....##.##.......##......
+        .########.....##....########..######....######.
+        .##...........##....##........##.............##
+        .##...........##....##........##.......##....##
+        .##...........##....##........########..######.
+
                                             Version 0.0.1
 
-                                    --A Bowman Group Product
+                                --A Bowman Group Product
                                     """
                 )
         """--Developed by Kee"""
@@ -833,11 +835,11 @@ class configs():
 #dis_lower = float(2)
 #dis_new_upper = float(9)
 
-#train_x = 'testpoint_v2b_co2h2o.dat'
+train_x = 'testpoint_v2b_co2h2o.dat'
 
 #train_x = 'dimer_47358.abE'
 
-#a = configs(train_x,first_n_configs=2000)
+a = configs(train_x,first_n_configs=2000)
 #a = configs(train_x)
 #a.plot()
 #b = a.list()
