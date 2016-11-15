@@ -8,6 +8,7 @@ numpy
 matplotlib
 
 ###### Requirements with Version Specifiers ######
+#For python download: https://www.python.org/downloads/
 python >= 3             # Recomended version python 3.5.2
 
 ###### Recommended user interface ######
