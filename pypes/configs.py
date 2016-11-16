@@ -218,7 +218,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.7
+                                            Version 0.0.8
 
                                 --A Bowman Group Product
                                     """
@@ -805,15 +805,11 @@ class configs():
             return vector21
 
     def molden(self,configs=False):
+        """Give the configs in list form, and show them using molden"""
+
         configs = self.configs_check(configs)
         self.write('plot.temp',configs)
-        #Get the address of Molden:
-
         address = self.alias('molden')
-
-
-        #if len(address) == 0:
-            #expansion
         self.cl(address +' plot.temp')
 
     def cl(self,command):
@@ -844,45 +840,18 @@ class configs():
         #address_book = self.cl('cat '+path).decode("utf-8")
         address_book = self.cl('cat '+path)
         print(type(address_book))
-        #name = name.encode()
-        #name = bytes(name)
         line_count = 0
         for line in address_book.strip().split():
-            #print ('this is :'+ line)
-            #print(line[0])
-            #print(name)
-            #print(line[0:2])
-            #print(type(line[0:2]))
-            #print('test')
-            line = line.decode('utf-8')
+            line = line.decode('utf-8') #The line here could be a bytes type, so have to decode it.
             print(line)
             try:
                 if line[0:len(name)+1] == name+'=':  #different
                     expansion = line.split('"')[1]
                     break #If cannot find in single quote, then find double quote
             except:
-                if line[0:len(name)+1] == name+'=':  #different
+                if line[0:len(name)+1] == name+'=':  # 'is' and '==' are different here
                     expansion = line.split("'")[1]
-
-        #if len(expansion) == 0:
-
-
-
-        #print(type(expansion))
-        print(expansion)
-
-
-
-        # print(address_book)
-        # print(type(address_book))
-        # print(type(name))
-        # expression = name+'="(.*)"'
-        # print(type(expression))
-        # #pattern = name+'="(.*)"'.decode() #To  make sure it is string
-        # expansion = re.findall(expression,address_book)
-        # print(address_book)
-        # print(expression)
-        # print(expansion)
+        #print(expansion)
 
         return expansion #This is expansion of alias
 
@@ -1067,17 +1036,17 @@ class configs():
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
-train_x = 'dimer_47358.abE'
-a = configs(train_x,first_n_configs=2000)
+#train_x = 'dimer_47358.abE'
+#a = configs(train_x,first_n_configs=2000)
 #a.dissociation()
 #a = configs(train_x)
-b = a.list()[0:10]
+#b = a.list()[0:10]
 #a.plot()
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
 #a.alias('ll')
-a.molden(b)
+#a.molden(b)
 
 #c = a.translate(config= b,dis = 10)
 #a.prt(c)
