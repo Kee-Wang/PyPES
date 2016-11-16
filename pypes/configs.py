@@ -823,7 +823,7 @@ class configs():
         arg = shlex.split(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        print(output)
+        #print(output)
         return output #output is bytes
 
     def alias(self,name,path=False):
@@ -837,21 +837,38 @@ class configs():
         if path is False:
             path = '~/.bash_profile'
         address = 'Alias not found'
-        address_book = self.cl('cat '+path).decode("utf-8")
+        #address_book = self.cl('cat '+path).decode("utf-8")
+        address_book = self.cl('cat '+path)
+        print(type(address_book))
         #name = name.encode()
         #name = bytes(name)
-        print(address_book)
-        print(type(address_book))
-        print(type(name))
-        expression = name+'="(.*)"'
-        print(type(expression))
-        #pattern = name+'="(.*)"'.decode() #To  make sure it is string
-        expansion = re.findall(expression,address_book)
-        print(address_book)
-        print(expression)
+        line_count = 0
+        for line in address_book.strip().split():
+            #print ('this is :'+ line)
+            #print(line[0])
+            #print(name)
+            #print(line[0:2])
+            #print(type(line[0:2]))
+            if line[0:len(name)+1] == name+'=':  #different
+                expansion = line.split('"')[1]
+
+        #print(type(expansion))
         print(expansion)
 
-        return expansion[0] #This is expansion of alias
+
+
+        # print(address_book)
+        # print(type(address_book))
+        # print(type(name))
+        # expression = name+'="(.*)"'
+        # print(type(expression))
+        # #pattern = name+'="(.*)"'.decode() #To  make sure it is string
+        # expansion = re.findall(expression,address_book)
+        # print(address_book)
+        # print(expression)
+        # print(expansion)
+
+        return expansion #This is expansion of alias
 
     def plot(self,configs = False,binwidth=False):
         import numpy as np
