@@ -853,7 +853,7 @@ class configs():
             #print(name)
             #print(line[0:2])
             #print(type(line[0:2]))
-
+            print('test')
             if line[0:len(name)+1] == name+'=':  #different
                 expansion = line.split('"')[1]
                 break #If cannot find in single quote, then find double quote
