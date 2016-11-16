@@ -823,7 +823,7 @@ class configs():
         arg = shlex.split(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        print('teeeest'+output)
+        print(output)
         return output
 
     def alias(self,name,path=False):
