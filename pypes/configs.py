@@ -856,12 +856,13 @@ class configs():
             #print('test')
             line = line.decode('utf-8')
             print(line)
-            if line[0:len(name)+1] == name+'=':  #different
-                expansion = line.split('"')[1]
-                break #If cannot find in single quote, then find double quote
-
-            if line[0:len(name)+1] == name+'=':  #different
-                expansion = line.split("'")[1]
+            try:
+                if line[0:len(name)+1] == name+'=':  #different
+                    expansion = line.split('"')[1]
+                    break #If cannot find in single quote, then find double quote
+            except:
+                if line[0:len(name)+1] == name+'=':  #different
+                    expansion = line.split("'")[1]
 
         #if len(expansion) == 0:
 
