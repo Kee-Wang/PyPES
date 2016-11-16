@@ -838,12 +838,12 @@ class configs():
             path = '~/.bash_profile'
         address = 'Alias not found'
         address_book = self.cl('cat '+path).decode("utf-8")
-        name = name.encode()
+        #name = name.encode()
         #name = bytes(name)
         print(address_book)
         print(type(address_book))
         print(type(name))
-        expression = name+b'="(.*)"'
+        expression = name+'="(.*)"'
         print(type(expression))
         #pattern = name+'="(.*)"'.decode() #To  make sure it is string
         expansion = re.findall(expression,address_book)
