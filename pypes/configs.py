@@ -837,7 +837,7 @@ class configs():
         if path is False:
             path = '~/.bash_profile'
         address = 'Alias not found'
-        #address_book = self.cl('cat '+path).decode("utf-8")
+        address_book = self.cl('cat '+path).decode("utf-8")
         address_book = self.cl('cat '+path)
         print(type(address_book))
         #name = name.encode()
