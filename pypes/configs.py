@@ -840,11 +840,11 @@ class configs():
         address = 'Alias not found'
         #address_book = self.cl('cat '+path).decode("utf-8")
         address_book = self.cl('cat '+path)
-        print(type(address_book))
+        #print(type(address_book))
         line_count = 0
         for line in address_book.strip().split():
             line = line.decode('utf-8') #The line here could be a bytes type, so have to decode it.
-            print(line)
+            #print(line)
             try:
                 if line[0:len(name)+1] == name+'=':  #different
                     expansion = line.split('"')[1]
@@ -1046,7 +1046,7 @@ class configs():
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
-#a.alias('ll')
+#print(a.alias('pypes'))
 #a.molden(b)
 
 #c = a.translate(config= b,dis = 10)
