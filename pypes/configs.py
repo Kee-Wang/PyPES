@@ -478,7 +478,7 @@ class configs():
         """To show error message and waiting for decision
         Internal
         """
-        decision = raw_input('Do you want to continue? (y/n) \n')
+        decision = input('Do you want to continue? (y/n) \n')
         if decision is not 'y':
             print('Exiting program.')
             exit()
@@ -524,7 +524,7 @@ class configs():
             configs_new_count = 0
 
             try:
-                molecule_count=int(raw_input('I want new atom ({:d}) to be the old atom number: '.format(molecule_count)))
+                molecule_count=int(input('I want new atom ({:d}) to be the old atom number: '.format(molecule_count)))
             except:
                 pass
             #molecule_count = self.molecule_count_total - molecule_new_count + 1 #Test arguement(reverse order)
@@ -597,10 +597,10 @@ class configs():
         #print ('This is monomer_B:',monomer_B)
         if atom_A is False: #Assign atom a and atom b
             try:
-                trail = raw_input()
+                trail = input()
                 self.order()
-                atom_A = int(raw_input('Please assign the number of first atom: '))
-                atom_B = int(raw_input('Please assign the number of second atom: '))
+                atom_A = int(input('Please assign the number of first atom: '))
+                atom_B = int(input('Please assign the number of second atom: '))
             except:
                 print('Translate using default Atom (first atom in monomer_A and first atom in monomer_B)')
                 #print(monomer_A)
@@ -646,11 +646,11 @@ class configs():
             print('Monomer is not determined. Please specify monomers')
             #if monomer_A is False: #For the convinience of other function's usage
             try:
-                #a = raw_input()#To try out if can catch input
+                #a = input()#To try out if can catch input
                 self.order()
                 print('(Enter integers and separate them by whitespace)')
-                str1 = raw_input('What atoms are in first monomer: ')
-                str2 = raw_input('Waht atoms are in second monomer: ')
+                str1 = input('What atoms are in first monomer: ')
+                str2 = input('Waht atoms are in second monomer: ')
             except:
                 print('Warning: Using test arguments. Please use terminal to catch input.')
                 atom_A= 3# Arguemnt for test
@@ -683,7 +683,7 @@ class configs():
 
         if step is False:
             try:
-                step = float(raw_input('Please specify the step: '))
+                step = float(input('Please specify the step: '))
             except:  #False-save
                 print('Using default step: 0.05')
                 step = 0.05
@@ -693,8 +693,8 @@ class configs():
 
         if dis_min is False and dis_max is False:
             try:
-                dis_min = float(raw_input('Please specify the dis_min: '))
-                dis_max = float(raw_input('Please specify the dis_max: '))
+                dis_min = float(input('Please specify the dis_min: '))
+                dis_max = float(input('Please specify the dis_max: '))
             except:
                 dis_min = 2
                 dis_max = 20
@@ -716,7 +716,7 @@ class configs():
             print(dis_min)
         print(configs_new)
         try:
-            decision = raw_input('Do you want to see the configs in Molden? (y/n):')
+            decision = input('Do you want to see the configs in Molden? (y/n):')
             if decision is 'y':
                 self.molden(configs_new)
         except:
@@ -728,8 +728,8 @@ class configs():
     def chosen_atom(self,atom_A=False,atom_B=False):
         if atom_A is False:
             try:
-                atom_A = int(raw_input('Please specify reference atom in first monomer: '))
-                atom_B = int(raw_input('Please specify reference atom in second monomer: '))
+                atom_A = int(input('Please specify reference atom in first monomer: '))
+                atom_B = int(input('Please specify reference atom in second monomer: '))
             except:
                 print('Using defualt atom')
                 atom_A = 3
@@ -745,13 +745,13 @@ class configs():
 
         if dis_new_lower is False:#This is a weak argument, can be improved in many levels.
             try:
-                #a = raw_input('')
-                n_configs = float(raw_input('The number of new configuration you want is : '))
-                dis_lower = float(raw_input('The original distance_min (Angstrom) you want is : '))
-                dis_upper = float(raw_input('The original distance_max (Angstrom) you want is: '))
+                #a = input('')
+                n_configs = float(input('The number of new configuration you want is : '))
+                dis_lower = float(input('The original distance_min (Angstrom) you want is : '))
+                dis_upper = float(input('The original distance_max (Angstrom) you want is: '))
 
-                dis_new_lower = float(raw_input('The original distance_new_min (Angstrom) you want is: '))
-                dis_new_upper = float(raw_input('The original distance_new_max (Angstrom) you want is: '))
+                dis_new_lower = float(input('The original distance_new_min (Angstrom) you want is: '))
+                dis_new_upper = float(input('The original distance_new_max (Angstrom) you want is: '))
             except:
                 print('Using default dis boundaries')
                 dis_lower = float(2)
@@ -892,9 +892,9 @@ class configs():
         #ax.xlabels[-1] = '300+'
         fig = plt.gcf()
         plt.show()
-        decision = raw_input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
         if decision is 'y':
-            filename = raw_input('Please specify .eps (1200 dpi) filename: ').strip()
+            filename = input('Please specify .eps (1200 dpi) filename: ').strip()
 
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
@@ -980,9 +980,9 @@ class configs():
         fig = plt.gcf()
         plt.show()
         try:
-            decision = raw_input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+            decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
             if decision is 'y':
-                filename = raw_input('Please specify .eps (1200 dpi) filename: ').strip()
+                filename = input('Please specify .eps (1200 dpi) filename: ').strip()
 
                 fig.savefig(filename, format='eps', dpi=1200)
                 print('Plot saved to {}.'.format(filename))
