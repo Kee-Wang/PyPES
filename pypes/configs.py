@@ -840,6 +840,7 @@ class configs():
         address_book = self.cl('cat '+path).decode("utf-8")
         name = name.encode()
         #name = bytes(name)
+        print(type(address_book))
         print(type(name))
         expression = name+b'="(.*)"'
         print(type(expression))
