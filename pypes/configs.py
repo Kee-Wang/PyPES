@@ -824,7 +824,7 @@ class configs():
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
         print(output)
-        return output
+        return output #output is bytes
 
     def alias(self,name,path=False):
         """Search ~/.bash_profile and return the alias cotent as a string.
@@ -837,7 +837,7 @@ class configs():
         if path is False:
             path = '~/.bash_profile'
         address = 'Alias not found'
-        address_book = self.cl('cat '+path)
+        address_book = self.cl('cat '+path).decode()
         name = name.encode()
         #name = bytes(name)
         print(type(name))
