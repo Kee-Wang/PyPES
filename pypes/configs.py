@@ -837,7 +837,7 @@ class configs():
         if path is False:
             path = '~/.bash_profile'
         address = 'Alias not found'
-        address_book = self.cl('cat '+path).decode()
+        address_book = self.cl('cat '+path).decode("utf-8")
         name = name.encode()
         #name = bytes(name)
         print(type(name))
@@ -1034,15 +1034,15 @@ class configs():
 #train_x = 'pts.dat'
 train_x = 'dimer_47358.abE'
 a = configs(train_x,first_n_configs=2000)
-a.dissociation()
+#a.dissociation()
 #a = configs(train_x)
-#b = a.list()[0:10]
+b = a.list()[0:10]
 #a.plot()
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
 #a.alias('ll')
-#a.molden(b)
+a.molden(b)
 
 #c = a.translate(config= b,dis = 10)
 #a.prt(c)
