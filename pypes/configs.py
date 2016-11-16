@@ -838,9 +838,12 @@ class configs():
             path = '~/.bash_profile'
         address = 'Alias not found'
         address_book = self.cl('cat '+path)
-        name = b''+name
+        name = name.decode()
+        print(type(name))
+        expression = name+b'="(.*)"'
+        print(type(expression))
         #pattern = name+'="(.*)"'.decode() #To  make sure it is string
-        expansion = re.findall(name+'="(.*)"',address_book)
+        expansion = re.findall(expression,address_book)
 
         return expansion[0] #This is expansion of alias
 
