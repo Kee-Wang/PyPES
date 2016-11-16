@@ -218,7 +218,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.5
+                                            Version 0.0.6
 
                                 --A Bowman Group Product
                                     """
@@ -713,8 +713,8 @@ class configs():
             configs_new.append(self.translate(atom_A,atom_B,dis_min,config))
             configs_count = configs_count + 1
             dis_min = dis_min + step
-            print(dis_min)
-        print(configs_new)
+            print('New distance: '+str(dis_min))
+        #print(configs_new)
         try:
             decision = input('Do you want to see the configs in Molden? (y/n):')
             if decision is 'y':
@@ -823,7 +823,7 @@ class configs():
         arg = shlex.split(command)
         p = subprocess.Popen(command, stdout=subprocess.PIPE, shell=True)
         (output, err) = p.communicate()
-        print(output)
+        #print(output)
         return output
 
     def alias(self,name,path=False):
@@ -838,7 +838,7 @@ class configs():
             path = '~/.bash_profile'
         address = 'Alias not found'
         address_book = self.cl('cat '+path)
-        pattern = name+'="(.*)"'
+        pattern = name+'="(.*)"'.decode() #To  make sure it is string
         expansion = re.findall(pattern,address_book)
 
         return expansion[0] #This is expansion of alias
@@ -1024,8 +1024,9 @@ class configs():
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
-#train_x = 'dimer_47358.abE'
-#a = configs(train_x,first_n_configs=2000)
+train_x = 'dimer_47358.abE'
+a = configs(train_x,first_n_configs=2000)
+a.dissociation()
 #a = configs(train_x)
 #b = a.list()[0:10]
 #a.plot()
