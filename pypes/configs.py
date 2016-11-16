@@ -218,7 +218,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.8
+                                            Version 0.0.9
 
                                 --A Bowman Group Product
                                     """
@@ -724,6 +724,7 @@ class configs():
 
 
         print('{:d} configs are return as list.'.format(configs_count))
+        return configs_new
 
     def chosen_atom(self,atom_A=False,atom_B=False):
         if atom_A is False:
