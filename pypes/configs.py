@@ -839,7 +839,7 @@ class configs():
         address = 'Alias not found'
         address_book = self.cl('cat '+path)
         #pattern = name+'="(.*)"'.decode() #To  make sure it is string
-        expansion = re.findall(name+'="(.*)"',address_book)
+        expansion = re.findall(b''+name+'="(.*)"',address_book)
 
         return expansion[0] #This is expansion of alias
 
