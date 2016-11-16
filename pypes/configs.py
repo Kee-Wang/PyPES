@@ -845,6 +845,7 @@ class configs():
         print(type(expression))
         #pattern = name+'="(.*)"'.decode() #To  make sure it is string
         expansion = re.findall(expression,address_book)
+        print(expansion)
 
         return expansion[0] #This is expansion of alias
 
