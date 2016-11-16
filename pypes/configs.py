@@ -327,6 +327,8 @@ class configs():
             a.resize(self, n_configs=False,configs=False, first_n_configs=False, monomer=False, dis_lower=False, dis_uppder=False, dis_new_lower=False, dis_new_upper=False)
                 *Select configs randomly in the given region[dis_lower, dis_upper], then separate them along given two atoms to the given new distance [dis_new_lower, dis_new_upper].
 
+            a.dissociation(self,config=False, dis_min=False,dis_max=False,step=False, atomA=False,atomB=False)
+                *Dissociate two monomers with given
 
         *To show info:
             a.info()
@@ -715,9 +717,9 @@ class configs():
         print(configs_new)
         try:
             decision = raw_input('Do you want to see the configs in Molden? (y/n):')
-                if decision is 'y':
-                    self.molden(configs_new)
-        else:
+            if decision is 'y':
+                self.molden(configs_new)
+        except:
             self.molden(configs_new)
 
 
@@ -805,14 +807,16 @@ class configs():
     def molden(self,configs=False):
         configs = self.configs_check(configs)
         self.write('plot.temp',configs)
-        #self.cl('/raid/molden4.7/molden plot.temp')#Please use the absolut path of molden becasue it is not considerd as 'installed'
-        self.cl('/Users/qingfengwang/Desktop/molden/molden plot.temp')
+        #Get the address of Molden:
+
+        address = self.alias('molden')
+        self.cl(address +' plot.temp')
 
     def cl(self,command):
         #ip::string, command line as string input
         #op::string, return value is the output of command line
         #Notice, each time when change dire.ctly, cl starts from currect directory.
-        #Use three \' if you want to input multiple line
+        #Use three ' if you want to input multiple line
         import subprocess
         import os
         import shlex
@@ -821,6 +825,23 @@ class configs():
         (output, err) = p.communicate()
         print(output)
         return output
+
+    def alias(self,name,path=False):
+        """Search ~/.bash_profile and return the alias cotent as a string.
+
+        *Can overwrite default search path.
+        """
+
+        import re
+
+        if path is False:
+            path = '~/.bash_profile'
+        address = 'Alias not found'
+        address_book = self.cl('cat '+path)
+        pattern = name+'="(.*)"'
+        expansion = re.findall(pattern,address_book)
+
+        return expansion[0] #This is expansion of alias
 
     def plot(self,configs = False,binwidth=False):
         import numpy as np
@@ -1003,14 +1024,16 @@ class configs():
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
-train_x = 'dimer_47358.abE'
+#train_x = 'dimer_47358.abE'
 #a = configs(train_x,first_n_configs=2000)
-a = configs(train_x)
+#a = configs(train_x)
+#b = a.list()[0:10]
 #a.plot()
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
-a.dissociation()
+#a.alias('ll')
+#a.molden(b)
 
 #c = a.translate(config= b,dis = 10)
 #a.prt(c)
