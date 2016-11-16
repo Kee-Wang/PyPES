@@ -838,7 +838,8 @@ class configs():
             path = '~/.bash_profile'
         address = 'Alias not found'
         address_book = self.cl('cat '+path)
-        name = name.decode()
+        name = name.encode()
+        #name = bytes(name)
         print(type(name))
         expression = name+b'="(.*)"'
         print(type(expression))
