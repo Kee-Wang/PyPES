@@ -810,6 +810,10 @@ class configs():
         #Get the address of Molden:
 
         address = self.alias('molden')
+
+
+        #if len(address) == 0:
+            #expansion
         self.cl(address +' plot.temp')
 
     def cl(self,command):
@@ -837,7 +841,7 @@ class configs():
         if path is False:
             path = '~/.bash_profile'
         address = 'Alias not found'
-        address_book = self.cl('cat '+path).decode("utf-8")
+        #address_book = self.cl('cat '+path).decode("utf-8")
         address_book = self.cl('cat '+path)
         print(type(address_book))
         #name = name.encode()
@@ -849,8 +853,17 @@ class configs():
             #print(name)
             #print(line[0:2])
             #print(type(line[0:2]))
+
             if line[0:len(name)+1] == name+'=':  #different
                 expansion = line.split('"')[1]
+                break #If cannot find in single quote, then find double quote
+
+            if line[0:len(name)+1] == name+'=':  #different
+                expansion = line.split("'")[1]
+
+        #if len(expansion) == 0:
+
+
 
         #print(type(expansion))
         print(expansion)
