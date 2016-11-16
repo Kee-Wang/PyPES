@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 #import configs
 
-
-
 class configs():
     '''Read configuraitons and do stuff.
 
@@ -56,9 +54,6 @@ class configs():
                                     #x/y/z (float)(Angstrom):   configs[0][2][0][1][0] = '1.39511118877395'
 
     '''
-
-
-
 
     def __init__(self,train_x,dip = False,first_n_configs=False):
         '''Read input file into configs with checks
@@ -206,24 +201,24 @@ class configs():
         TODO:
 
         1. Add feature so that input can be formated string.
+        2. Add molden path
                 """)
 
 #    def read(self,config_string):
         #for line in string:
 
-
     def logo(self):
         print("""
 
-        .########..##....##.########..########..######.
-        .##.....##..##..##..##.....##.##.......##....##
-        .##.....##...####...##.....##.##.......##......
-        .########.....##....########..######....######.
-        .##...........##....##........##.............##
-        .##...........##....##........##.......##....##
-        .##...........##....##........########..######.
+        ########  ##    ## ########  ########  ######
+        ##     ##  ##  ##  ##     ## ##       ##    ##
+        ##     ##   ####   ##     ## ##       ##
+        ########     ##    ########  ######    ######
+        ##           ##    ##        ##             ##
+        ##           ##    ##        ##       ##    ##
+        ##           ##    ##        ########  ######
 
-                                            Version 0.0.4
+                                            Version 0.0.5
 
                                 --A Bowman Group Product
                                     """
@@ -676,22 +671,57 @@ class configs():
         return monomers
         #Example: monomers = [[[3, 4, 5], [6, 1, 2]]]
 
-    def dissociation(self,dis_new_lower=False,dis_new_upper=False,atomA=False,atomB=False,config=False):
+    def dissociation(self,config=False, dis_min=False,dis_max=False,step=False, atomA=False,atomB=False):
 
+        if config is False: #Meaning use the default one
+            print('Using default global minimum configuration: ')
 
-            config = self.configs_sorted[0]
+            config = self.configs_sorted[0] #Default is global minimum
             self.prt(config)
-            self.molden(config)
-            print('----Translate along the A-B direction')
-            #atom_A = int(raw_input('What is the number of atom A: '))
-            #atom_B = int(raw_input('What is the number of atom B: '))
-            print('(Input integer with whitespace)')
-            #str1 = raw_input('The monomer that contains A also contains: ')
-            #str2 = raw_input('The monomer that contains B also contains: ')
 
-            #self.order(configs)
-            #for dis in range(0,10,0.5):
-        #        self.translate(configs=False,atom_A=3, atom_B = 6, monomer_A = '4 5', monomer_B = '1 2', dis_lower = 2, dis_upper = 10, dis_new_lower=dis, dis_new_upper=dis)
+        if step is False:
+            try:
+                step = float(raw_input('Please specify the step: '))
+            except:  #False-save
+                print('Using default step: 0.05')
+                step = 0.05
+        else:
+            print('Using default step: 0.05')
+            step = 0.05
+
+        if dis_min is False and dis_max is False:
+            try:
+                dis_min = float(raw_input('Please specify the dis_min: '))
+                dis_max = float(raw_input('Please specify the dis_max: '))
+            except:
+                dis_min = 2
+                dis_max = 20
+
+        else:
+            print('Using default dis_min: 2')
+            print('Using default dis_max: 20')
+            dis_min = 2
+            dis_max = 20
+
+        configs_count = 0
+        monomers = self.monomers(configs)
+        (atom_A,atom_B) = self.chosen_atom()
+        configs_new = list()
+        while dis_min <= dis_max:
+            configs_new.append(self.translate(atom_A,atom_B,dis_min,config))
+            configs_count = configs_count + 1
+            dis_min = dis_min + step
+            print(dis_min)
+        print(configs_new)
+        try:
+            decision = raw_input('Do you want to see the configs in Molden? (y/n):')
+                if decision is 'y':
+                    self.molden(configs_new)
+        else:
+            self.molden(configs_new)
+
+
+        print('{:d} configs are return as list.'.format(configs_count))
 
     def chosen_atom(self,atom_A=False,atom_B=False):
         if atom_A is False:
@@ -706,18 +736,18 @@ class configs():
         #    pass
         return (atom_A,atom_B)
 
-
-    def resize(self, n_configs=False,configs=False,  first_n_configs=False, monomer=False, dis_lower=False, dis_upper=False, dis_new_lower=False, dis_new_upper=False):
+    def resize(self, n_configs=False,configs=False,  first_n_configs=False, monomers=False, dis_lower=False, dis_upper=False, dis_new_lower=False, dis_new_upper=False):
         import numpy as np
         configs_new = list()
         configs = self.configs_check(configs)
 
-        if dis_lower is False:
+        if dis_new_lower is False:#This is a weak argument, can be improved in many levels.
             try:
                 #a = raw_input('')
                 n_configs = float(raw_input('The number of new configuration you want is : '))
                 dis_lower = float(raw_input('The original distance_min (Angstrom) you want is : '))
                 dis_upper = float(raw_input('The original distance_max (Angstrom) you want is: '))
+
                 dis_new_lower = float(raw_input('The original distance_new_min (Angstrom) you want is: '))
                 dis_new_upper = float(raw_input('The original distance_new_max (Angstrom) you want is: '))
             except:
@@ -729,12 +759,6 @@ class configs():
 
         monomers = self.monomers(configs)
         (atom_A,atom_B) = self.chosen_atom()
-        #print a
-        #print b
-        #atom_A = monom
-        #atom_B = monomers[1][b-1]
-
-
 
         if n_configs is not False:
             n_configs = int(n_configs)
@@ -815,6 +839,8 @@ class configs():
         ax = fig.add_subplot(111)
 
         x = energy_array
+        E_min = energy_array[0]
+        E_max = energy_array[-1]
         #x = np.random.normal(0,1,1000)
         #print(x)
 
@@ -830,20 +856,117 @@ class configs():
         #print(numBins)
         #numBins = 100
         ax.hist(x,numBins,color='green',alpha=0.8)
+        #ax.boxplot(x,numBins)#,color='green',alpha=0.8)
+        (count,x_tic) = np.histogram(x,numBins)
+
+
+        count.sort()
+        #print(count)
+        count_highest = count[-1]
         ax.set_xlabel("Energy(cm$^{-1}$)")
-        ax.set_ylabel("Frequency")
-        ax.annotate('Lowest Energy',xy=(energy_array[0],2),xytext=(energy_array[0], 100),arrowprops=dict(facecolor='black',shrink =0.005))
-        ax.annotate('Highest Energy',xy=(energy_array[-1],2),xytext=(energy_array[-1], 100),arrowprops=dict(facecolor='black',shrink =0.005))
+        ax.set_ylabel("Count")
+        #ax.set_title("Original data")
+        ax.annotate('E_min:\n{:10.2f}'.format(E_min),xy=(E_min,0),xytext=(E_min, count_highest*0.2),arrowprops=dict(arrowstyle="->"))
+        ax.annotate('E_max:\n{:10.2f}'.format(E_max),xy=(E_max,0),xytext=(E_max-(E_max-E_min)*0.1, count_highest*0.2),arrowprops=dict(arrowstyle="->"))
+        #ax.xlabels[-1] = '300+'
         fig = plt.gcf()
         plt.show()
-        decision = raw_input('''Do you want to save the file? (Enter 'y' to save, enter others to skip)''')
+        decision = raw_input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
         if decision is 'y':
             filename = raw_input('Please specify .eps (1200 dpi) filename: ').strip()
 
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
 
-        #print(energy_array[0])
+    def plot2(self,clip_rate=False, binwidth=False,configs = False):
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        configs = self.configs_check(configs)
+
+        if clip_rate is False:
+            clip_rate = 95
+            print('Using default (95%) clip rate')
+        clip_out = (100.0-float(clip_rate))/200
+        print(clip_out)
+
+        if configs is not False:
+            energy_array = list()
+            for config in configs:
+                energy_array.append(config[1][0][0]* self.hartree_to_cm)
+            #print(energy_array)
+        else:
+            energy_array = self.energy_array_cm
+        fig = plt.figure()
+
+        index = int(len(energy_array)*clip_out)
+
+        print(index)
+        energy_array = np.clip(energy_array,energy_array[index],energy_array[-index])
+        E_min = energy_array[0]
+        E_max = energy_array[-1]
+        ax = fig.add_subplot(111)
+        x = energy_array
+
+        if binwidth is False:
+            binwidth = 50
+        else:
+            binwidth = int(binwidth)
+
+        print('\nCurrent binwidth is {:d} cm-1\n'.format(binwidth))
+
+        fig.canvas.draw()
+
+        numBins = (self.energy_highest_cm - self.energy_lowest_cm) // binwidth
+        ax.hist(x,numBins,color='green',alpha=0.8)
+        (count,x_tic) = np.histogram(x,numBins)
+        count.sort()
+        #print(count)
+        #print(x_tic)
+        count_highest = count[-1]
+        ax.set_xlabel("Energy(cm$^{-1}$)")
+        ax.set_ylabel("Count")
+        ax.set_title("{:3.2f}% clipped distribution\nTotal count: {:d}\n".format(clip_rate,len(energy_array)))
+
+        ax.annotate('\nTail {:3.2f}%\n< {:7.1f}cm$^{{-1}}$'.format(clip_out*100,E_min),xy=(E_min,0),xytext=(E_min-(E_max-E_min)*0.05, count_highest*0.2),arrowprops=dict(arrowstyle="->"))
+        ax.annotate('\nHead {:3.2f}%\n> {:7.1f}cm$^{{-1}}$'.format(clip_out*100,E_max),xy=(E_max,0),xytext=(E_max+(E_max-E_min)*0.05, count_highest*0.2),arrowprops=dict(arrowstyle="->"))
+        #ax.xlabels[-1] = '300+'
+        #labels = ax.get_xticks().tolist()#To change specific labels
+        #print(labels)
+        # labels_count_min = 0
+        # labels_count_max = 0
+        #
+        # for label in labels:
+        #     print(label)
+        #     if float(label) < E_min:
+        #         labels[labels_count_min]=''
+        #         labels_count_min += 1
+        #
+        #
+        #     if float(label) < E_max:
+        #         labels_count_max +=1
+        #     else:
+        #         labels[labels_count_max]=''
+        #labels[labels_count_min + 1]=''
+        #labels[labels_count_min] = '< {:<9.1f}'.format(float(int(E_min)))
+        #labels[labels_count_max] = '> {:<9.1f}'.format(float(int(E_max)))
+        #label()
+        #labels[0]=''
+        #labels[-1]=''
+        #labels[1] = '< {:<9.1f}'.format(float(int(E_min)))
+        #labels[-2]='> {:<9.1f}'.format(float(int(E_max)))
+        #ax.set_xticklabels(labels)
+        fig = plt.gcf()
+        plt.show()
+        try:
+            decision = raw_input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+            if decision is 'y':
+                filename = raw_input('Please specify .eps (1200 dpi) filename: ').strip()
+
+                fig.savefig(filename, format='eps', dpi=1200)
+                print('Plot saved to {}.'.format(filename))
+        except:
+            pass
 
     def v2b(self,configs=False):
         """It returns configs of two monomers"""
@@ -877,18 +1000,17 @@ class configs():
 
 """Test arguemnts"""
 
-#dis_new_lower = float(6)
-#dis_upper = float(5)
-#dis_lower = float(2)
-#dis_new_upper = float(9)
+
 #train_x = 'testpoint_v2b_co2h2o.dat'
-#train_x = 'dimer_47358.abE'
+#train_x = 'pts.dat'
+train_x = 'dimer_47358.abE'
 #a = configs(train_x,first_n_configs=2000)
-#a = configs(train_x)
+a = configs(train_x)
 #a.plot()
+#a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
-#a.dissociation()
+a.dissociation()
 
 #c = a.translate(config= b,dis = 10)
 #a.prt(c)
