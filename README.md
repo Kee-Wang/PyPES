@@ -9,7 +9,7 @@ This package is a product of Bowman Group and is curretly developed by Kee.
 * You need to install Jupyter to use this feature.
 * If you have already installed all dependcies use Anaconda3, then just go to root directory and type
         
-        `jupyer notebook`
+        `jupyter notebook`
         
 # Dependency requirement
 
