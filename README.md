@@ -8,23 +8,23 @@ This package is a product of Bowman Group and is curretly developed by Kee.
 * A interactive Jupyter Notebook tutorial is available in `test_configs` directory.
 
 
-## Dependency requirement
+# Dependency requirement
 
 Those are the dependencies that reqired to fully functionalize PyPES.
 
-##Requirements without Version Specifiers ######
-get-pip.py
+* Requirements without Version Specifiers ######
+        get-pip.py
 
-numpy
+        numpy
 
-matplotlib
+        matplotlib
 
-## Requirements with Version Specifiers ######
-For python download: https://www.python.org/downloads/
-python >= 3             # Recomended version python 3.5.2
+* Requirements with Version Specifiers ######
+        For python download: https://www.python.org/downloads/
+        python >= 3             # Recomended version python 3.5.2
 
-## Recommended user interface ######
-ipython
+* Recommended user interface ######
+        IPython
 
 # Module Installation Instruction ######
 ##All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
