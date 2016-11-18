@@ -25,7 +25,8 @@ Those are the dependencies that reqired to fully functionalize PyPES.
         For python download: https://www.python.org/downloads/
         python >= 3             # Recomended version python 3.5.2
 
-* Recommended user interface ######
+* Recommended user interface
+
         IPython
 
 # Module Installation Instruction
