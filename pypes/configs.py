@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.9
+                                            Version 0.0.11
 
                                 --A Bowman Group Product
                                     """
@@ -676,6 +676,10 @@ class configs():
         #Example: monomers = [[[3, 4, 5], [6, 1, 2]]]
 
     def dissociation(self,config=False, dis_min=False,dis_max=False,step=False, atomA=False,atomB=False):
+        """This method is used to make rigid dissociation along designated atoms.
+
+        """
+
 
         if config is False: #Meaning use the default one
             print('Using default global minimum configuration: ')
