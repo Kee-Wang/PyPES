@@ -6,8 +6,11 @@ This package is a product of Bowman Group and is curretly developed by Kee.
 
 # PyPES Tutorial
 * An interactive Jupyter Notebook tutorial is available in `test_configs` directory.
-
-
+* You need to install Jupyter to use this feature.
+* If you have already installed all dependcies use Anaconda3, then just go to root directory and type
+        
+        `jupyer notebook`
+        
 # Dependency requirement
 
 Those are the dependencies that reqired to fully functionalize PyPES.
