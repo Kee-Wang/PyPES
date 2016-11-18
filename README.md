@@ -5,7 +5,7 @@ PyPES is a Python module that will be develped into a Python-based independend s
 This package is a product of Bowman Group and is curretly developed by Kee.
 
 # PyPES Tutorial
-* A interactive Jupyter Notebook tutorial is available in `test_configs` directory.
+* An interactive Jupyter Notebook tutorial is available in `test_configs` directory.
 
 
 # Dependency requirement
