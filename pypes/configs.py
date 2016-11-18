@@ -97,6 +97,8 @@ class configs():
         '''
         """Constants"""
         self.hartree_to_cm = 219474.63
+
+
         self.logo()
         print('Reading file...\n')
         f = open(train_x)
@@ -204,7 +206,7 @@ class configs():
         2. Add molden path
                 """)
 
-#    def read(self,config_string):
+        #    def read(self,config_string):
         #for line in string:
 
     def logo(self):
@@ -814,10 +816,14 @@ class configs():
         self.cl(address +' plot.temp')
 
     def cl(self,command):
+        """self.cl is to interact with terminal and catch the output.
+
+
         #ip::string, command line as string input
         #op::string, return value is the output of command line
         #Notice, each time when change dire.ctly, cl starts from currect directory.
         #Use three ' if you want to input multiple line
+        """
         import subprocess
         import os
         import shlex
