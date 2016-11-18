@@ -46,4 +46,48 @@ ipython
 4. To uninstall:
 
         `pip uninstall pypes`
+        
+# How to aviod importing packages every time?
+## You can do so by setting up initialization files.
+
+
+        `cd ~/.bashrc` (go to `~/.bash_profile` if use OS X)
+
+Add:
+
+        `export PYTHONSTARTUP=$HOME/.pythonstartup`
+
+Then create a start-up file:
+
+        `vim .pythonstartup`
+
+Then write:
+
+        `from pypes.configs import configs`
+
+and save.
+
+
+
+Now you can directly call `a = configs(‘file’)` without import configs every time
+
+## How to initilize IPython?
+
+        `ipython profile create [profilename]` (usually leave file name empty)
+
+Then go to:
+
+        `cd /home/kee/.ipython/profile_default` (use your own name)
+
+Then uncomment: 
+
+        `c.InteractiveShellApp.exec_PYTHONSTARTUP = True`
+
+Now everytime it would load PYTHONSARTUP (which contains the package yo import)
+
+
+## .bashrc or .bash_profile?
+OSX automattically calls .bash_profile first each time.
+Linux, our cluster Macronode, calls .bashrc each time log in. But alias etc. stored at .bash_profile
+
 
