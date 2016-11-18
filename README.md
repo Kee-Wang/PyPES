@@ -12,22 +12,24 @@ This package is a product of Bowman Group and is curretly developed by Kee.
 
 Those are the dependencies that reqired to fully functionalize PyPES.
 
-* Requirements without Version Specifiers ######
+* Requirements without Version Specifiers
+
         get-pip.py
 
         numpy
 
         matplotlib
 
-* Requirements with Version Specifiers ######
+* Requirements with Version Specifiers
+
         For python download: https://www.python.org/downloads/
         python >= 3             # Recomended version python 3.5.2
 
 * Recommended user interface ######
         IPython
 
-# Module Installation Instruction ######
-##All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
+# Module Installation Instruction
+## Notice: All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
 
 1. First install anaconda3 (meaning with Python 3 distribution)
 
@@ -51,6 +53,7 @@ Those are the dependencies that reqired to fully functionalize PyPES.
         `pip uninstall pypes`
         
 # How to aviod importing packages every time?
+
 ## You can do so by setting up initialization files.
 
 
