@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.11
+                                            Version 0.0.12
 
                                 --A Bowman Group Product
                                     """
@@ -757,8 +757,8 @@ class configs():
                 dis_lower = float(input('The original distance_min (Angstrom) you want is : '))
                 dis_upper = float(input('The original distance_max (Angstrom) you want is: '))
 
-                dis_new_lower = float(input('The original distance_new_min (Angstrom) you want is: '))
-                dis_new_upper = float(input('The original distance_new_max (Angstrom) you want is: '))
+                dis_new_lower = float(input('The new distance_new_min (Angstrom) you want is: '))
+                dis_new_upper = float(input('The new distance_new_max (Angstrom) you want is: '))
             except:
                 print('Using default dis boundaries')
                 dis_lower = float(2)
