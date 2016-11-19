@@ -1,30 +1,39 @@
-# PyPES
+# About PyPES
 
 PyPES is a Python module that will be develped into a Python-based independend softwere that will help making potential energy surface (PES).
 
 This package is a product of Bowman Group and is curretly developed by Kee.
 
-## Dependency requirement
-
+# PyPES Tutorial
+* An interactive Jupyter Notebook tutorial is available in `test_configs` directory.
+* You need to install Jupyter to use this feature.
+* If you have already installed all dependcies use Anaconda3, then just go to root directory and type
+        
+        `jupyter notebook`
+        
+# Dependency requirement
 
 Those are the dependencies that reqired to fully functionalize PyPES.
 
-##Requirements without Version Specifiers ######
-get-pip.py
+* Requirements without Version Specifiers
 
-numpy
+        get-pip.py
 
-matplotlib
+        numpy
 
-## Requirements with Version Specifiers ######
-For python download: https://www.python.org/downloads/
-python >= 3             # Recomended version python 3.5.2
+        matplotlib
 
-## Recommended user interface ######
-ipython
+* Requirements with Version Specifiers
 
-# Module Installation Instruction ######
-##All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
+        For python download: https://www.python.org/downloads/
+        python >= 3             # Recomended version python 3.5.2
+
+* Recommended user interface
+
+        IPython
+
+# Module Installation Instruction
+## Notice: All dependencies will be installed automatically without requiring root permission by installing Anaconda3. Strongly suggest using Anaconda to install all dependencies.
 
 1. First install anaconda3 (meaning with Python 3 distribution)
 
@@ -46,4 +55,49 @@ ipython
 4. To uninstall:
 
         `pip uninstall pypes`
+        
+# How to aviod importing packages every time?
+
+## You can do so by setting up initialization files.
+
+
+        `cd ~/.bashrc` (go to `~/.bash_profile` if use OS X)
+
+Add:
+
+        `export PYTHONSTARTUP=$HOME/.pythonstartup`
+
+Then create a start-up file:
+
+        `vim .pythonstartup`
+
+Then write:
+
+        `from pypes.configs import configs`
+
+and save.
+
+
+
+Now you can directly call `a = configs(‘file’)` without import configs every time
+
+## How to initilize IPython?
+
+        `ipython profile create [profilename]` (usually leave file name empty)
+
+Then go to:
+
+        `cd /home/kee/.ipython/profile_default` (use your own name)
+
+Then uncomment: 
+
+        `c.InteractiveShellApp.exec_PYTHONSTARTUP = True`
+
+Now everytime it would load PYTHONSARTUP (which contains the package yo import)
+
+
+## .bashrc or .bash_profile?
+OSX automattically calls .bash_profile first each time.
+Linux, our cluster Macronode, calls .bashrc each time log in. But alias etc. stored at .bash_profile
+
 

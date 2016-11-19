@@ -97,6 +97,8 @@ class configs():
         '''
         """Constants"""
         self.hartree_to_cm = 219474.63
+
+
         self.logo()
         print('Reading file...\n')
         f = open(train_x)
@@ -204,7 +206,7 @@ class configs():
         2. Add molden path
                 """)
 
-#    def read(self,config_string):
+        #    def read(self,config_string):
         #for line in string:
 
     def logo(self):
@@ -218,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.9
+                                            Version 0.0.12
 
                                 --A Bowman Group Product
                                     """
@@ -674,6 +676,10 @@ class configs():
         #Example: monomers = [[[3, 4, 5], [6, 1, 2]]]
 
     def dissociation(self,config=False, dis_min=False,dis_max=False,step=False, atomA=False,atomB=False):
+        """This method is used to make rigid dissociation along designated atoms.
+
+        """
+
 
         if config is False: #Meaning use the default one
             print('Using default global minimum configuration: ')
@@ -751,8 +757,8 @@ class configs():
                 dis_lower = float(input('The original distance_min (Angstrom) you want is : '))
                 dis_upper = float(input('The original distance_max (Angstrom) you want is: '))
 
-                dis_new_lower = float(input('The original distance_new_min (Angstrom) you want is: '))
-                dis_new_upper = float(input('The original distance_new_max (Angstrom) you want is: '))
+                dis_new_lower = float(input('The new distance_new_min (Angstrom) you want is: '))
+                dis_new_upper = float(input('The new distance_new_max (Angstrom) you want is: '))
             except:
                 print('Using default dis boundaries')
                 dis_lower = float(2)
@@ -814,10 +820,14 @@ class configs():
         self.cl(address +' plot.temp')
 
     def cl(self,command):
+        """self.cl is to interact with terminal and catch the output.
+
+
         #ip::string, command line as string input
         #op::string, return value is the output of command line
         #Notice, each time when change dire.ctly, cl starts from currect directory.
         #Use three ' if you want to input multiple line
+        """
         import subprocess
         import os
         import shlex
