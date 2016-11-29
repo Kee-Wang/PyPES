@@ -878,18 +878,19 @@ class configs():
 
 """Test arguemnts"""
 
-#dis_new_lower = float(6)
+dis_new_lower = float(6)
 #dis_upper = float(5)
 #dis_lower = float(2)
 #dis_new_upper = float(9)
-#train_x = 'testpoint_v2b_co2h2o.dat'
+train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'dimer_47358.abE'
-#a = configs(train_x,first_n_configs=2000)
+a = configs(train_x,first_n_configs=2000)
 #a = configs(train_x)
 #a.plot()
 #b = a.list()
 #a.prt(b)
-#a.dissociation()
+a.dissociation()
+
 
 #c = a.translate(config= b,dis = 10)
 #a.prt(c)
