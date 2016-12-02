@@ -633,6 +633,7 @@ class configs():
         return config_new # One none-nested configuraiton list
 
     def monomers(self, monomer_A = False, monomer_B = False):
+        # type: (object, object) -> object
         """To assign monomer groups and return as two lists of number. Use default groups if no assign.
 
             Example: monomer = [[[3, 4, 5], [6, 1, 2]]]
@@ -651,8 +652,8 @@ class configs():
                 #a = input()#To try out if can catch input
                 self.order()
                 print('(Enter integers and separate them by whitespace)')
-                str1 = input('What atoms are in first monomer: ')
-                str2 = input('Waht atoms are in second monomer: ')
+                str1 = raw_input('What atoms are in first monomer: ')
+                str2 = raw_input('Waht atoms are in second monomer: ')
             except:
                 print('Warning: Using test arguments. Please use terminal to catch input.')
                 atom_A= 3# Arguemnt for test
@@ -1041,18 +1042,37 @@ class configs():
         self.prt(configs_A)
         self.prt(configs_B)
 
+    def split(self,configs=False,monomers=False):
+        print('test')
+
+        configs = self.configs_check(configs)
+        monomers = self.monomers(monomer_A='1 2 6',monomer_B='3 4 5')
+        monomer1 = monomers[0]
+        monomer2 = monomers[1]
+        print(monomers)
+        new_configs = list()
+        config_monomer1 = list()
+        config_monomer2 = list()
+        for config in configs:
+            print(config)
+            break
+
+
+        return
+
 
 """Test arguemnts"""
 
 
-#train_x = 'testpoint_v2b_co2h2o.dat'
+train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-#a = configs(train_x,first_n_configs=2000)
+a = configs(train_x,first_n_configs=2000)
 #a.dissociation()
 #a = configs(train_x)
 #b = a.list()[0:10]
-#a.plot()
+a.split()
+
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
