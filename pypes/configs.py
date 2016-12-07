@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.12
+                                            Version 0.0.13
 
                                 --A Bowman Group Product
                                     """
@@ -380,6 +380,7 @@ class configs():
         configs=self.configs_check(configs)
         for config in configs: #Write config by config
             configs_count = configs_count + 1
+
             f.write('{:<2d}'.format(config[0][0])+'\n') #Number of atoms. Align number of atom to the very left
             f.write('  '), #To align the colums of energy and coordiante. Comma to continue on the same line
             if self.dip:#Print energy and dipole
@@ -1042,23 +1043,264 @@ class configs():
         self.prt(configs_A)
         self.prt(configs_B)
 
-    def split(self,configs=False,monomers=False):
-        print('test')
+    def int2list(self,str):
+        """Convert the integer input to string into a list of numbers"""
+        try:
+            lst = list()
+            for line in str.split():
+                #print('TTTTest-----------------',line)
+                if line is "\'":
+                    continue
+                lst.append(int(line.strip()))
+        except:
+            lst = str
+
+        return lst #This list of int numbers
+
+    def slice(self,monomer,configs=False):
+        """Given the number of atoms, and split the molecule into list
+            configs::given configuration
+            monomers::the order of the monomer
+        """
+        configs = self.configs_check(configs)
+        monomer = self.int2list(monomer)
+        configs_monomer = list()
+        for config in configs:
+            config_monomer = list()
+            config_monomer.append([len(monomer)])
+            config_monomer.append(config[1])
+
+            temp = list()
+            for i in monomer:
+                #print(config[2][i-1])
+                temp.append(config[2][i-1])
+            config_monomer.append(temp)
+            #print(config_monomer)
+            #self.prt(config_monomer)
+            configs_monomer.append(config_monomer)
+        #self.prt(configs_monomer[0])
+
+        return configs_monomer
+
+    def submit(self,file):
+        file='file1'
+        self.cl('qsub '+file)
+
+    def split2node(self,name,configs=False):
+
+        configs=self.configs_check(configs)
+        cores = 24
+        coresperjob = 4
+        subjobs = 24
+        nconfigs = len(configs)
+        n = int(nconfigs/subjobs)
+        lst = list()
+        for i in range(1,subjobs+1):
+            start = (i-1)*n
+            end = start+n
+            if start+2*n >= nconfigs-1:
+                end = nconfigs
+            if end < start:
+                break
+            #print('Start:{:d} End:{:d}'.format(start+1,end+1))
+            #self.write('{}_{:02d}'.format(name,i),configs[start:end])
+            #print('test2',configs[start])
+            self.write(name,configs[start:end])
+            lst.append((end-start))
+            self.cl("""mkdir {}{:02d}
+                       mv {} {}{:02d}""".format(name,i,name,name,i))
+
+        return lst #Describes the number of configs
+
+    def pbs(self,ndata=1,usr='kee'):
+        """This is to take configurations and do ab initio calculation automatically"""
+
+
+        #configs = self.configs_check(configs)
+        #natom = configs[0][0]
+        #ndata = len(configs)
+        f = open('1_submit_sub.que','w')
+        f.write('''#!/bin/bash
+            #PBS -q xeon16
+            #PBS -l nodes=1:ppn=4
+            #PBS -N spe
+            #PBS -r n
+            #PBS -c n
+            #PBS -m n
+            #PBS -e /dev/null
+            #PBS -o /dev/null
+            #PBS -S /bin/sh
+
+            id=`echo $PBS_JOBID |cut -d. -f1`
+            basename=`echo $infile |sed 's/\.[a-zA-Z]*$//' `
+            log="$PBS_O_WORKDIR/spe.${id}.log"
+            exe=${exe:="1_submit_sub.csh"}
+            ndata="'''+str(ndata)+'''"
+
+            export TMPDIR="/scratch/$USER"
+            echo "job id:        " $PBS_JOBID  >> $log
+            echo "input file:    " $infile $PBS_JOBNAME >> $log
+            echo "exicutalbe:" $exe >> $log
+            echo "job starts at: " `date` >> $log
+            echo "submitted from:" $PBS_O_HOST >> $log
+            echo "submitted to:  "  >> $log
+            cat $PBS_NODEFILE >> $log
+            echo "" >> $log
+
+            MYDIR="/scratch/'''+usr+'''/spe-$id"
+            mkdir $MYDIR
+            cd $MYDIR
+            cp $PBS_O_WORKDIR/* . -r
+
+            echo ./$exe $ndata >>$log 2>&1
+            ./$exe $ndata >>$log 2>&1
+            cp -r $MYDIR/* $PBS_O_WORKDIR/
+            rm -rf $MYDIR
+
+            echo "job ends at:   " `date`  >> $log
+                    ''')
+        f.close()
+
+        return None
+
+    def molpro(self,file='b',natom=1,ndata=1,basis='avtz',ab='ccsd(t)-f12',title='co2h2o'):
+
+        #configs = self.configs_check(configs)
+        #natom = configs[0][0]
+        #ndata = len(configs)
+        #print(type(natom))
+        #print('This is natom:',natom)
+        #print(type(ab))
+        #natom=6
+        f = open('1_submit_sub.csh','w')
+        #f.write('This is test')
+        f.write(''' #!/bin/csh -f
+            #This file split a file into nfile files, and creat standard molpro input file for each configuration.
+
+
+            #-----------------------User define-----------------
+            set nfile = {0:d} #No. configs
+            set inputfile = '{5}' #No suffix
+            #---------------------------------------------------
+
+            set n = {1:d}
+            set i = 1
+            while ( $i <= $nfile )
+              set tail = $i
+              if ( $i < "10" ) then
+                set tail = 00$i
+              else if ($i < "100") then
+                set tail = 0$i
+              endif
+
+              set k = `expr $i - 0`
+              set j = `expr $k \* $n`
+              set input = $inputfile$tail
+
+
+            echo '*** {2}'        >> $input.temp.head
+            echo 'memory,100,m'      >> $input.temp.head
+            echo 'basis {3} '        >> $input.temp.head
+            echo 'geomtype = xyz'    >> $input.temp.head
+            echo 'geometry = {{'      >> $input.temp.head
+
+
+            #change here accroding to different input
+            head -n $j $inputfile | tail -$n  >> $input.temp.config
+            cat $input.temp.head  $input.temp.config >> $input
+            rm $input.temp.head
+            rm $input.temp.config
+
+            echo ''                  >> $input
+            echo '}}'                 >> $input
+            echo 'hf'                >> $input
+            echo '{4}'       >> $input
+            echo '---'               >> $input
+
+            /usr/local/bin/molprop_2010_1_Linux_x86_64_i8 -n 4 $input
+              set  i = `expr $i + 1`
+            end
+        '''.format(ndata,natom+2,title,basis,ab,file))
+        f.close()
+        self.cl("chmod +x '1_submit_sub.csh' ")
+        return None
+
+
+    def submit(self,configs=False,file='dimer',v2b=False,basis='avtz',ab='ccsd(t)-f12',usr='kee',monomerA=None,monomerB=None):
 
         configs = self.configs_check(configs)
-        monomers = self.monomers(monomer_A='1 2 6',monomer_B='3 4 5')
-        monomer1 = monomers[0]
-        monomer2 = monomers[1]
-        print(monomers)
-        new_configs = list()
-        config_monomer1 = list()
-        config_monomer2 = list()
-        for config in configs:
-            print(config)
-            break
+        nsubjobs=24
+        molpro = '1_submit_sub.csh'
+        pbs = '1_submit_sub.que'
+
+        lst = self.split2node('dimer',configs) #It splits file into nodes and return number of configs as list
+        natom = configs[0][0][0]
+        #print(type(natom))
 
 
-        return
+
+        #if v2b is False:
+        #    ans = input('Do you want two-body energy:? y/n \n')
+
+        if v2b is True:
+            if monomerA is None:
+                self.order(configs)
+                monomerA = input('First monomer: ')
+                self.order(configs)
+                monomerB = input('Second monomer: ')
+
+            monomerA = self.slice(self.int2list(monomerA))
+            monomerB = self.slice(self.int2list(monomerB))
+
+
+            self.split2node('monomerA',monomerA)
+            self.split2node('monomerB',monomerB)
+            #MonomerA
+            natomA = monomerA[0][0][0]
+            natomB = monomerB[0][0][0]
+
+            #Generate molpro file and mv it to the dir
+
+            for i in range(1,nsubjobs+1):
+                ndata = lst[i-1]
+                #print('------t1')
+
+                self.molpro(file='monomerA',natom=natomA,ndata=ndata)
+                self.cl('mv {} monomerA{:02}'.format(molpro, i))
+                self.molpro(file='monomerB',natom=natomB,ndata=ndata)
+                self.cl('mv {} monomerB{:02}'.format(molpro, i))
+                self.pbs(ndata=ndata)
+                self.cl('mv {} monomerA{:02}'.format(pbs, i))
+                self.pbs(ndata=ndata)
+                self.cl('mv {} monomerB{:02}'.format(pbs, i))
+                self.cl('''cd monomerA{:02}
+                            echo {}'''.format(i,pbs))
+                self.cl('''cd monomerB{:02}
+                            qsub {} '''.format(i,pbs))
+
+
+        for i in range(1, nsubjobs + 1):
+            self.molpro(file='dimer', natom=natom, ndata=ndata)
+            self.cl('mv {} dimer{:02}'.format(molpro, i))
+            self.pbs(ndata=ndata)
+            self.cl('mv {} dimer{:02}'.format(pbs, i))
+            self.cl('''cd dimer{:02}
+                        qsub {} '''.format(i, pbs))
+
+
+
+             #   self.cl('''mv dim
+              #  ''')
+
+        return None
+
+    #def collect(self):
+    #    nsubjobs = 24
+
+     #   for i in range(1, nsubjobs + 1):
+
+
+
 
 
 """Test arguemnts"""
@@ -1067,12 +1309,17 @@ class configs():
 train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-a = configs(train_x,first_n_configs=2000)
+a = configs(train_x,first_n_configs=2097)
 #a.dissociation()
 #a = configs(train_x)
-#b = a.list()[0:10]
-a.split()
+b = a.list()[0]
+#print(b)
+#a.prt()
 
+#a.slice('1 2 6')
+#print(a.split2node('test'))
+#a.submit(v2b=True)
+a.submit(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
