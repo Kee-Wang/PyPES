@@ -1560,12 +1560,12 @@ class configs():
 """Test arguemnts"""
 
 
-train_x = 'testpoint_v2b_co2h2o.dat'
+#train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-a = configs(train_x,first_n_configs=360)
+#a = configs(train_x,first_n_configs=360)
 
-a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
+#a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
 #a.pbs(10)
 #a.dissociation()
 #a = configs(train_x)
