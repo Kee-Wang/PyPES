@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.16
+                                            Version 0.0.17
 
                                 --A Bowman Group Product
                                     """
