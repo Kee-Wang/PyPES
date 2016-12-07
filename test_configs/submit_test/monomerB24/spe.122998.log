@@ -1,0 +1,35 @@
+job id:         122998.macronode.chem.emory.edu
+input file:     spe
+exicutalbe: 1_submit_sub.csh
+job starts at:  Tue Dec 6 23:32:58 EST 2016
+submitted from: macronode.chem.emory.edu
+submitted to:  
+node2
+node2
+node2
+node2
+
+./1_submit_sub.csh 15
+mpirun: killing job...
+
+mpirun: abort is already in progress...hit ctrl-c again to forcibly terminate
+
+forrtl: error (78): process killed (SIGTERM)
+Image              PC                Routine            Line        Source             
+molprop_2010_1_Li  00000000032A4701  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000032A2E57  Unknown               Unknown  Unknown
+molprop_2010_1_Li  000000000324CB24  Unknown               Unknown  Unknown
+molprop_2010_1_Li  000000000324C936  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000031D8224  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000031E15FB  Unknown               Unknown  Unknown
+libpthread.so.0    0000003C2DE0F710  Unknown               Unknown  Unknown
+molprop_2010_1_Li  0000000003249055  Unknown               Unknown  Unknown
+molprop_2010_1_Li  0000000000511672  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000005BBB17  Unknown               Unknown  Unknown
+molprop_2010_1_Li  000000000051DC0F  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000004E0366  Unknown               Unknown  Unknown
+molprop_2010_1_Li  0000000000568069  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000004D1A63  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000004D19FE  Unknown               Unknown  Unknown
+libc.so.6          0000003C2DA1ED5D  Unknown               Unknown  Unknown
+molprop_2010_1_Li  00000000004D1909  Unknown               Unknown  Unknown
