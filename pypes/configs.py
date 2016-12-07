@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.17
+                                            Version 0.0.18
 
                                 --A Bowman Group Product
                                     """
@@ -1379,12 +1379,14 @@ class configs():
                                      ./{}
                             cp monomerA.abE monomerA.abE{:02d}
                             mv monomerA.abE{:02d} ../
+                            cd ../
                             cat monomerA.abE{:02d} >> monomerA.abE
                             rm monomerA.abE{:02d}'''.format(i, extract,i,i,i,i))
                 self.cl('''cd monomerB{:02}
                                      ./{}
                             cp monomerB.abE monomerB.abE{:02d}
                             mv monomerB.abE{:02d} ../
+                            cd ../
                             cat monomerB.abE{:02d} >> monomerB.abE
                             rm monomerB.abE{:02d}'''.format(i, extract, i, i, i, i))
 
@@ -1400,6 +1402,7 @@ class configs():
                                  ./{}
                         cp dimer.abE dimer.abE{:02d}
                         mv dimer.abE{:02d} ../
+                        cd ../
                         cat dimer.abE{:02d} >> dimer.abE
                         rm dimer.abE{:02d}'''.format(i, extract, i, i, i, i))
 
