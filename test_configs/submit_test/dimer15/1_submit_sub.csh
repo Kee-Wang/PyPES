@@ -1,4 +1,4 @@
- #!/bin/csh -f
+#!/bin/csh -f
             #This file split a file into nfile files, and creat standard molpro input file for each configuration.
 
 
