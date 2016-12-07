@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.14
+                                            Version 0.0.15
 
                                 --A Bowman Group Product
                                     """
@@ -1082,6 +1082,28 @@ class configs():
 
         return configs_monomer
 
+
+    def nodelist(self,configs=False):
+
+        configs = self.configs_check(configs)
+        cores = 24
+        coresperjob = 4
+        subjobs = 24
+        nconfigs = len(configs)
+        n = int(nconfigs / subjobs)
+        lst = list()
+        for i in range(1, subjobs + 1):
+            start = (i - 1) * n
+            end = start + n
+            if start + 2 * n > nconfigs - 1:
+                end = nconfigs
+            if end < start:
+                break
+            lst.append((end - start))
+
+
+        return lst
+
     def split2node(self,name,configs=False):
 
         configs=self.configs_check(configs)
@@ -1090,7 +1112,7 @@ class configs():
         subjobs = 24
         nconfigs = len(configs)
         n = int(nconfigs/subjobs)
-        lst = list()
+        lst = self.nodelist(configs)
         for i in range(1,subjobs+1):
             start = (i-1)*n
             end = start+n
@@ -1102,7 +1124,6 @@ class configs():
             #self.write('{}_{:02d}'.format(name,i),configs[start:end])
             #print('test2',configs[start])
             self.write(name,configs[start:end])
-            lst.append((end-start))
             self.cl("""mkdir {}{:02d}
                        mv {} {}{:02d}""".format(name,i,name,name,i))
 
@@ -1229,7 +1250,9 @@ class configs():
         molpro = '1_submit_sub.csh'
         pbs = '1_submit_sub.que'
 
-        lst = self.split2node('dimer',configs) #It splits file into nodes and return number of configs as list
+        self.split2node('dimer',configs) #It splits file into nodes and return number of configs as list
+
+        lst = self.nodelist(configs)
         natom = configs[0][0][0]
         #print(type(natom))
 
@@ -1270,7 +1293,7 @@ class configs():
                 self.pbs(ndata=ndata)
                 self.cl('mv {} monomerB{:02}'.format(pbs, i))
                 self.cl('''cd monomerA{:02}
-                            echo {}'''.format(i,pbs))
+                            qsub {}'''.format(i,pbs))
                 print(self.cl('''cd monomerB{:02}
                             qsub {} '''.format(i,pbs)))
 
@@ -1296,16 +1319,238 @@ class configs():
      #   for i in range(1, nsubjobs + 1):
 
 
+    def extract_ee(self,info=None):
 
+        f = open(dimer001.out)
+        i = 0
+        lst = list()
+        for line in f:
+            line = line.strip()
+            line = line.split()
+            i += 1
+            if len(line) ==0:
+                continue
+            if line[0] is 'geometry':
+                lst.append(i)  #Record the line
+        return
+
+    def extract(self,configs=False,v2b=False,monomerA=None,monomerB=None):
+
+        configs = self.configs_check(configs)
+        nsubjobs = 24
+        molpro = '1_submit_sub.csh'
+        pbs = '1_submit_sub.que'
+        extract = '2_extractE_sub.csh'
+
+        lst = self.nodelist(configs)  # It splits file into nodes and return number of configs as list
+        print(lst)
+
+        natom = configs[0][0][0]
+        # print(type(natom))
+
+        if v2b is True:
+            if monomerA is None:
+                self.order(configs)
+                monomerA = input('First monomer: ')
+                self.order(configs)
+                monomerB = input('Second monomer: ')
+
+            #monomerA = self.slice(self.int2list(monomerA), configs)
+            #monomerB = self.slice(self.int2list(monomerB), configs)
+
+
+            # MonomerA
+            natomA = len(monomerA)
+            natomB = len(monomerB)
+
+            # Generate molpro file and mv it to the dir
+
+            for i in range(1, nsubjobs + 1):
+                ndata = lst[i - 1]
+
+                self.extract_monomer(file='monomerA',nfile=ndata,natom=natomA)
+                self.cl('mv {} monomerA{:02}'.format(extract, i))
+
+                self.extract_monomer(file='monomerB', nfile=ndata, natom=natomB)
+
+                self.cl('mv {} monomerB{:02}'.format(extract, i))
+
+                self.cl('''cd monomerA{:02}
+                                     ./{}'''.format(i, extract))
+                print(self.cl('''cd monomerB{:02}
+                                    ./{} '''.format(i, extract)))
+
+        for i in range(1, nsubjobs + 1):
+            self.extract_dimer(file='dimer', nfile=ndata, natom=natom)
+
+            self.cl('mv {} dimer{:02}'.format(extract, i))
+
+            self.cl('''cd dimer{:02}
+                                 ./{}'''.format(i, extract))
+
+        return None
+
+
+
+
+    def extract_dimer(self,file='dimer',nfile=15,natom=6):
+
+        f2 = open('2_extractE_sub.csh','w')
+        f2.write('''#!/bin/csh -f
+            #When using this file, should be used for molpro outputfiles of the same batch. namexxx.out, and should be in same output format. Only the fist colum of $output will be extracted.
+            #Need to set the number of output files need to be processed.
+            #Need to set the number of atoms of the batch config
+            #Need to set the order of atoms, i.e. where is the line of atom coordinates.
+            #nfile=number of output files in this folder
+
+            #please change following settings accordingly.
+
+            #----------------------------User define-----------------
+            set input = '{}'
+            set nfile = {:d}   #Num of file per node
+            #--------------------------------------------------------
+
+
+            set output = '{}.abE'
+            set natom = {:d}
+            set lineAtom1 = 29
+            set lineAtom2 = 30
+            set lineAtom3 = 31
+            set lineAtom4 = 32
+            set lineAtom5 = 33
+            set lineAtom6 = 34
+
+            set i = 1
+            while ( $i <= $nfile )
+              set tail = $i
+              if ( $i < "10" ) then
+                set tail = 00$i
+              else if ($i < "100") then
+                set tail = 0$i
+              endif
+
+            #Make sure the line number of $output and coordinate are corret, using keyword1 and keyword2.
+            #if ((head -n $keyword1 $input$tail.out | tail -1) == $linekey1 && (head -n $keyword2 $input$tail.out | tail -1) == $linekey2)
+
+
+            #Number of atom
+            echo $natom >> $output
+
+            #Energy extracted from output files.
+
+            tail -n 3 $input$tail.out |  head -1 | awk '{{print $1}}' >> $output
+
+
+
+            ####What arrangement of atoms do you want?
+            head -n $lineAtom1 $input$tail.out | tail -1 >> $output
+            head -n $lineAtom2 $input$tail.out | tail -1 >> $output
+            head -n $lineAtom3 $input$tail.out | tail -1 >> $output
+            head -n $lineAtom4 $input$tail.out | tail -1 >> $output
+            head -n $lineAtom5 $input$tail.out | tail -1 >> $output
+            head -n $lineAtom6 $input$tail.out | tail -1 >> $output
+            #head -n $lineAtom7 $input$tail.out | tail -1 >> $output
+            #head -n $lineAtom8 $input$tail.out | tail -1 >> $output
+            #head -n $lineAtom9 $input$tail.out | tail -1 >> $output
+            #head -n $lineAtom10 $input$tail.out | tail -1 >> $output
+
+            set i = `expr $i + 1`
+
+            #else
+            #echo 'There is a bad file in file $i' >> badfilereport
+            #endif
+            end
+
+             '''.format(file,nfile,file,natom))
+        f2.close()
+        self.cl('chmod +x 2_extractE_sub.csh')
+
+        return None
+
+    def extract_monomer(self, file='monomer', nfile=15, natom=6):
+
+        f2 = open('2_extractE_sub.csh', 'w')
+        f2.write('''#!/bin/csh -f
+               #When using this file, should be used for molpro outputfiles of the same batch. namexxx.out, and should be in same output format. Only the fist colum of $output will be extracted.
+               #Need to set the number of output files need to be processed.
+               #Need to set the number of atoms of the batch config
+               #Need to set the order of atoms, i.e. where is the line of atom coordinates.
+               #nfile=number of output files in this folder
+
+               #please change following settings accordingly.
+
+               #----------------------------User define-----------------
+               set input = '{}'
+               set nfile = {:d}   #Num of file per node
+               #--------------------------------------------------------
+
+
+               set output = '{}.abE'
+               set natom = {:d}
+               set lineAtom1 = 29
+               set lineAtom2 = 30
+               set lineAtom3 = 31
+               set lineAtom4 = 32
+               set lineAtom5 = 33
+               set lineAtom6 = 34
+
+               set i = 1
+               while ( $i <= $nfile )
+                 set tail = $i
+                 if ( $i < "10" ) then
+                   set tail = 00$i
+                 else if ($i < "100") then
+                   set tail = 0$i
+                 endif
+
+               #Make sure the line number of $output and coordinate are corret, using keyword1 and keyword2.
+               #if ((head -n $keyword1 $input$tail.out | tail -1) == $linekey1 && (head -n $keyword2 $input$tail.out | tail -1) == $linekey2)
+
+
+               #Number of atom
+               echo $natom >> $output
+
+               #Energy extracted from output files.
+
+               tail -n 3 $input$tail.out |  head -1 | awk '{{print $1}}' >> $output
+
+
+
+               ####What arrangement of atoms do you want?
+               head -n $lineAtom1 $input$tail.out | tail -1 >> $output
+               head -n $lineAtom2 $input$tail.out | tail -1 >> $output
+               head -n $lineAtom3 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom4 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom5 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom6 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom7 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom8 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom9 $input$tail.out | tail -1 >> $output
+               #head -n $lineAtom10 $input$tail.out | tail -1 >> $output
+
+               set i = `expr $i + 1`
+
+               #else
+               #echo 'There is a bad file in file $i' >> badfilereport
+               #endif
+               end
+
+                '''.format(file, nfile, file, natom))
+        f2.close()
+        self.cl('chmod +x 2_extractE_sub.csh')
+
+        return None
 
 
 """Test arguemnts"""
 
 
-#train_x = 'testpoint_v2b_co2h2o.dat'
+train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-#a = configs(train_x,first_n_configs=2097)
+a = configs(train_x,first_n_configs=360)
+
+a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
 #a.pbs(10)
 #a.dissociation()
 #a = configs(train_x)
