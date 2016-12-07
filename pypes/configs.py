@@ -1170,7 +1170,7 @@ class configs():
         #natom=6
         f = open('1_submit_sub.csh','w')
         #f.write('This is test')
-        f.write(''' #!/bin/csh -f
+        f.write('''#!/bin/csh -f
             #This file split a file into nfile files, and creat standard molpro input file for each configuration.
 
 
