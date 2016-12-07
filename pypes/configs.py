@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.13
+                                            Version 0.0.14
 
                                 --A Bowman Group Product
                                     """
@@ -1094,7 +1094,7 @@ class configs():
         for i in range(1,subjobs+1):
             start = (i-1)*n
             end = start+n
-            if start+2*n >= nconfigs-1:
+            if start+2*n > nconfigs-1:
                 end = nconfigs
             if end < start:
                 break
@@ -1271,8 +1271,8 @@ class configs():
                 self.cl('mv {} monomerB{:02}'.format(pbs, i))
                 self.cl('''cd monomerA{:02}
                             echo {}'''.format(i,pbs))
-                self.cl('''cd monomerB{:02}
-                            qsub {} '''.format(i,pbs))
+                print(self.cl('''cd monomerB{:02}
+                            qsub {} '''.format(i,pbs)))
 
 
         for i in range(1, nsubjobs + 1):
@@ -1306,6 +1306,7 @@ class configs():
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
 #a = configs(train_x,first_n_configs=2097)
+#a.pbs(10)
 #a.dissociation()
 #a = configs(train_x)
 #b = a.list()[0]
