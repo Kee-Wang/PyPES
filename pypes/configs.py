@@ -653,8 +653,8 @@ class configs():
                 #a = input()#To try out if can catch input
                 self.order()
                 print('(Enter integers and separate them by whitespace)')
-                str1 = raw_input('What atoms are in first monomer: ')
-                str2 = raw_input('Waht atoms are in second monomer: ')
+                str1 = input('What atoms are in first monomer: ')
+                str2 = input('Waht atoms are in second monomer: ')
             except:
                 print('Warning: Using test arguments. Please use terminal to catch input.')
                 atom_A= 3# Arguemnt for test
@@ -1082,10 +1082,6 @@ class configs():
 
         return configs_monomer
 
-    def submit(self,file):
-        file='file1'
-        self.cl('qsub '+file)
-
     def split2node(self,name,configs=False):
 
         configs=self.configs_check(configs)
@@ -1249,8 +1245,8 @@ class configs():
                 self.order(configs)
                 monomerB = input('Second monomer: ')
 
-            monomerA = self.slice(self.int2list(monomerA))
-            monomerB = self.slice(self.int2list(monomerB))
+            monomerA = self.slice(self.int2list(monomerA),configs)
+            monomerB = self.slice(self.int2list(monomerB),configs)
 
 
             self.split2node('monomerA',monomerA)
@@ -1306,20 +1302,20 @@ class configs():
 """Test arguemnts"""
 
 
-train_x = 'testpoint_v2b_co2h2o.dat'
+#train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-a = configs(train_x,first_n_configs=2097)
+#a = configs(train_x,first_n_configs=2097)
 #a.dissociation()
 #a = configs(train_x)
-b = a.list()[0]
+#b = a.list()[0]
 #print(b)
 #a.prt()
 
 #a.slice('1 2 6')
 #print(a.split2node('test'))
 #a.submit(v2b=True)
-a.submit(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
+#a.submit(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
 #a.plot2(clip_rate=99.9)
 #b = a.list()
 #a.prt(b)
