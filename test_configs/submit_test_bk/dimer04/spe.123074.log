@@ -1,0 +1,12 @@
+job id:         123074.macronode.chem.emory.edu
+input file:     spe
+exicutalbe: 1_submit_sub.csh
+job starts at:  Tue Dec 6 23:43:11 EST 2016
+submitted from: macronode.chem.emory.edu
+submitted to:  
+node24
+node24
+node24
+node24
+
+job ends at:    Wed Dec 7 00:22:44 EST 2016
