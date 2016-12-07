@@ -1379,13 +1379,13 @@ class configs():
                                      ./{}
                             cp monomerA.abE monomerA.abE{:02d}
                             mv monomerA.abE{:02d} ../
-                            cat monomerA.abE{:02d} monomerA.abE
+                            cat monomerA.abE{:02d} >> monomerA.abE
                             rm monomerA.abE{:02d}'''.format(i, extract,i,i,i,i))
                 self.cl('''cd monomerB{:02}
                                      ./{}
                             cp monomerB.abE monomerB.abE{:02d}
                             mv monomerB.abE{:02d} ../
-                            cat monomerB.abE{:02d} monomerB.abE
+                            cat monomerB.abE{:02d} >> monomerB.abE
                             rm monomerB.abE{:02d}'''.format(i, extract, i, i, i, i))
 
 
@@ -1400,7 +1400,7 @@ class configs():
                                  ./{}
                         cp dimer.abE dimer.abE{:02d}
                         mv dimer.abE{:02d} ../
-                        cat dimer.abE{:02d} dimer.abE
+                        cat dimer.abE{:02d} >> dimer.abE
                         rm dimer.abE{:02d}'''.format(i, extract, i, i, i, i))
 
         return None
@@ -1560,12 +1560,12 @@ class configs():
 """Test arguemnts"""
 
 
-train_x = 'testpoint_v2b_co2h2o.dat'
+#train_x = 'testpoint_v2b_co2h2o.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-a = configs(train_x,first_n_configs=360)
+#a = configs(train_x,first_n_configs=360)
 
-a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
+#a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
 #a.pbs(10)
 #a.dissociation()
 #a = configs(train_x)
