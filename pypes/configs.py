@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.19
+                                            Version 0.0.20
 
                                 --A Bowman Group Product
                                     """
@@ -1094,10 +1094,8 @@ class configs():
         for i in range(1, subjobs + 1):
             start = (i - 1) * n
             end = start + n
-            if start + 2 * n > nconfigs - 1:
+            if i == subjobs:
                 end = nconfigs
-            if end < start:
-                break
             lst.append((end - start))
 
 
@@ -1115,10 +1113,10 @@ class configs():
         for i in range(1,subjobs+1):
             start = (i-1)*n
             end = start+n
-            if start+2*n > nconfigs-1:
+           # print('Start:{:d},end:{:d}'.format(start,end))
+            if i == subjobs:
                 end = nconfigs
-            if end < start:
-                break
+               # print('This was run..................')
             #print('Start:{:d} End:{:d}'.format(start+1,end+1))
             #self.write('{}_{:02d}'.format(name,i),configs[start:end])
             #print('test2',configs[start])
@@ -1128,7 +1126,7 @@ class configs():
 
         return lst #Describes the number of configs
 
-    def pbs(self,ndata=1,usr='kee'):
+    def pbs(self,ndata=1,usr='kee',job='spe'):
         """This is to take configurations and do ab initio calculation automatically"""
 
 
@@ -1139,7 +1137,7 @@ class configs():
         f.write('''#!/bin/bash
             #PBS -q xeon16
             #PBS -l nodes=1:ppn=4
-            #PBS -N spe
+            #PBS -N '''+job+'''
             #PBS -r n
             #PBS -c n
             #PBS -m n
@@ -1289,9 +1287,9 @@ class configs():
                 self.cl('mv {} monomerA{:02}'.format(molpro, i))
                 self.molpro(file='monomerB',natom=natomB,ndata=ndata)
                 self.cl('mv {} monomerB{:02}'.format(molpro, i))
-                self.pbs(ndata=ndata)
+                self.pbs(ndata=ndata,job='monomerA')
                 self.cl('mv {} monomerA{:02}'.format(pbs, i))
-                self.pbs(ndata=ndata)
+                self.pbs(ndata=ndata,job='monomerB')
                 self.cl('mv {} monomerB{:02}'.format(pbs, i))
                 self.cl('''cd monomerA{:02}
                             qsub {}'''.format(i,pbs))
@@ -1303,7 +1301,7 @@ class configs():
             ndata = lst[i - 1]
             self.molpro(file='dimer', natom=natom, ndata=ndata)
             self.cl('mv {} dimer{:02}'.format(molpro, i))
-            self.pbs(ndata=ndata)
+            self.pbs(ndata=ndata,job='dimer')
             self.cl('mv {} dimer{:02}'.format(pbs, i))
             self.cl('''cd dimer{:02}
                         qsub {} '''.format(i, pbs))
@@ -1394,11 +1392,9 @@ class configs():
 
 
         for i in range(1, nsubjobs + 1):
+            ndata = lst[i - 1]
             self.extract_dimer(file='dimer', nfile=ndata, natom=natom)
-
             self.cl('mv {} dimer{:02}'.format(extract, i))
-
-
             self.cl('''cd dimer{:02}
                                  ./{}
                         cp dimer.abE dimer.abE{:02d}
@@ -1603,12 +1599,12 @@ class configs():
 
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
-train_x = 'plot.temp'
+#train_x = 'plot.temp'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-a = configs(train_x)#,first_n_configs=5000)
+#a = configs(train_x,first_n_configs=375)
 #b = a.list()
-a.submit()
+#a.submit()
 #a.v2b(b,b,b)
 #a.compare()
 #a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
