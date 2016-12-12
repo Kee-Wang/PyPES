@@ -1,7 +1,7 @@
 #!/bin/bash
             #PBS -q xeon16
             #PBS -l nodes=1:ppn=4
-            #PBS -N spe
+            #PBS -N monomerA
             #PBS -r n
             #PBS -c n
             #PBS -m n
