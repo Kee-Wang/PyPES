@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.21
+                                            Version 0.0.22
 
                                 --A Bowman Group Product
                                     """
@@ -1348,14 +1348,16 @@ class configs():
         # print(type(natom))
 
         if v2b is True:
+            self.cl('rm monomerA.abE')
+            self.cl('rm monomerB.abE')
             if monomerA is None:
                 self.order(configs)
                 monomerA = input('First monomer: ')
                 self.order(configs)
                 monomerB = input('Second monomer: ')
 
-            #monomerA = self.slice(self.int2list(monomerA), configs)
-            #monomerB = self.slice(self.int2list(monomerB), configs)
+            monomerA = self.int2list(monomerA)
+            monomerB = self.int2list(monomerB)
 
 
             # MonomerA
@@ -1366,15 +1368,21 @@ class configs():
 
             for i in range(1, nsubjobs + 1):
                 ndata = lst[i - 1]
-
+                print('Extracting monomerA {:d}'.format(i))
+                #print('natomA: {:d}'.format(natomA))
+                #print(monomerA)
+                #print(len(monomerA))
+                #for el in monomerA:
+                #    print (el)
                 self.extract_monomer(file='monomerA',nfile=ndata,natom=natomA)
                 self.cl('mv {} monomerA{:02}'.format(extract, i))
-
+                print('Extracting monomerB {:d}'.format(i))
                 self.extract_monomer(file='monomerB', nfile=ndata, natom=natomB)
 
                 self.cl('mv {} monomerB{:02}'.format(extract, i))
 
                 self.cl('''cd monomerA{:02}
+                            rm monomerA.abE
                                      ./{}
                             cp monomerA.abE monomerA.abE{:02d}
                             mv monomerA.abE{:02d} ../
@@ -1382,6 +1390,7 @@ class configs():
                             cat monomerA.abE{:02d} >> monomerA.abE
                             rm monomerA.abE{:02d}'''.format(i, extract,i,i,i,i))
                 self.cl('''cd monomerB{:02}
+                            rm monomerB.abE
                                      ./{}
                             cp monomerB.abE monomerB.abE{:02d}
                             mv monomerB.abE{:02d} ../
@@ -1390,12 +1399,14 @@ class configs():
                             rm monomerB.abE{:02d}'''.format(i, extract, i, i, i, i))
 
 
-
+        self.cl('rm dimer.abE')
         for i in range(1, nsubjobs + 1):
+            print('Extracting dimer {:d}'.format(i))
             ndata = lst[i - 1]
             self.extract_dimer(file='dimer', nfile=ndata, natom=natom)
             self.cl('mv {} dimer{:02}'.format(extract, i))
             self.cl('''cd dimer{:02}
+                        rm dimer.abE
                                  ./{}
                         cp dimer.abE dimer.abE{:02d}
                         mv dimer.abE{:02d} ../
@@ -1406,6 +1417,7 @@ class configs():
         return None
 
     def extract_dimer(self,file='dimer',nfile=15,natom=6):
+
 
         f2 = open('2_extractE_sub.csh','w')
         f2.write('''#!/bin/csh -f
@@ -1558,45 +1570,68 @@ class configs():
         configs1 = self.configs_check(configs1)
         configs2 = self.configs_check(configs2)
 
+
         i = 0
         for config in configs:
-            config[1][0][0] = config[1][0][0]- configs1[i][1][0][0] #- configs2[i][1][0][0]
+            config[1][0][0] = config[1][0][0]- configs1[i][1][0][0] - configs2[i][1][0][0]
             i += 1
 
         return configs
 
-    def compare(self,configs1=False,configs2=False,atomA=1,atomB=2):
+    def compare(self,configs1=False,configs2=False,configs3=False,atomA=1,atomB=2):
 
         import numpy as np
         import matplotlib.pyplot as plt
 
+        aucm = 219474.63
         configs1 = self.configs_check(configs1)
-        configs1 = self.sort(configs1)
+        #configs1 = self.sort(configs1)
         configs2 = self.configs_check(configs2)
+        configs3 = self.configs_check(configs3)
         dis1 = list()
         dis2 = list()
+        dis3 = list()
         e1 = list()
         e2 = list()
+        e3 = list()
+        ecompare = list()
         i = 0
         for config in configs1:
 
             dis1.append(self.distance(config,atomA,atomB))
             dis2.append(self.distance(configs2[i],atomA,atomB))
-            e1.append(config[1][0][0])
-            e2.append(configs2[i][0][0])
+            dis3.append(self.distance(configs3[i], atomA, atomB))
+            #print(dis2[i])
+            #self.prt(configs2[i])
+            e1.append(config[1][0][0]*aucm)
+            e2.append(configs2[i][1][0][0]*aucm)
+            e3.append(configs3[i][1][0][0] * aucm)
+            ecompare.append(e3[i]-e2[i])
+            i=i+1
 
         fig = plt.figure()
-        ax = fig.add_subplot(111)
-        ax.plot(dis1,e1)
+        ax = fig.add_subplot(211)
+        ax.set_title('Purified MSA')
+        ax.scatter(dis1,e1,s=5,label='long-range-only fit')
+        #ax.annotate('E_min:\n{:10.2f}'.format(E_min), xy=(E_min, 0), xytext=(E_min, count_highest * 0.2),
+                    #arrowprops=dict(arrowstyle="->"))
+        ax.scatter(dis2,e2,s=5,color='r',label='ab initio')
+        ax.scatter(dis3,e3,s=5,color='b',label='whole-range fit')
+        ax.legend()
+        ax2 = fig.add_subplot(212)
+        ax2.scatter(dis1, ecompare, color='r', label='(whole range) - (ab initio)')
+        ax2.legend()
         plt.show()
 
 
         return None
 
-    def compare1(self,configs1=False,atomA=1,atomB=2):
+    def compare_cm(self,configs1=False,atomA=1,atomB=2):
 
         import numpy as np
         import matplotlib.pyplot as plt
+
+        aucm = 219474.63
 
         configs1 = self.configs_check(configs1)
         configs1 = self.sort(configs1)
@@ -1610,12 +1645,12 @@ class configs():
 
             dis1.append(self.distance(config,atomA,atomB))
 
-            e1.append(config[1][0][0])
+            e1.append(config[1][0][0]*aucm)
 
 
         fig = plt.figure()
         ax = fig.add_subplot(111)
-        ax.plot(dis1,e1)
+        ax.scatter(dis1,e1)
         plt.show()
 
 
@@ -1628,9 +1663,28 @@ class configs():
 
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
-#train_x = 'plot.temp'
+train_x = 'plot.temp'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
+#aa = configs(train_x)
+#aa.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
+#a = configs('dimer.abE')
+#b = configs('monomerA.abE')
+#b1 = b.list()
+#c = configs('monomerB.abE')
+#c1 = c.list()
+#d=a.v2b(configs1=b1,configs2=c1)
+#a.write('diss_ab.dat',d)
+#a.compare_cm(d,atomA=3,atomB=6)
+a=configs('diss_long_range.dat')
+a1 = a.list()
+b=configs('diss_ab.dat')
+b1=b.list()
+c=configs('whole_range.dat')
+c1=c.list()
+a.compare(a1,b1,c1,atomA=3,atomB=6)
+b.compare(a1,b1,c1,atomA=3,atomB=6)
+#a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
 #a = configs(train_x,first_n_configs=375)
 #b = a.list()
 #a.submit()
