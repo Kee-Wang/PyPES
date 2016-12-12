@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.18
+                                            Version 0.0.19
 
                                 --A Bowman Group Product
                                     """
@@ -1082,7 +1082,6 @@ class configs():
 
         return configs_monomer
 
-
     def nodelist(self,configs=False):
 
         configs = self.configs_check(configs)
@@ -1242,7 +1241,6 @@ class configs():
         self.cl("chmod +x '1_submit_sub.csh' ")
         return None
 
-
     def submit(self,configs=False,file='dimer',v2b=False,basis='avtz',ab='ccsd(t)-f12',usr='kee',monomerA=None,monomerB=None):
 
         configs = self.configs_check(configs)
@@ -1258,8 +1256,11 @@ class configs():
 
 
 
-        #if v2b is False:
-        #    ans = input('Do you want two-body energy:? y/n \n')
+        if v2b is False:
+            ans = input('Do you want two-body energy:? y/n \n')
+            if ans is 'y':
+                v2b = True
+
 
         if v2b is True:
             if monomerA is None:
@@ -1299,6 +1300,7 @@ class configs():
 
 
         for i in range(1, nsubjobs + 1):
+            ndata = lst[i - 1]
             self.molpro(file='dimer', natom=natom, ndata=ndata)
             self.cl('mv {} dimer{:02}'.format(molpro, i))
             self.pbs(ndata=ndata)
@@ -1317,7 +1319,6 @@ class configs():
     #    nsubjobs = 24
 
      #   for i in range(1, nsubjobs + 1):
-
 
     def extract_ee(self,info=None):
 
@@ -1407,9 +1408,6 @@ class configs():
                         rm dimer.abE{:02d}'''.format(i, extract, i, i, i, i))
 
         return None
-
-
-
 
     def extract_dimer(self,file='dimer',nfile=15,natom=6):
 
@@ -1559,15 +1557,60 @@ class configs():
 
         return None
 
+    def v2b(self,configs=False,configs1=False,configs2=False):
+        configs = self.configs_check(configs)
+        configs1 = self.configs_check(configs1)
+        configs2 = self.configs_check(configs2)
+
+        i = 0
+        for config in configs:
+            config[1][0][0] = config[1][0][0]- configs1[i][1][0][0] #- configs2[i][1][0][0]
+            i += 1
+
+        return configs
+
+    def compare(self,configs1=False,configs2=False,atomA=1,atomB=2):
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        configs1 = self.configs_check(configs1)
+        configs1 = self.sort(configs1)
+        configs2 = self.configs_check(configs2)
+        dis1 = list()
+        dis2 = list()
+        e1 = list()
+        e2 = list()
+        i = 0
+        for config in configs1:
+
+            dis1.append(self.distance(config,atomA,atomB))
+            dis2.append(self.distance(configs2[i],atomA,atomB))
+            e1.append(config[1][0][0])
+            e2.append(configs2[i][0][0])
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(dis1,e1)
+        plt.show()
+
+
+        return None
+
+
 
 """Test arguemnts"""
 
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
+train_x = 'plot.temp'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
-#a = configs(train_x,first_n_configs=360)
-
+a = configs(train_x)#,first_n_configs=5000)
+#b = a.list()
+a.submit()
+#a.v2b(b,b,b)
+#a.compare()
 #a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5' )
 #a.pbs(10)
 #a.dissociation()
