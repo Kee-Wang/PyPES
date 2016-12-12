@@ -1663,7 +1663,7 @@ class configs():
 
 
 #train_x = 'testpoint_v2b_co2h2o.dat'
-train_x = 'plot.temp'
+#train_x = 'c_configs.dat'
 #train_x = 'pts.dat'
 #train_x = 'dimer_47358.abE'
 #aa = configs(train_x)
@@ -1674,16 +1674,18 @@ train_x = 'plot.temp'
 #c = configs('monomerB.abE')
 #c1 = c.list()
 #d=a.v2b(configs1=b1,configs2=c1)
-#a.write('diss_ab.dat',d)
+#a.write('diss_ab_c_config.dat',d)
 #a.compare_cm(d,atomA=3,atomB=6)
-a=configs('diss_long_range.dat')
-a1 = a.list()
-b=configs('diss_ab.dat')
-b1=b.list()
-c=configs('whole_range.dat')
-c1=c.list()
-a.compare(a1,b1,c1,atomA=3,atomB=6)
-b.compare(a1,b1,c1,atomA=3,atomB=6)
+
+#a=configs('diss_long_range.dat')
+#a1 = a.list()
+#b=configs('diss_ab.dat')
+#b1=b.list()
+#c=configs('whole_range.dat')
+#c1=c.list()
+#a.compare(a1,b1,c1,atomA=3,atomB=6)
+#b.compare(a1,b1,c1,atomA=3,atomB=6)
+
 #a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
 #a = configs(train_x,first_n_configs=375)
 #b = a.list()
