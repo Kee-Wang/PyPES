@@ -1,0 +1,12 @@
+job id:         123444.macronode.chem.emory.edu
+input file:     monomerA
+exicutalbe: 1_submit_sub.csh
+job starts at:  Mon Dec 12 14:10:54 EST 2016
+submitted from: macronode.chem.emory.edu
+submitted to:  
+node3
+node3
+node3
+node3
+
+job ends at:    Mon Dec 12 14:12:41 EST 2016

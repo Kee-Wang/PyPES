@@ -1,0 +1,12 @@
+job id:         123431.macronode.chem.emory.edu
+input file:     monomerB
+exicutalbe: 1_submit_sub.csh
+job starts at:  Mon Dec 12 14:02:18 EST 2016
+submitted from: macronode.chem.emory.edu
+submitted to:  
+node5
+node5
+node5
+node5
+
+job ends at:    Mon Dec 12 14:03:03 EST 2016
