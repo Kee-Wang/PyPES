@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.20
+                                            Version 0.0.21
 
                                 --A Bowman Group Product
                                     """
@@ -1592,6 +1592,35 @@ class configs():
 
 
         return None
+
+    def compare1(self,configs1=False,atomA=1,atomB=2):
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        configs1 = self.configs_check(configs1)
+        configs1 = self.sort(configs1)
+
+        dis1 = list()
+
+        e1 = list()
+
+        i = 0
+        for config in configs1:
+
+            dis1.append(self.distance(config,atomA,atomB))
+
+            e1.append(config[1][0][0])
+
+
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        ax.plot(dis1,e1)
+        plt.show()
+
+
+        return None
+
 
 
 
