@@ -1,0 +1,12 @@
+job id:         123594.macronode.chem.emory.edu
+input file:     dimer
+exicutalbe: 1_submit_sub.csh
+job starts at:  Mon Dec 12 16:21:53 EST 2016
+submitted from: macronode.chem.emory.edu
+submitted to:  
+node20
+node20
+node20
+node20
+
+job ends at:    Mon Dec 12 18:50:33 EST 2016
