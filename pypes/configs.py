@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.22
+                                            Version 0.0.23
 
                                 --A Bowman Group Product
                                     """
@@ -393,7 +393,7 @@ class configs():
         print('*Status: writting finished.\n')
         f.close()
 
-    def sort(self,configs=False,reverse=False,key = 'energy'): #sort based on energy
+    def sort(self,configs=False,reverse=False,key = 'energy',subkey1=None,subkey2=None): #sort based on energy
         """Sort given configurations based on the given key and return the list.
 
         TODO: sort key = distance
@@ -420,11 +420,26 @@ class configs():
                 self.energy_array_sorted = energy_array
                 energy_array_sorted_cm = copy.deepcopy(self.energy_array_sorted)
                 self.energy_array_sorted_cm = np.array(energy_array_sorted_cm)* self.hartree_to_cm
-                #print('\nSort finished.\n')
-                #return configs
-        else:#Reserved for other key expansion in the future.
 
-            return
+        elif key == 'distance': #Reserved for other key expansion in the future.
+            print('\n----Sorting by distance...\n')
+            if reverse: #From high to low
+                configs.sort(key= lambda item:item[1][0],reverse = True) #In key, it helps iterate though list.
+                #print('\nReverse sort finished.\n')
+                #return configs
+            else: #Default, from low to high.
+                configs.sort(key= lambda item:self.distance(item,subkey1,subkey2))
+                energy_array_sorted = list()
+                energy_array = list()
+
+                for config in configs:
+                    #print(config[1][0][0])
+                    energy_array.append(config[1][0][0])
+                self.energy_array_sorted = energy_array
+                energy_array_sorted_cm = copy.deepcopy(self.energy_array_sorted)
+                self.energy_array_sorted_cm = np.array(energy_array_sorted_cm)* self.hartree_to_cm
+
+
 
         print('\n*Status: sorting finished.\n')
         return configs
@@ -1671,6 +1686,7 @@ class configs():
         ecompare=list()
         for i in range(0,n):
             configss[i] = self.configs_check(configss[i])
+            configss[i] = self.sort(configss[i], key='distance', subkey1=atomA, subkey2=atomB)
 
 
 
@@ -1696,10 +1712,14 @@ class configs():
             for config in configss[n]:
 
                 dis_temp.append(self.distance(config,atomA,atomB))
+                #print(n,dis_temp[i])
 
                 e_temp.append(config[1][0][0]*aucm)
                 e_temp_ref.append(configss[-1][i][1][0][0]*aucm-e_temp[i])
                 #e2.append(configs2[i][1][0][0]*aucm)
+                self.prt(configss[-1][i])
+                self.prt(config)
+                print(n, dis_temp[i],e_temp_ref[i])
                 #e3.append(configs3[i][1][0][0] * aucm)
                 #ecompare.append(e3[i]-e2[i])
                 i=i+1
@@ -1730,8 +1750,8 @@ class configs():
        # axes.set_ylim([y, ymax])
        # plt.ylim(-10, 0.1)
         plt.show()
-        #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
-        decision = 'n'
+        decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        #decision = 'n'
         if decision is 'y':
             filename = input('Please specify .eps (1200 dpi) filename: ').strip()
 
@@ -1769,16 +1789,16 @@ class configs():
 #b1=b.list()
 #c=configs('diss_a6_long.dat')
 #c1=c.list()
-d=configs('diss_100A.abE')
-d1 = d.list()
+#d=configs('diss_100A.abE')
+#d1 = d.list()
 #e=configs('diss_a2d5_long.dat')
 #e1=e.list()
-f=configs('diss_a7_long.dat')
+#f=configs('diss_a7_long.dat')
 #f1=f.list()
 #g=configs('diss_a8_long.dat')
 #g1=g.list()
-h=configs('diss_bas_whole.dat')
-h1=h.list()
+#h=configs('diss_bas_whole.dat')
+#h1=h.list()
 #i=configs('diss_purf_whole.dat')
 #i1=i.list()
 #j=configs('diss_nop_msa_whole.dat')
@@ -1787,20 +1807,23 @@ h1=h.list()
 #k1=k.list()
 #l = configs('diss_a20_long.dat')
 #l1=l.list()
-m = configs('diss_com_5t6.dat')
-m1=m.list()
+# m = configs('diss_com_5t6.dat')
+# m1=m.list()
+#
+# n = configs('c_diss_ab.dat')
+# n1=n.list()
+#
+# o = configs('c_diss_bas.dat')
+# o1=o.list()
+#
+# p = configs('c_diss_long.dat')
+# p1 = p.list()
+#
+# q = configs('c_diss_switch.dat')
+# q1=q.list()
 
-n = configs('c_diss_ab.dat')
-n1=n.list()
-
-o = configs('c_diss_bas.dat')
-o1=o.list()
-
-p = configs('c_diss_long.dat')
-p1 = p.list()
-
-q = configs('c_diss_switch.dat')
-q1=q.list()
+#qsort= q.sort(q1,key='distance',subkey1=3,subkey2=6)
+#q.molden(qsort)
 
 #"Compare long with whole range"
 #color = ['y','c','r','k']
@@ -1812,15 +1835,16 @@ q1=q.list()
 #a.compared(compare,atomA=3,atomB=6,s=50,title='switch',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
 
 
-"Compare long with whole range"
-color = ['y','c','b','k']
-marker = ['.', '.', '.', '.']
-label = ['long a=07','bas','switch', 'ab']
-#m.prt()
-compare = [q1,n1]
-
-xmin =1;xmax = 20 ;ymin = -1200;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -20;ymax2 = 20
-d.compared(compare,atomA=3,atomB=6,s=50,title='c configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+# "Compare long with whole range"
+# color = ['m','c','r','k']
+# marker = ['.', '.', '.', 'x']
+# label = ['long a=07','bas','switch', 'ab']
+# #m.prt()
+# compare = [p1,o1,q1,n1]
+# #compare = [p1,n1]
+#
+# xmin =1;xmax = 20 ;ymin = -800;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -10;ymax2 = 25
+# d.compared(compare,atomA=3,atomB=6,s=50,title='c configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
 
 
 #compare = [c1,f1,g1,h1,i1,j1,d1]
