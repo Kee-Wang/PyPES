@@ -1790,7 +1790,7 @@ h1=h.list()
 m = configs('diss_com_5t6.dat')
 m1=m.list()
 
-n = configs('c_diss_20A.dat')
+n = configs('c_diss_ab.dat')
 n1=n.list()
 
 o = configs('c_diss_bas.dat')
@@ -1798,6 +1798,9 @@ o1=o.list()
 
 p = configs('c_diss_long.dat')
 p1 = p.list()
+
+q = configs('c_diss_switch.dat')
+q1=q.list()
 
 #"Compare long with whole range"
 #color = ['y','c','r','k']
@@ -1810,11 +1813,11 @@ p1 = p.list()
 
 
 "Compare long with whole range"
-color = ['y','c','k']
+color = ['y','c','b','k']
 marker = ['.', '.', '.', '.']
-label = ['long a=07','switch', 'ab']
+label = ['long a=07','bas','switch', 'ab']
 #m.prt()
-compare = [p1,o1,n1]
+compare = [q1,n1]
 
 xmin =1;xmax = 20 ;ymin = -1200;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -20;ymax2 = 20
 d.compared(compare,atomA=3,atomB=6,s=50,title='c configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
