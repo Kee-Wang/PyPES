@@ -1600,7 +1600,7 @@ class configs():
 
             dis1.append(self.distance(config,atomA,atomB))
             dis2.append(self.distance(configs2[i],atomA,atomB))
-            dis3.append(self.distance(configs3[i], atomA, atomB))
+            dis3.append(self.distance(configs3[i],atomA,atomB))
             #print(dis2[i])
             #self.prt(configs2[i])
             e1.append(config[1][0][0]*aucm)
@@ -1608,25 +1608,28 @@ class configs():
             e3.append(configs3[i][1][0][0] * aucm)
             ecompare.append(e3[i]-e2[i])
             i=i+1
-
+        s = 7
         fig = plt.figure()
         ax = fig.add_subplot(211)
-        ax.set_title('Purified MSA')
-        ax.scatter(dis1,e1,s=5,label='long-range-only fit')
+        ax.set_title('Long-range-fit')
+        ax.scatter(dis1,e1,s=s,color='g',label='a0=4')
         #ax.annotate('E_min:\n{:10.2f}'.format(E_min), xy=(E_min, 0), xytext=(E_min, count_highest * 0.2),
                     #arrowprops=dict(arrowstyle="->"))
-        ax.scatter(dis2,e2,s=5,color='r',label='ab initio')
-        ax.scatter(dis3,e3,s=5,color='b',label='whole-range fit')
+        ax.scatter(dis2,e2,s=s,color='r',label='a0=5')
+        ax.scatter(dis3,e3,s=s,color='b',label='a0=6')
+        #ax.scatter(dis3,e3,s=5, color='b', label='a0=6')
         ax.legend()
         ax2 = fig.add_subplot(212)
         ax2.scatter(dis1, ecompare, color='r', label='(whole range) - (ab initio)')
         ax2.legend()
+        print('show')
         plt.show()
 
 
         return None
 
-    def compare_cm(self,configs1=False,atomA=1,atomB=2):
+
+    def compare_cm(self,configs1=False,atomA=3,atomB=6):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -1644,7 +1647,6 @@ class configs():
         for config in configs1:
 
             dis1.append(self.distance(config,atomA,atomB))
-
             e1.append(config[1][0][0]*aucm)
 
 
@@ -1652,6 +1654,90 @@ class configs():
         ax = fig.add_subplot(111)
         ax.scatter(dis1,e1)
         plt.show()
+
+
+        return None
+
+    def compared(self,configss, atomA=3,atomB=6,s=100, title='default',color='b',marker='.',label='default',xmin=None,xmax=None,ymin=None,ymax=None,xmin2=None,xmax2=None,ymin2=None,ymax2=None):
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        aucm = 219474.63
+
+        n = len(configss)
+        dis = list()
+        e = list()
+        ecompare=list()
+        for i in range(0,n):
+            configss[i] = self.configs_check(configss[i])
+
+
+
+        fig = plt.figure()
+        ax = fig.add_subplot(211)
+        axes = plt.gca()
+        axes.set_xlim([xmin, xmax])
+        plt.ylim(ymin, ymax)
+        ax2 = fig.add_subplot(212)
+        axes = plt.gca()
+        axes.set_xlim([xmin2, xmax2])
+        plt.ylim(ymin2, ymax2)
+
+        ax.set_title(title)
+
+
+        for n in range(0,n):
+            print(n)
+            dis_temp = list()
+            e_temp = list()
+            e_temp_ref = list()
+            i = 0
+            for config in configss[n]:
+
+                dis_temp.append(self.distance(config,atomA,atomB))
+
+                e_temp.append(config[1][0][0]*aucm)
+                e_temp_ref.append(configss[-1][i][1][0][0]*aucm-e_temp[i])
+                #e2.append(configs2[i][1][0][0]*aucm)
+                #e3.append(configs3[i][1][0][0] * aucm)
+                #ecompare.append(e3[i]-e2[i])
+                i=i+1
+            ecompare.append(e_temp_ref)
+            dis.append(dis_temp)
+            e.append(e_temp)
+            #print(dis[n])
+
+            ax.scatter(dis[n], e[n], s=s, color=color[n],marker=marker[n], label=label[n])
+            ax2.scatter(dis[n], ecompare[n], s=s, color=color[n],marker=marker[n], label=label[n])
+
+
+        #ax.scatter(dis1,e1,s=s,color='g',label='a0=4')
+        #ax.annotate('E_min:\n{:10.2f}'.format(E_min), xy=(E_min, 0), xytext=(E_min, count_highest * 0.2),
+                    #arrowprops=dict(arrowstyle="->"))
+        #ax.scatter(dis2,e2,s=s,color='r',label='a0=5')
+        #ax.scatter(dis3,e3,s=s,color='b',label='a0=6')
+        #ax.scatter(dis3,e3,s=5, color='b', label='a0=6')
+        #plt.ylim(-10, 0.1)
+        ax.legend()
+        ax2.legend()
+        #ax2 = fig.add_subplot(212)
+        #ax2.scatter(dis1, ecompare, color='r', label='(whole range) - (ab initio)')
+        #ax2.legend()
+        #print('show')
+        #axes = plt.gca()
+        #axes.set_xlim([6, 20])
+       # axes.set_ylim([y, ymax])
+       # plt.ylim(-10, 0.1)
+        plt.show()
+        #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        decision = 'n'
+        if decision is 'y':
+            filename = input('Please specify .eps (1200 dpi) filename: ').strip()
+
+            fig.savefig(filename, format='eps', dpi=1200)
+            print('Plot saved to {}.'.format(filename))
+
 
 
         return None
@@ -1677,14 +1763,119 @@ class configs():
 #a.write('diss_ab_c_config.dat',d)
 #a.compare_cm(d,atomA=3,atomB=6)
 
-#a=configs('diss_long_range.dat')
+#a=configs('diss_a4_long.dat')
 #a1 = a.list()
-#b=configs('diss_ab.dat')
+#b=configs('diss_a5_long.dat')
 #b1=b.list()
-#c=configs('whole_range.dat')
+#c=configs('diss_a6_long.dat')
 #c1=c.list()
-#a.compare(a1,b1,c1,atomA=3,atomB=6)
-#b.compare(a1,b1,c1,atomA=3,atomB=6)
+d=configs('diss_100A.abE')
+d1 = d.list()
+#e=configs('diss_a2d5_long.dat')
+#e1=e.list()
+f=configs('diss_a7_long.dat')
+#f1=f.list()
+#g=configs('diss_a8_long.dat')
+#g1=g.list()
+h=configs('diss_bas_whole.dat')
+h1=h.list()
+#i=configs('diss_purf_whole.dat')
+#i1=i.list()
+#j=configs('diss_nop_msa_whole.dat')
+#j1=j.list()
+#k = configs('diss_a9_long.dat')
+#k1=k.list()
+#l = configs('diss_a20_long.dat')
+#l1=l.list()
+m = configs('diss_com_5t6.dat')
+m1=m.list()
+
+n = configs('c_diss_20A.dat')
+n1=n.list()
+
+o = configs('c_diss_bas.dat')
+o1=o.list()
+
+p = configs('c_diss_long.dat')
+p1 = p.list()
+
+#"Compare long with whole range"
+#color = ['y','c','r','k']
+#marker = ['.', '.', '.', '.']
+#label = ['long a=07', 'bas_whole','switch', 'ab']
+#m.prt()
+#compare = [f1,h1,m1,d1]
+#xmin = 4.5;xmax = 6.5 ;ymin = -300;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -10;ymax2 = 7
+#a.compared(compare,atomA=3,atomB=6,s=50,title='switch',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
+"Compare long with whole range"
+color = ['y','c','k']
+marker = ['.', '.', '.', '.']
+label = ['long a=07','switch', 'ab']
+#m.prt()
+compare = [p1,o1,n1]
+
+xmin =1;xmax = 20 ;ymin = -1200;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -20;ymax2 = 20
+d.compared(compare,atomA=3,atomB=6,s=50,title='c configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
+#compare = [c1,f1,g1,h1,i1,j1,d1]
+#label = ['a0=6', 'a0=7', 'a0=8', 'bas_whole', 'msa_purified_whole', 'msa_nopuri_whole', 'ab']
+#marker = ['.', '.', '.', '.', '.', '.', 'x']
+#color = ['m','c','y','k','g','r','k']
+
+"Compare a0"
+#compare = [c1,f1,g1,k1,l1,d1]
+#label = ['a0=6', 'a0=7', 'a0=8','a0=9','a0=20', 'ab']
+#marker = ['.', '.', '.','.','.' ,'x']
+#color = ['c','g','r','b','k','k']
+#xmin = 6;xmax = 12 ;ymin = -70;ymax = 2 ;xmin2 = xmin;xmax2 = xmax;ymin2 = -20;ymax2 = 20
+#a.compared(compare,atomA=3,atomB=6,s=50,title='a0 comparison',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
+
+#"Compare long with whole range"
+#color = ['y','k','g','r','c','k']
+#marker = ['.', '.', '.', '.', '.', 'x']
+#label = ['a0=7', 'bas_whole', 'msa_purified_whole', 'msa_nopuri_whole','switch', 'ab']
+#compare = [g1,h1,i1,j1,m1,d1]
+#xmin = 2;xmax = 20 ;ymin = -1100;ymax = 10 ;xmin2 = 2;xmax2 = 8;ymin2 = -100;ymax2 = 100
+#a.compared(compare,atomA=3,atomB=6,title='switch',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
+
+
+
+
+
+#compare = [c1,f1,g1,k1,d1]
+#label = ['a0=6', 'a0=7', 'a0=8','a0=9', 'ab']
+#marker = ['.', '.', '.','.' ,'x']
+#color = ['c','g','r','b','k']
+
+
+
+
+
+
+
+
+
+
+#b.compare_cm()
+#b.compare_cm()
+#d=configs('c_config_long.dat')
+#d1 = d.list()
+#e=configs('diss_ab_c_config.dat')
+#e1=e.list()
+#f=configsperperpd('c_configs_whole.dat')
+#f1=f.list()
+#d.compare(d1,e1,f1,atomA=3,atomB=6)
+
+
+
+
 
 #a.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
 #a = configs(train_x,first_n_configs=375)
