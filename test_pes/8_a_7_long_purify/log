@@ -1,0 +1,9 @@
+
+3. Fitting is finished: 
+Overall Root-mean-square fitting error:    0.0000018006 Hartree
+Weighted Root-mean-square fitting error:    0.0000018006 Hartree
+
+ifort -r8 -O -c basis.f90
+ifort -r8 -O -c gradient.f90
+
+0.3952cm-1
