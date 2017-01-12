@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.23
+                                            Version 0.0.24
 
                                 --A Bowman Group Product
                                     """
@@ -542,7 +542,7 @@ class configs():
             configs_new_count = 0
 
             try:
-                molecule_count=int(input('I want new atom ({:d}) to be the old atom number: '.format(molecule_count)))
+                molecule_count=int(input('I want new atom ({:d}) to be the old atom number: '.format(molecule_new_count+1)))
             except:
                 pass
             #molecule_count = self.molecule_count_total - molecule_new_count + 1 #Test arguement(reverse order)
@@ -1717,9 +1717,9 @@ class configs():
                 e_temp.append(config[1][0][0]*aucm)
                 e_temp_ref.append(configss[-1][i][1][0][0]*aucm-e_temp[i])
                 #e2.append(configs2[i][1][0][0]*aucm)
-                self.prt(configss[-1][i])
-                self.prt(config)
-                print(n, dis_temp[i],e_temp_ref[i])
+                #self.prt(configss[-1][i])
+                #self.prt(config)
+                #print(n, dis_temp[i],e_temp_ref[i])
                 #e3.append(configs3[i][1][0][0] * aucm)
                 #ecompare.append(e3[i]-e2[i])
                 i=i+1
@@ -1822,8 +1822,64 @@ class configs():
 # q = configs('c_diss_switch.dat')
 # q1=q.list()
 
+
 #qsort= q.sort(q1,key='distance',subkey1=3,subkey2=6)
 #q.molden(qsort)
+
+
+r = configs('b_diss_long.dat')
+r1 = r.list()
+
+
+
+s = configs('b_diss_bas.dat')
+s1 = s.list()
+
+t = configs('b_diss_switch.dat')
+t1 = t.list()
+
+u = configs('b_diss_ab.dat')
+u1 = u.list()
+
+a = configs('e_diss_long.dat')
+a1 = a.list()
+
+b = configs('e_diss_bas.dat')
+b1 = b.list()
+
+c = configs('e_diss_switch.dat')
+c1 = c.list()
+
+d = configs('e_diss_ab.dat')
+d1 = d.list()
+
+e = configs('arbi_diss_long.dat')
+e1 = e.list()
+
+
+f = configs('arbi_diss_bas.dat')
+f1 = f.list()
+
+g = configs('arb_diss_switch.dat')
+g1 = g.list()
+
+h = configs('arbi_diss_ab.dat')
+h1 = h.list()
+
+
+
+
+# "Compare long with whole range"
+color = ['m','c','r','k']
+marker = ['.', '.', '.', 'x']
+label = ['long a=07','bas','switch', 'ab']
+# #m.prt()
+# compare = [a1,b1,c1,d1]
+compare = [e1,f1,g1,h1]
+xmin =1;xmax = 20 ;ymin = -800;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -10;ymax2 = 10
+u.compared(compare,atomA=3,atomB=6,s=50,title='arbitrary configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
 
 #"Compare long with whole range"
 #color = ['y','c','r','k']
