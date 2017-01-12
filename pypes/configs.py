@@ -1826,7 +1826,7 @@ class configs():
 #qsort= q.sort(q1,key='distance',subkey1=3,subkey2=6)
 #q.molden(qsort)
 
-
+"""
 r = configs('b_diss_long.dat')
 r1 = r.list()
 
@@ -1879,7 +1879,7 @@ compare = [e1,f1,g1,h1]
 xmin =1;xmax = 20 ;ymin = -800;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -10;ymax2 = 10
 u.compared(compare,atomA=3,atomB=6,s=50,title='arbitrary configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
 
-
+"""
 
 #"Compare long with whole range"
 #color = ['y','c','r','k']
