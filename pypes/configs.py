@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.24
+                                            Version 0.0.25
 
                                 --A Bowman Group Product
                                     """
@@ -542,13 +542,17 @@ class configs():
             configs_new_count = 0
 
             try:
-                molecule_count=int(input('I want new atom ({:d}) to be the old atom number: '.format(molecule_new_count+1)))
+                molecule_count=int(input('I want new atom ({:d}) to be the old atom number: '.format(molecule_new_count)))
+                for config_new in configs_new:
+                    configs_new[configs_new_count][2][molecule_new_count - 1] = configs[configs_new_count][2][
+                        molecule_count - 1]
+                    configs_new_count = configs_new_count + 1
             except:
                 pass
             #molecule_count = self.molecule_count_total - molecule_new_count + 1 #Test arguement(reverse order)
-            for config_new in configs_new:
-                configs_new[configs_new_count][2][molecule_new_count-1] =configs[configs_new_count][2][molecule_count-1]
-                configs_new_count = configs_new_count + 1
+
+
+
             molecule_new_count = molecule_new_count + 1
             #        self.prt(configs_new)
         print('New numbering:')
