@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.25
+                                            Version 0.0.26
 
                                 --A Bowman Group Product
                                     """
@@ -1677,7 +1677,7 @@ class configs():
 
         return None
 
-    def compared(self,configss, atomA=3,atomB=6,s=100, title='default',color='b',marker='.',label='default',xmin=None,xmax=None,ymin=None,ymax=None,xmin2=None,xmax2=None,ymin2=None,ymax2=None):
+    def compared(self,configss, atomA=3,atomB=6,s=100, title='',color='b',marker='.',label='default',xmin=None,xmax=None,ymin=None,ymax=None,xmin2=None,xmax2=None,ymin2=None,ymax2=None,loc=None,fontsize=12):
 
         import numpy as np
         import matplotlib.pyplot as plt
@@ -1694,12 +1694,12 @@ class configs():
 
 
 
-        fig = plt.figure()
+        fig = plt.figure(figsize=(10,6 ))
         ax = fig.add_subplot(211)
         axes = plt.gca()
         axes.set_xlim([xmin, xmax])
         plt.ylim(ymin, ymax)
-        ax2 = fig.add_subplot(212)
+        ax2 = fig.add_subplot(212)#,sharex=True)
         axes = plt.gca()
         axes.set_xlim([xmin2, xmax2])
         plt.ylim(ymin2, ymax2)
@@ -1713,27 +1713,30 @@ class configs():
             e_temp = list()
             e_temp_ref = list()
             i = 0
+            j = 0
             for config in configss[n]:
 
-                dis_temp.append(self.distance(config,atomA,atomB))
-                #print(n,dis_temp[i])
 
-                e_temp.append(config[1][0][0]*aucm)
-                e_temp_ref.append(configss[-1][i][1][0][0]*aucm-e_temp[i])
-                #e2.append(configs2[i][1][0][0]*aucm)
-                #self.prt(configss[-1][i])
-                #self.prt(config)
-                #print(n, dis_temp[i],e_temp_ref[i])
-                #e3.append(configs3[i][1][0][0] * aucm)
-                #ecompare.append(e3[i]-e2[i])
-                i=i+1
+                if j%1 == 0 :
+                    #j = j + 1
+                    print(j)
+                    print('OK')
+                    print('i=',i)
+                    #continue
+
+                    dis_temp.append(self.distance(config,atomA,atomB))
+                    e_temp.append(config[1][0][0]*aucm)
+                    e_temp_ref.append(configss[-1][j][1][0][0]*aucm-e_temp[i])
+                    i=i+1
+                j=j+1
             ecompare.append(e_temp_ref)
             dis.append(dis_temp)
             e.append(e_temp)
             #print(dis[n])
+            #ax.plot(dis[n], e[n], s=s, color=color[n],marker=marker[n], label=label[n],facecolors='none',linewidth='2')
 
-            ax.scatter(dis[n], e[n], s=s, color=color[n],marker=marker[n], label=label[n])
-            ax2.scatter(dis[n], ecompare[n], s=s, color=color[n],marker=marker[n], label=label[n])
+            ax.plot(dis[n], e[n], ) #color=color[n],marker=marker[n], label=label[n],facecolors='none',linewidth='2')
+            ax2.scatter(dis[n], ecompare[n], s=s, color=color[n],marker=marker[n], label=label[n],facecolors='none',linewidth='2')
 
 
         #ax.scatter(dis1,e1,s=s,color='g',label='a0=4')
@@ -1743,8 +1746,24 @@ class configs():
         #ax.scatter(dis3,e3,s=s,color='b',label='a0=6')
         #ax.scatter(dis3,e3,s=5, color='b', label='a0=6')
         #plt.ylim(-10, 0.1)
-        ax.legend()
-        ax2.legend()
+
+        ax.legend(loc=4,fontsize=12)
+        ax2.legend(loc=4, fontsize=12)
+        #ax.set_xlabel('$r_5$ ($\AA$)')
+        ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)',fontsize=fontsize)
+        ax.text(4.1,-5,'(a)',fontsize=fontsize)
+        ax2.text(4.1, 5.8, '(b)',fontsize=fontsize)
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label.set_fontsize(fontsize)
+
+        for tick in ax2.xaxis.get_major_ticks():
+            tick.label.set_fontsize(fontsize)
+
+
+        ax2.set_xlabel('$r_5$ ($\AA$)',fontsize=fontsize)
+        ax2.set_ylabel('$\Delta \mathrm{V}_{\mathrm{2b}}$ (cm$^{-1}$)',fontsize=fontsize)
+
+
         #ax2 = fig.add_subplot(212)
         #ax2.scatter(dis1, ecompare, color='r', label='(whole range) - (ab initio)')
         #ax2.legend()
@@ -1754,15 +1773,126 @@ class configs():
        # axes.set_ylim([y, ymax])
        # plt.ylim(-10, 0.1)
         plt.show()
-        decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
-        #decision = 'n'
+        #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        decision = 'y'
         if decision is 'y':
-            filename = input('Please specify .eps (1200 dpi) filename: ').strip()
-
+            #filename = input('Please specify .eps (1200 dpi) filename: ').strip()
+            filename = 'switch.eps'
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
 
 
+
+        return None
+
+    def co2h2o(self,configss, atomA=3,atomB=6,s=100, title='',color='b',marker='.',label='default',xmin=None,xmax=None,ymin=None,ymax=None,xmin2=None,xmax2=None,ymin2=None,ymax2=None,loc=None,fontsize=12):
+
+        import numpy as np
+        import matplotlib.pyplot as plt
+
+        aucm = 219474.63
+
+        n = len(configss)
+        dis = list()
+        e = list()
+
+        for i in range(0,n):
+            configss[i] = self.configs_check(configss[i])
+            configss[i] = self.sort(configss[i], key='distance', subkey1=atomA, subkey2=atomB)
+
+        fig = plt.figure(figsize=(6,8))
+        ax = fig.add_subplot(311)
+        axes = plt.gca()
+        axes.set_xlim([4, 15])
+        plt.ylim(ymin, ymax)
+
+        ax2 = fig.add_subplot(312)#,sharex=True)
+        axes = plt.gca()
+        axes.set_xlim([4, 15])
+        plt.ylim(-200, 10)
+
+        ax3 = fig.add_subplot(313)#,sharex=True)
+        axes = plt.gca()
+        axes.set_xlim([4, 15])
+        plt.ylim(-200, 10)
+
+
+
+        for n in range(0,len(configss)):
+            if (n+1)%3==0:
+                i = 0
+                j = 0
+                e_temp = list()
+                e_temp_ref = list()
+                dis_temp = list()
+                for config in configss[n]:
+                    i = i + 1
+                    if i % 8 == 0:
+                        j = j + 1
+                        print(i, j)
+                        dis_temp.append(self.distance(config, atomA, atomB))
+                        e_temp.append(config[1][0][0] * aucm)
+                dis.append(dis_temp)
+                e.append(e_temp)
+            else:
+                e_temp = list()
+                e_temp_ref = list()
+                dis_temp = list()
+                for config in configss[n]:
+                        dis_temp.append(self.distance(config,atomA,atomB))
+                        e_temp.append(config[1][0][0]*aucm)
+
+                dis.append(dis_temp)
+                e.append(e_temp)
+
+        ax.plot(dis[0], e[0],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
+        ax.plot(dis[1], e[1],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax.scatter(dis[2], e[2], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
+                    linewidth='2')
+        ax.set_title(title)
+        ax.legend(loc=4, fontsize=fontsize)
+        ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)', fontsize=fontsize)
+        ax.text(4.1, -5, '(a)', fontsize=fontsize)
+
+
+        ax2.plot(dis[3], e[3],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
+        ax2.plot(dis[4], e[4],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax2.scatter(dis[5], e[5], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
+                    linewidth='2')
+        ax2.set_title(title)
+        ax2.legend(loc=4, fontsize=fontsize)
+        ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)', fontsize=fontsize)
+        ax2.text(4.1, -5, '(b)', fontsize=fontsize)
+
+        ax3.plot(dis[6], e[6],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
+        ax3.plot(dis[7], e[7],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax3.scatter(dis[8], e[8], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
+                    linewidth='2')
+        ax3.set_title(title)
+        ax3.legend(loc=4, fontsize=fontsize)
+        ax3.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)', fontsize=fontsize)
+        ax3.text(4.1, -5, '(c)', fontsize=fontsize)
+        ax3.set_xlabel('r$_{C\cdots O}$ ($\AA$)', fontsize=14)
+
+
+        for tick in ax.xaxis.get_major_ticks():
+            tick.label.set_fontsize(fontsize)
+
+        for tick in ax2.xaxis.get_major_ticks():
+            tick.label.set_fontsize(fontsize)
+
+        for tick in ax3.xaxis.get_major_ticks():
+            tick.label.set_fontsize(fontsize)
+
+
+        plt.show()
+        #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        decision = 'y'
+        if decision is 'y':
+            #filename = input('Please specify .eps (1200 dpi) filename: ').strip()
+            filename = 'switch.eps'
+            fig.savefig(filename, format='eps', dpi=1200)
+            print('Plot saved to {}.'.format(filename))
 
         return None
 
@@ -1772,37 +1902,17 @@ class configs():
 """Test arguemnts"""
 
 
-#train_x = 'testpoint_v2b_co2h2o.dat'
-#train_x = 'c_configs.dat'
-#train_x = 'pts.dat'
-#train_x = 'dimer_47358.abE'
-#aa = configs(train_x)
-#aa.extract(v2b=True,monomerA='1 2 6',monomerB='3 4 5')
-#a = configs('dimer.abE')
-#b = configs('monomerA.abE')
-#b1 = b.list()
-#c = configs('monomerB.abE')
-#c1 = c.list()
-#d=a.v2b(configs1=b1,configs2=c1)
-#a.write('diss_ab_c_config.dat',d)
-#a.compare_cm(d,atomA=3,atomB=6)
 
-#a=configs('diss_a4_long.dat')
-#a1 = a.list()
-#b=configs('diss_a5_long.dat')
-#b1=b.list()
-#c=configs('diss_a6_long.dat')
-#c1=c.list()
-#d=configs('diss_100A.abE')
-#d1 = d.list()
+c=configs('diss_100A.abE')
+c1 = c.list()
 #e=configs('diss_a2d5_long.dat')
 #e1=e.list()
-#f=configs('diss_a7_long.dat')
-#f1=f.list()
+a=configs('diss_a7_long.dat')
+a1=a.list()
 #g=configs('diss_a8_long.dat')
 #g1=g.list()
-#h=configs('diss_bas_whole.dat')
-#h1=h.list()
+b=configs('diss_bas_whole.dat')
+b1=b.list()
 #i=configs('diss_purf_whole.dat')
 #i1=i.list()
 #j=configs('diss_nop_msa_whole.dat')
@@ -1811,17 +1921,17 @@ class configs():
 #k1=k.list()
 #l = configs('diss_a20_long.dat')
 #l1=l.list()
-# m = configs('diss_com_5t6.dat')
-# m1=m.list()
+#c = configs('diss_com_5t6.dat')
+#c1=c.list()
 #
-# n = configs('c_diss_ab.dat')
-# n1=n.list()
+i = configs('c_diss_ab.dat')
+i1=i.list()
 #
-# o = configs('c_diss_bas.dat')
-# o1=o.list()
+h = configs('c_diss_bas.dat')
+h1=h.list()
 #
-# p = configs('c_diss_long.dat')
-# p1 = p.list()
+g = configs('c_diss_long.dat')
+g1 = g.list()
 #
 # q = configs('c_diss_switch.dat')
 # q1=q.list()
@@ -1830,60 +1940,57 @@ class configs():
 #qsort= q.sort(q1,key='distance',subkey1=3,subkey2=6)
 #q.molden(qsort)
 
-"""
-r = configs('b_diss_long.dat')
-r1 = r.list()
-
-
-
-s = configs('b_diss_bas.dat')
-s1 = s.list()
-
-t = configs('b_diss_switch.dat')
-t1 = t.list()
-
-u = configs('b_diss_ab.dat')
-u1 = u.list()
-
-a = configs('e_diss_long.dat')
-a1 = a.list()
-
-b = configs('e_diss_bas.dat')
-b1 = b.list()
-
-c = configs('e_diss_switch.dat')
-c1 = c.list()
-
-d = configs('e_diss_ab.dat')
+#
+d = configs('b_diss_long.dat')
 d1 = d.list()
-
-e = configs('arbi_diss_long.dat')
+e = configs('b_diss_bas.dat')
 e1 = e.list()
-
-
-f = configs('arbi_diss_bas.dat')
+#t = configs('b_diss_switch.dat')
+#t1 = t.list()
+#
+f = configs('b_diss_ab.dat')
 f1 = f.list()
+#
+# a = configs('e_diss_long.dat')
+# a1 = a.list()
+#
+# b = configs('e_diss_bas.dat')
+# b1 = b.list()
+#
+# c = configs('e_diss_switch.dat')
+# c1 = c.list()
+#
+# d = configs('e_diss_ab.dat')
+# d1 = d.list()
+#
+# e = configs('arbi_diss_long.dat')
+# e1 = e.list()
 
-g = configs('arb_diss_switch.dat')
-g1 = g.list()
 
-h = configs('arbi_diss_ab.dat')
-h1 = h.list()
+#f = configs('arbi_diss_bas.dat')
+#f1 = f.list()
+
+#g = configs('arb_diss_switch.dat')
+#g1 = g.list()
+
+#h = configs('arbi_diss_ab.dat')
+#h1 = h.list()
 
 
 
 
 # "Compare long with whole range"
 color = ['m','c','r','k']
-marker = ['.', '.', '.', 'x']
-label = ['long a=07','bas','switch', 'ab']
-# #m.prt()
-# compare = [a1,b1,c1,d1]
-compare = [e1,f1,g1,h1]
-xmin =1;xmax = 20 ;ymin = -800;ymax = 10 ;xmin2 =2;xmax2 =20;ymin2 = -10;ymax2 = 10
-u.compared(compare,atomA=3,atomB=6,s=50,title='arbitrary configs',color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+marker = ['.', 'd', 's', 'o']
+#label = [r'${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$','$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$','$\mathrm{PES}^{\mathrm{2b}}_{\mathrm{B-PL}}$', '$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$']
+label = [r'${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$','$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$', '$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$']
+#PES${{^{2b}}{_{\mathrm{PL}}}}$
 
-"""
+compare = [a1,b1,c1,d1,e1,f1,g1,h1,i1]
+xmin =4;xmax = 15 ;ymin = -200;ymax = 10 ;xmin2 =4;xmax2 =15;ymin2 = -10;ymax2 = 7
+a.co2h2o(compare,atomA=3,atomB=6,s=200,color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+
+
 
 #"Compare long with whole range"
 #color = ['y','c','r','k']
