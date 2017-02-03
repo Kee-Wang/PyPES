@@ -1845,8 +1845,8 @@ class configs():
                 dis.append(dis_temp)
                 e.append(e_temp)
 
-        ax.plot(dis[0], e[0],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
-        ax.plot(dis[1], e[1],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax.plot(dis[0], e[0],label = '${\mathrm{PES}}^{\mathrm{2b}}-{\mathrm{lr}}$',linewidth=2.0)
+        ax.plot(dis[1], e[1],'--',label='$\mathrm{PES}^{\mathrm{2b}}-\mathrm{sr}$',linewidth=2.0)
         ax.scatter(dis[2], e[2], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
                     linewidth='2')
         ax.set_title(title)
@@ -1855,8 +1855,8 @@ class configs():
         ax.text(4.2, -10, '(a)', fontsize=fontsize)
 
 
-        ax2.plot(dis[3], e[3],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
-        ax2.plot(dis[4], e[4],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax2.plot(dis[3], e[3],label = '${\mathrm{PES}}^{\mathrm{2b}}-{\mathrm{lr}}$',linewidth=2.0)
+        ax2.plot(dis[4], e[4],'--',label='$\mathrm{PES}^{\mathrm{2b}}-\mathrm{sr}$',linewidth=2.0)
         ax2.scatter(dis[5], e[5], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
                     linewidth='2')
         ax2.set_title(title)
@@ -1864,8 +1864,8 @@ class configs():
         ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)', fontsize=fontsize)
         ax2.text(4.2, -10, '(b)', fontsize=fontsize)
 
-        ax3.plot(dis[6], e[6],label = '${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$',linewidth=2.0)
-        ax3.plot(dis[7], e[7],'--',label='$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$',linewidth=2.0)
+        ax3.plot(dis[6], e[6],label = '${\mathrm{PES}}^{\mathrm{2b}}-{\mathrm{lr}}$',linewidth=2.0)
+        ax3.plot(dis[7], e[7],'--',label='$\mathrm{PES}^{\mathrm{2b}}-\mathrm{sr}$',linewidth=2.0)
         ax3.scatter(dis[8], e[8], s=200, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$', facecolors='none',
                     linewidth='2')
         ax3.set_title(title)
@@ -1960,9 +1960,10 @@ class configs():
             print('Plot saved to {}.'.format(filename))
 
 
-# """Test arguemnts"""
+
+"""Test arguemnts"""
 # import matplotlib.pyplot as plt
-# a = configs('51158.fitting')
+# a = configs('gt_6.xyz')
 # b = a.list()
 # E = list()
 # dis = list()
@@ -1971,23 +1972,23 @@ class configs():
 #     #print(config)
 #     E.append(config[1][0][0]*219474.63)
 #     dis.append(a.distance(config,atom_A=3,atom_B=6))
-#     if a.distance(config,atom_A=3,atom_B=6)>=10 and config[1][0][0]>0:
-#         c.append(config)
-# a.molden(c)
+#    # if a.distance(config,atom_A=3,atom_B=6)>=10 and config[1][0][0]>0:
+#    #     c.append(config)
+# #a.molden(c)
 #
 # fig = plt.figure(figsize=(12,12))
 # plt.gcf().subplots_adjust(bottom=0.15)
-# ax = fig.add_subplot(311)
+# ax = fig.add_subplot(111)
 # ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
+# ax.set_xlabel('r$_{\mathrm{Si--O}}$ ($\AA$)')
 # axes = plt.gca()
 #
 # ax.scatter(dis, E, s=2, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
 #                     linewidth='2')
 # plt.gcf().subplots_adjust(bottom=0.15)
-# ax2 = fig.add_subplot(312)
+#ax2 = fig.add_subplot(312)
 # ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax2.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
+# ax2.set_xlabel('r$_{\mathrm{Si--H}}$ ($\AA$)')
 # axes = plt.gca()
 # axes.set_xlim([6, 15])
 # axes.set_ylim([-200, 100])
@@ -1995,7 +1996,7 @@ class configs():
 #                     linewidth='2')
 # ax2 = fig.add_subplot(313)
 # ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax2.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
+# ax2.set_xlabel('r$_{\mathrm{Si--H}}$ ($\AA$)')
 # axes = plt.gca()
 # axes.set_xlim([9, 25])
 # axes.set_ylim([-6, 5])
@@ -2004,6 +2005,76 @@ class configs():
 # plt.show()
 # fig.savefig('v2bdis.eps', format='eps', dpi=1200)
 
+"""This is for v2bgt0"""
+import matplotlib.pyplot as plt
+a = configs('v2bgt0_pes.dat')
+aa = configs('v2bgt0.abE')
+bb = aa.list()
+b = a.list()
+E = list()
+EE = list()
+E0 = list()
+dis = list()
+dis2 = list()
+c = list()
+i=0
+for config in b:
+    #print(config)
+    E.append(config[1][0][0]*219474.63)
+    if aa.distance(bb[i], atom_A=3, atom_B=6) <=3.3 and i%2 ==0:
+        EE.append(bb[i][1][0][0]*219474.63)
+        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
+    elif aa.distance(bb[i], atom_A=3, atom_B=6) <= 4 and i%4==0:
+        EE.append(bb[i][1][0][0] * 219474.63)
+        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
+    elif i%8 == 0:
+        EE.append(bb[i][1][0][0]*219474.63)
+        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
+    E0.append(config[1][0][0]*0)
+    dis.append(a.distance(config,atom_A=3,atom_B=6))
+
+    i = i+1
+    if a.distance(config,atom_A=3,atom_B=6)>=10 and config[1][0][0]>0:
+        c.append(config)
+#a.molden(c)
+
+fig = plt.figure(figsize=(6,4))
+#plt.gcf().subplots_adjust(bottom=0.15)
+ax = fig.add_subplot(111)
+ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
+ax.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
+axes = plt.gca()
+
+ax.plot(dis, E,  color='k',linewidth='2',label='PES')
+ax.scatter(dis2, EE, s=50, color='m', marker='o',linewidth='2 ',label='$ab\ initio$',facecolors='None')
+ax.legend()
+#ax.plot(dis, E0,  color='r', label='y=0',
+                   # linewidth='2')
+plt.gcf().subplots_adjust(bottom=0.15)
+axes = plt.gca()
+#axes.set_xlim([1, 15])
+#axes.set_ylim([-10, 1200])
+plt.tight_layout()
+plt.show()
+fig.savefig('v2bgt0.eps', format='eps', dpi=1200)
+
+#
+# ax2 = fig.add_subplot(212)
+# ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
+# ax2.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
+# axes = plt.gca()
+# axes.set_xlim([4, 12])
+# axes.set_ylim([-2, 100])
+# ax2.plot(dis, E,  color='k',linewidth='2')
+# ax2.scatter(dis2, EE, s=5, color='m', marker='.',linewidth='2')
+#
+# ax2.plot(dis, E0,  color='r', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
+#                     linewidth='2')
+# ax.legend(loc=1, fontsize=12)
+# #ax2.legend(loc=1, fontsize=12)
+# plt.gcf().subplots_adjust(bottom=0.15)
+# plt.show()
+# fig.savefig('v2bgt0.eps', format='eps', dpi=1200)
 
 
 
@@ -2032,7 +2103,7 @@ class configs():
 # # "Compare long with whole range"
 # color = ['m','c','r','k']
 # marker = ['.', 'd', 's', 'o']
-# label = [r'${\mathrm{PES}}^{\mathrm{2b}}_{\mathrm{PL}}$','$\mathrm{PES}^{\mathrm{2b}}_\mathrm{B}$', '$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$']
+# label = [r'${\mathrm{PES}}^{\mathrm{lr}}_{\mathrm{sr}}$','$\mathrm{PES}^{\mathrm{2b}}_\mathrm{sr}$', '$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$']
 #
 # compare = [a1,b1,c1,d1,e1,f1,g1,h1,i1]
 # xmin =4;xmax = 15 ;ymin = -200;ymax = 10 ;xmin2 =4;xmax2 =15;ymin2 = -10;ymax2 = 7
