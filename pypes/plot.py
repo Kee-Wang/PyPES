@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 class plot():
     def version(self):
-        print('Plot Version: 0.0.1')
+        print('Plot Version: 0.0.2')
         return None
 
     def heatmap(self,file,bin=100,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None):
@@ -23,7 +23,7 @@ class plot():
         # fig, ax = plt.subplots( sharey=True, figsize=(7, 4))
         # fig.subplots_adjust(hspace=0.5, left=0.07, right=0.93)
 
-        hb = ax.hexbin(x, y, z, gridsize, cmap='inferno')
+        hb = ax.hexbin(x, y, z, bin, cmap='inferno')
 
         ax.axis([xmin, xmax, ymin, ymax])
         ax.set_title(title)
@@ -34,10 +34,21 @@ class plot():
 
         plt.show()
         return None
-    def scatter(self,file,xtitle='xtitle',ytitle='ytitle',delimiter=' ',cols=(0,1)):
-        """This is to plot simple scatter plot for 2 columns."""
+    def scatter(self,file,col=[0,1],xtitle='xtitle',ytitle='ytitle',title=' '):
+        """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
         import matplotlib.pyplot as plt
+        import numpy as np
         self.version()
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        data = np.loadtxt(file, unpack=True)
+        for i in col:
+            if i == 0:
+                continue
+            plt.scatter(data[0],data[i])
+        #ax.set_title(title)
+        ax.set_xlabel(xtitle)
+        ax.set_ylabel(ytitle)
 
-        plt.plotfile(file, delimiter=delimiter, cols=cols,names=(xtitle, ytitle))
         plt.show()
+        return None
