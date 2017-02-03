@@ -55,13 +55,15 @@ Those are the dependencies that reqired to fully functionalize PyPES.
 4. To uninstall:
 
         `pip uninstall pypes`
+	
+	Notice you might need to reinstall if you just reinstalled your Anaconda.
         
 # How to aviod importing packages every time?
 
 ## You can do so by setting up initialization files.
 
 
-        `cd ~/.bashrc` (go to `~/.bash_profile` if use OS X)
+        `vim ~/.bashrc` (go to `~/.bash_profile` if use OS X)
 
 Add:
 
@@ -89,7 +91,7 @@ Then go to:
 
         `cd /home/kee/.ipython/profile_default` (use your own name)
 
-Then uncomment: 
+Then in file `ipython_config.py` uncomment: 
 
         `c.InteractiveShellApp.exec_PYTHONSTARTUP = True`
 
@@ -99,5 +101,4 @@ Now everytime it would load PYTHONSARTUP (which contains the package yo import)
 ## .bashrc or .bash_profile?
 OSX automattically calls .bash_profile first each time.
 Linux, our cluster Macronode, calls .bashrc each time log in. But alias etc. stored at .bash_profile
-
 
