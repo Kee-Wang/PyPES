@@ -39,5 +39,5 @@ class plot():
         import matplotlib.pyplot as plt
         self.version()
 
-        plt.plotfile(file, delimiter=delimiter, cols=cols,names=(xtitle, ytitle))
+        plt.plotfile(self,file, delimiter=delimiter, cols=cols,names=(xtitle, ytitle))
         plt.show()
