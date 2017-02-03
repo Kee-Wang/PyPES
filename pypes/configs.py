@@ -1647,7 +1647,6 @@ class configs():
 
         return None
 
-
     def compare_cm(self,configs1=False,atomA=3,atomB=6):
 
         import numpy as np
@@ -1896,8 +1895,6 @@ class configs():
 
         return None
 
-
-
     def plotv2b(self, configs=False, binwidth=False):
         import numpy as np
         import matplotlib.pyplot as plt
@@ -1960,152 +1957,5 @@ class configs():
             print('Plot saved to {}.'.format(filename))
 
 
-
-"""Test arguemnts"""
-# import matplotlib.pyplot as plt
-# a = configs('gt_6.xyz')
-# b = a.list()
-# E = list()
-# dis = list()
-# c = list()
-# for config in b:
-#     #print(config)
-#     E.append(config[1][0][0]*219474.63)
-#     dis.append(a.distance(config,atom_A=3,atom_B=6))
-#    # if a.distance(config,atom_A=3,atom_B=6)>=10 and config[1][0][0]>0:
-#    #     c.append(config)
-# #a.molden(c)
-#
-# fig = plt.figure(figsize=(12,12))
-# plt.gcf().subplots_adjust(bottom=0.15)
-# ax = fig.add_subplot(111)
-# ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax.set_xlabel('r$_{\mathrm{Si--O}}$ ($\AA$)')
-# axes = plt.gca()
-#
-# ax.scatter(dis, E, s=2, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
-#                     linewidth='2')
-# plt.gcf().subplots_adjust(bottom=0.15)
-#ax2 = fig.add_subplot(312)
-# ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax2.set_xlabel('r$_{\mathrm{Si--H}}$ ($\AA$)')
-# axes = plt.gca()
-# axes.set_xlim([6, 15])
-# axes.set_ylim([-200, 100])
-# ax2.scatter(dis, E, s=2, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
-#                     linewidth='2')
-# ax2 = fig.add_subplot(313)
-# ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax2.set_xlabel('r$_{\mathrm{Si--H}}$ ($\AA$)')
-# axes = plt.gca()
-# axes.set_xlim([9, 25])
-# axes.set_ylim([-6, 5])
-# ax2.scatter(dis, E, s=2, color='k', marker='.', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
-#                     linewidth='2')
-# plt.show()
-# fig.savefig('v2bdis.eps', format='eps', dpi=1200)
-
-"""This is for v2bgt0"""
-import matplotlib.pyplot as plt
-a = configs('v2bgt0_pes.dat')
-aa = configs('v2bgt0.abE')
-bb = aa.list()
-b = a.list()
-E = list()
-EE = list()
-E0 = list()
-dis = list()
-dis2 = list()
-c = list()
-i=0
-for config in b:
-    #print(config)
-    E.append(config[1][0][0]*219474.63)
-    if aa.distance(bb[i], atom_A=3, atom_B=6) <=3.3 and i%2 ==0:
-        EE.append(bb[i][1][0][0]*219474.63)
-        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
-    elif aa.distance(bb[i], atom_A=3, atom_B=6) <= 4 and i%4==0:
-        EE.append(bb[i][1][0][0] * 219474.63)
-        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
-    elif i%8 == 0:
-        EE.append(bb[i][1][0][0]*219474.63)
-        dis2.append(aa.distance(bb[i], atom_A=3, atom_B=6))
-    E0.append(config[1][0][0]*0)
-    dis.append(a.distance(config,atom_A=3,atom_B=6))
-
-    i = i+1
-    if a.distance(config,atom_A=3,atom_B=6)>=10 and config[1][0][0]>0:
-        c.append(config)
-#a.molden(c)
-
-fig = plt.figure(figsize=(6,4))
-#plt.gcf().subplots_adjust(bottom=0.15)
-ax = fig.add_subplot(111)
-ax.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-ax.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
-axes = plt.gca()
-
-ax.plot(dis, E,  color='k',linewidth='2',label='PES')
-ax.scatter(dis2, EE, s=50, color='m', marker='o',linewidth='2 ',label='$ab\ initio$',facecolors='None')
-ax.legend()
-#ax.plot(dis, E0,  color='r', label='y=0',
-                   # linewidth='2')
-plt.gcf().subplots_adjust(bottom=0.15)
-axes = plt.gca()
-#axes.set_xlim([1, 15])
-#axes.set_ylim([-10, 1200])
-plt.tight_layout()
-plt.show()
-fig.savefig('v2bgt0.eps', format='eps', dpi=1200)
-
-#
-# ax2 = fig.add_subplot(212)
-# ax2.set_ylabel('V$_{\mathrm{2b}}$ (cm$^{-1}$)')
-# ax2.set_xlabel('r$_{\mathrm{C--O}}$ ($\AA$)')
-# axes = plt.gca()
-# axes.set_xlim([4, 12])
-# axes.set_ylim([-2, 100])
-# ax2.plot(dis, E,  color='k',linewidth='2')
-# ax2.scatter(dis2, EE, s=5, color='m', marker='.',linewidth='2')
-#
-# ax2.plot(dis, E0,  color='r', label='$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$',
-#                     linewidth='2')
-# ax.legend(loc=1, fontsize=12)
-# #ax2.legend(loc=1, fontsize=12)
-# plt.gcf().subplots_adjust(bottom=0.15)
-# plt.show()
-# fig.savefig('v2bgt0.eps', format='eps', dpi=1200)
-
-
-
-
-
-# c=configs('diss_100A.abE')
-# c1 = c.list()
-# a=configs('diss_a7_long.dat')
-# a1=a.list()
-# b=configs('diss_bas_whole.dat')
-# b1=b.list()
-# i = configs('c_diss_ab.dat')
-# i1=i.list()
-# h = configs('c_diss_bas.dat')
-# h1=h.list()
-# g = configs('c_diss_long.dat')
-# g1 = g.list()
-# d = configs('b_diss_long.dat')
-# d1 = d.list()
-# e = configs('b_diss_bas.dat')
-# e1 = e.list()
-# f = configs('b_diss_ab.dat')
-# f1 = f.list()
-#
-#
-# # "Compare long with whole range"
-# color = ['m','c','r','k']
-# marker = ['.', 'd', 's', 'o']
-# label = [r'${\mathrm{PES}}^{\mathrm{lr}}_{\mathrm{sr}}$','$\mathrm{PES}^{\mathrm{2b}}_\mathrm{sr}$', '$\mathrm{V}^{\mathrm{2b}}_{ab\ initio}$']
-#
-# compare = [a1,b1,c1,d1,e1,f1,g1,h1,i1]
-# xmin =4;xmax = 15 ;ymin = -200;ymax = 10 ;xmin2 =4;xmax2 =15;ymin2 = -10;ymax2 = 7
-# a.co2h2o(compare,atomA=3,atomB=6,s=200,color=color,marker=marker,label=label,xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax,xmin2=xmin2,xmax2=xmax2,ymin2=ymin2,ymax2=ymax2)
+"""To keep this script as clean as possible, please use another script for test arguments"""
 
