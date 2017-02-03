@@ -1,10 +1,15 @@
 #!/usr/bin/env python
 class plot():
-    def heatmap(self,file='log_cart_compare',gridsize=100,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None):
+    def version(self):
+        print('Plot Version: 0.0.1')
+        return None
+
+    def heatmap(self,file,bin=100,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None):
         """This is to construct 3d heat map. """
 
         import matplotlib.pyplot as plt
         import numpy as np
+        self.version()
 
         (x, y, z) = np.loadtxt(file, unpack=True)
 
@@ -29,3 +34,10 @@ class plot():
 
         plt.show()
         return None
+    def scatter(self,file,xtitle='xtitle',ytitle='ytitle',delimiter=' ',cols=(0,1)):
+        """This is to plot simple scatter plot for 2 columns."""
+        import matplotlib.pyplot as plt
+        self.version()
+
+        plt.plotfile(file, delimiter=delimiter, cols=cols,names=(xtitle, ytitle))
+        plt.show()
