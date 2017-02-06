@@ -2,8 +2,7 @@
 class plot():
     def version(self):
         print('Plot Version: 0.0.3')
-        return None
-
+        return Non
     def heatmap(self,file,bin=100,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None):
         """This is to construct 3d heat map. """
 
