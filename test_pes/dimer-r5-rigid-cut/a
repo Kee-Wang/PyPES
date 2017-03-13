@@ -1,0 +1,5 @@
+#!/bin/bash
+
+make 
+./getpot.x cut.xyz
+
