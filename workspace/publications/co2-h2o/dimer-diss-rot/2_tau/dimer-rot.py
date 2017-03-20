@@ -2,8 +2,8 @@ from pypes.plot import plot
 a = plot()
 a.line(file='rigid',
        file2='rlx',
-       xtitle='Internal rotation angle $\phi$',
-       ytitle='energy (cm$^{-1}$)',
+       xtitle=r'Internal rotation angle $\tau$ (degree)',
+       ytitle='CO$_2$-H$_2$O potential (cm$^{-1}$)',
        label='rigid',
        label2='relaxed',
        legendloc=8,

@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.28
+                                            Version 0.0.29
 
                                 --A Bowman Group Product
                                     """
@@ -1780,6 +1780,21 @@ class configs():
         import numpy as np
         import matplotlib.pyplot as plt
 
+
+
+        SMALL_SIZE = 12
+        MEDIUM_SIZE = 14
+        BIGGER_SIZE = 16
+
+        plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
+        plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
+        plt.rc('axes', labelsize=BIGGER_SIZE)  # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+        plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+        plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
+        plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+
         configs = self.configs_check(configs)
 
         if configs is not False:
@@ -1790,10 +1805,10 @@ class configs():
         else:
             energy_array = self.energy_array_cm
         fig = plt.figure(figsize=(6,4))
-        plt.gcf().subplots_adjust(bottom=0.15)
+        #plt.gcf().subplots_adjust(bottom=0.15)
         ax = fig.add_subplot(111)
         axes = plt.gca()
-        axes.set_xlim([-2000, 4000])
+        axes.set_xlim([-1500, 3100])
         #plt.ylim(0, ymax)
 
         x = energy_array
@@ -1817,27 +1832,94 @@ class configs():
         (count, x_tic) = np.histogram(x, numBins)
 
         count.sort()
-        # print(count)
+
         count_highest = count[-1]
-        ax.set_xlabel("Energy(cm$^{-1}$)",fontsize=12)
-        ax.set_ylabel("Count",fontsize=12)
-        # ax.set_title("Original data")
-        #ax.annotate('E_min:\n{:10.2f}'.format(E_min), xy=(E_min, 0), xytext=(E_min, count_highest * 0.2),
-         #           arrowprops=dict(arrowstyle="->"))
-        #ax.annotate('E_max:\n{:10.2f}'.format(E_max), xy=(E_max, 0),
-        #            xytext=(E_max - (E_max - E_min) * 0.1, count_highest * 0.2), arrowprops=dict(arrowstyle="->"))
-        # ax.xlabels[-1] = '300+'
+        ax.set_xlabel("V$_{\mathrm{2b}}$ (cm$^{-1}$)")
+        ax.set_ylabel("Count")
+
         fig = plt.gcf()
+        plt.tight_layout()
         plt.show()
         #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
         decision = 'y'
         if decision is 'y':
-            filename = 'v2b.eps'#input('Please specify .eps (1200 dpi) filename: ').strip()
+            filename = 'v2b-energy-distribution.eps'#input('Please specify .eps (1200 dpi) filename: ').strip()
 
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
 
+    def plotevsr_for_publication(self, configs1,configs2, atom_A=3, atom_B = 6, binwidth=False):
+        "Plot the energy versus r_co distribution"
+        import numpy as np
+        import matplotlib.pyplot as plt
 
+
+
+        SMALL_SIZE = 12
+        MEDIUM_SIZE = 14
+        BIGGER_SIZE = 16
+
+        plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
+        plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
+        plt.rc('axes', labelsize=BIGGER_SIZE)  # fontsize of the x and y labels
+        plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+        plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+        plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
+        plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
+
+        configs1 = self.configs_check(configs1)
+        configs2 = self.configs_check(configs2)
+
+
+        energy_array1 = list()
+        energy_array2 = list()
+        distance_array1 = list()
+        distance_array2 = list()
+        for config in configs1:
+            energy_array1.append(config[1][0][0] * self.hartree_to_cm)
+            distance_array1.append(self.distance(config,atom_A,atom_B))
+        for config in configs2:
+            energy_array2.append(config[1][0][0] * self.hartree_to_cm)
+            distance_array2.append(self.distance(config,atom_A,atom_B))
+
+        fig = plt.figure(figsize=(6,4))
+        #plt.gcf().subplots_adjust(bottom=0.15)
+        ax1 = fig.add_subplot(111)
+        #ax2 = fig.add_subplot(212)
+        axes = plt.gca()
+        axes.set_xlim([1.5, 17])
+        axes.set_ylim([-2000, 4300])
+        #axes.set_xlim([5, 24])
+        #axes.set_ylim([-100, 50])
+        #plt.ylim(0, ymax)
+
+
+        # x = np.random.normal(0,1,1000)
+        # print(x)
+        ax1.scatter(distance_array1,energy_array1, s=1, c='k',marker='.',linewidths=0,edgecolors=None)
+        left, bottom, width, height = [0.42, 0.52, 0.50, 0.4]
+        ax2 = fig.add_axes([left, bottom, width, height])
+        axes = plt.gca()
+        axes.set_xlim([5, 23])
+        axes.set_ylim([-150, 60])
+        ax2.scatter(distance_array2, energy_array2, s=1, c='m', marker='.', linewidths=0, edgecolors=None)
+
+
+        ax1.set_xlabel(r'$R_{\mathrm{CO}}$ ($\mathrm{\AA}$)')
+        ax1.set_ylabel(r'V$_{\mathrm{2b}}$  (cm$^{-1}$)')
+        ax1.text(11, -1500, 'fit-SR database', fontsize=14)
+        ax2.text(13, -120, 'fit-LR database', fontsize=14,color='m')
+        fig = plt.gcf()
+        plt.tight_layout()
+        plt.show()
+        #decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+        decision = 'y'
+        if decision is 'y':
+            filename = 'v2b-energy-vs-rco.eps'#input('Please specify .eps (1200 dpi) filename: ').strip()
+
+            fig.savefig(filename, format='eps', dpi=1200)
+            print('Plot saved to {}.'.format(filename))
 
 """To keep this script as clean as possible, please use another script for test arguments"""
 

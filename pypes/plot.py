@@ -19,10 +19,10 @@ class plot():
         plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
 
     def version(self):
-        print('Plot Version: 0.0.6 --By Kee')
+        print('Plot Version: 0.0.7 --By Kee')
         return None
 
-    def heatmap(self,file=None,bin=100,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None,save=None):
+    def heatmap(self,file=None,gridsize=100,bins=None,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None,save=None,linewidths=None,sizex=6,sizey=4):
         """This is to construct 3d heat map. """
         import matplotlib.pyplot as plt
         import numpy as np
@@ -34,11 +34,20 @@ class plot():
         xmax = x.max()
         ymin = y.min()
         ymax = y.max()
-        fig = plt.figure()
+        #Temp
+        zmin = z.min()
+        print('zmin is {:f}'.format(zmin))
+        #Temp
+        #fig = plt.figure()
+        fig = plt.figure(figsize=(sizex, sizey))
         ax = fig.add_subplot(111)
+        axes = plt.gca()
+       # ax = fig.add_subplot(111)
 
-        hb = ax.hexbin(x, y, z, bin, cmap='inferno')
-
+        hb = ax.hexbin(x, y, z, gridsize=gridsize,bins=bins,cmap='inferno',linewidths=linewidths)
+        #hb = ax.pcolor(x,y,z)
+        #ax = sns.heatmap((x,y,z))
+        #hb = ax.imshow((x,y,z), cmap='hot', interpolation='nearest')
         ax.axis([xmin, xmax, ymin, ymax])
         ax.set_title(title)
         ax.set_xlabel(xtitle)
@@ -153,5 +162,53 @@ class plot():
             fig.savefig(save, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(save))
 
+
+        return None
+    def contour(self,file=None,gridsize=100,bins=None,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None,save=None,linewidths=None,sizex=6,sizey=4):
+        """This is to construct 2d contour map. """
+        import matplotlib.pyplot as plt
+        import numpy as np
+        from scipy.interpolate import griddata
+        from numpy import linspace, meshgrid
+        self.version()
+
+
+        (x, y, z) = np.loadtxt(file, unpack=True)
+        xmin = x.min()
+        xmax = x.max()
+        ymin = y.min()
+        ymax = y.max()
+        #Temp
+        zmin = z.min()
+        print('zmin is {:f}'.format(zmin))
+        #Temp
+        #fig = plt.figure()
+        fig = plt.figure(figsize=(sizex, sizey))
+        ax = fig.add_subplot(111)
+        axes = plt.gca()
+       # ax = fig.add_subplot(111)
+        def grid(x, y, z, resX=100, resY=100):
+            "Convert 3 column data to matplotlib grid"
+            xi = linspace(min(x), max(x), resX)
+            yi = linspace(min(y), max(y), resY)
+            Z = griddata((x, y), z, (xi[None,:], yi[:,None]), method='linear')
+            X, Y = meshgrid(xi, yi)
+            return X, Y, Z
+
+        X,Y,Z = grid(x,y,z)
+
+        #levels = [100, 1000, 1500, 2000, 3000, 3500]
+        cp = plt.contour(X, Y, Z, 8,colors='black')
+        plt.clabel(cp, inline=1,fmt = '%.1f',
+                   fontsize=12)
+        #plt.colorbar(cp)
+
+
+        ax.axis([xmin, xmax, ymin, ymax])
+        ax.set_title(title)
+        ax.set_xlabel(xtitle)
+        ax.set_ylabel(ytitle)
+
+        self.save(fig,save)
 
         return None
