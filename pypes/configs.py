@@ -1921,13 +1921,20 @@ class configs():
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
 
-    def pot_add_all(self,configs):
+    def pot_sum(self,configs):
         """Add all potentials (for v2b and v3b) for configs in clathrate"""
         configs = self.configs_check(configs)
         pot = 0
         for config in configs:
             pot = pot + config[1][0][0]
         print('Overall potential is {:14.8f}'.format(pot))
+    def pot_avg(self,configs):
+        """Add all potentials (for v2b and v3b) for configs in clathrate"""
+        configs = self.configs_check(configs)
+        pot = 0
+        for config in configs:
+            pot = pot + config[1][0][0]
+        print('Overall potential is {:14.8f}'.format(pot/len(configs)))
 
 
 """To keep this script as clean as possible, please use another script for test arguments"""
