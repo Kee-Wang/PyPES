@@ -220,7 +220,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.29
+                                            Version 0.0.30
 
                                 --A Bowman Group Product
                                     """
@@ -1935,6 +1935,24 @@ class configs():
         for config in configs:
             pot = pot + config[1][0][0]
         print('Overall potential is {:14.8f}'.format(pot/len(configs)))
+    def sort_unique(self,configs):
+        """Sorted out all configs with unique potential"""
+        configs = self.configs_check(configs)
+        sort_configs = configs.sort()
+        uconfig = list()
+        pot = 0
+
+        for config in  sort_configs:
+            if config[1][0][0] == pot:
+                continue
+            else:
+                uconfig.append(config)
+                pot = config[1][0][0]
+        print('There are {:d} configs with unique values in all {:d} configs.'.format(len(uconfig),len(configs)))
+
+        return uconfig
+
+
 
 
 """To keep this script as clean as possible, please use another script for test arguments"""

@@ -95,7 +95,7 @@ class plot():
         self.save(fig, save)
 
         return None
-    def line(self,file=None,file2=None,data=None,xmin=None,xmax=None,ymin=None,ymax=None,col=[0,1],col2=[0,1],xtitle='xtitle',ytitle='ytitle',title=' ',save=None,linewidth=2,label=None,label2=None,legendloc=None,sizex=6,sizey=4):
+    def line(self,file=None,file2=None,data=None,xmin=None,xmax=None,ymin=None,ymax=None,col=(0,1),col2=(0,1),xtitle='xtitle',ytitle='ytitle',title=' ',save=None,linewidth=2,label=None,label2=None,legendloc=None,sizex=6,sizey=4):
         """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
         import matplotlib.pyplot as plt
         import numpy as np
@@ -109,7 +109,7 @@ class plot():
             axes.set_ylim([ymin, ymax])
 
         if file is not None:
-            data = np.loadtxt(file, unpack=True) #Read columns
+            data = np.loadtxt(file,usecols=col, unpack=True) #Read columns
         for i in col2:
             if i == 0:
                 continue
@@ -117,7 +117,7 @@ class plot():
 
 
         if file2 is not None:
-            data2 = np.loadtxt(file2, unpack=True)
+            data2 = np.loadtxt(file2,usecols=col2, unpack=True)
             for i in col2:
                 if i == 0:
                     continue
