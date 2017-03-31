@@ -1938,7 +1938,7 @@ class configs():
     def sort_unique(self,configs):
         """Sorted out all configs with unique potential"""
         configs = self.configs_check(configs)
-        sort_configs = configs.sort()
+        sort_configs = self.sort()
         uconfig = list()
         pot = 0
 
