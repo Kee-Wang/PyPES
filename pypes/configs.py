@@ -139,9 +139,12 @@ class configs():
 
             if config_count == 2:
                 try:
-                    energy = [float(line.split()[0])] #Record the energy.
+                    if len(line) is 0:
+                        energy = [0]
+                    else:
+                        energy = [float(line.split()[0])] #Record the energy.
                 except:
-                    energy = [0]
+
                     print("Type error: energy in line "+line_count+" is : "+line) #Check energy type
                     #break
 
@@ -221,7 +224,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.31
+                                            Version 0.0.32
 
                                 --A Bowman Group Product
                                     """
