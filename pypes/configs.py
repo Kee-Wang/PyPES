@@ -110,9 +110,9 @@ class configs():
         blank_line_count = 0
         for line in f:
             line = line.strip() #The delete the newline character
-            if len(line) == 0:
-                blank_line_count += 1
-                continue
+            #if len(line) == 0: #Comment out so that don't can if E is 0
+               # blank_line_count += 1
+                #continue
             line_count = line_count + 1
             if line_count == 1: # This is number of atoms.  #Check type
                 if line.isdigit():
@@ -141,6 +141,7 @@ class configs():
                 try:
                     energy = [float(line.split()[0])] #Record the energy.
                 except:
+                    energy = [0]
                     print("Type error: energy in line "+line_count+" is : "+line) #Check energy type
                     #break
 
@@ -220,7 +221,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.30
+                                            Version 0.0.31
 
                                 --A Bowman Group Product
                                     """
