@@ -185,6 +185,7 @@ class configs():
         self.molecule_count_total = molecule_count_total
         self.line_count = line_count
 
+        #self.configs_list = self.list()
         #self.configs_sorted = self.sort(configs)
         #self.energy_lowest=self.energy_array_sorted[0]
         #self.energy_highest=self.energy_array_sorted[-1]
@@ -224,7 +225,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.32
+                                            Version 0.0.33
 
                                 --A Bowman Group Product
                                     """
@@ -573,7 +574,7 @@ class configs():
         if configs is False:
             if silence is not True:
                 print('Using original list.')
-            return self.configs_sorted
+            return self.configs
         else:
             try:
                 check = configs[0][0][0]#Check if the list has only one configuration but one layer smaller
@@ -1596,9 +1597,9 @@ class configs():
 
         i = 0
         for config in configs:
-            print(config[1][0][0],'-',configs1[i][1][0][0],'-',configs2[i][1][0][0])
+            #print(config[1][0][0],'-',configs1[i][1][0][0],'-',configs2[i][1][0][0])
             config[1][0][0] = config[1][0][0]- configs1[i][1][0][0] - configs2[i][1][0][0]
-            print(config[1][0][0])
+            #print(config[1][0][0])
             i += 1
 
         return configs
@@ -1941,7 +1942,7 @@ class configs():
         for config in configs:
             pot = pot + config[1][0][0]
         print('Overall potential is {:14.8f}'.format(pot/len(configs)))
-    def sort_unique(self,configs):
+    def sort_unique(self, configs = False):
         """Sorted out all configs with unique potential"""
         configs = self.configs_check(configs)
         sort_configs = self.sort()
