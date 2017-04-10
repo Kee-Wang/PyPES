@@ -185,12 +185,12 @@ class configs():
         self.molecule_count_total = molecule_count_total
         self.line_count = line_count
 
-        #self.configs_list = self.list()
-        #self.configs_sorted = self.sort(configs)
-        #self.energy_lowest=self.energy_array_sorted[0]
-        #self.energy_highest=self.energy_array_sorted[-1]
-        #self.energy_lowest_cm = self.energy_array_sorted_cm[0]
-        #self.energy_highest_cm = self.energy_array_sorted_cm[-1]
+        return_configs = self.list()
+        self.configs_sorted = self.sort(configs)
+        self.energy_lowest=self.energy_array_sorted[0]
+        self.energy_highest=self.energy_array_sorted[-1]
+        self.energy_lowest_cm = self.energy_array_sorted_cm[0]
+        self.energy_highest_cm = self.energy_array_sorted_cm[-1]
         print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
         print('Configuration check finished!')
         #print('**Status: File reading finshed.\n')
@@ -202,6 +202,7 @@ class configs():
 
 
         f.close()
+        return return_configs
 
     def todo(self):
         print("""
@@ -225,7 +226,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.33
+                                            Version 0.0.34
 
                                 --A Bowman Group Product
                                     """
