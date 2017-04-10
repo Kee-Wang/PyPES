@@ -202,7 +202,7 @@ class configs():
 
 
         f.close()
-        return return_configs
+
 
     def todo(self):
         print("""
@@ -1365,6 +1365,7 @@ class configs():
         molpro = '1_submit_sub.csh'
         pbs = '1_submit_sub.que'
         extract = '2_extractE_sub.csh'
+        print('Warning!!!!Use unsorted list to do extract')
 
         lst = self.nodelist(configs)  # It splits file into nodes and return number of configs as list
         print(lst)
