@@ -185,11 +185,11 @@ class configs():
         self.molecule_count_total = molecule_count_total
         self.line_count = line_count
 
-        self.configs_sorted = self.sort(configs)
-        self.energy_lowest=self.energy_array_sorted[0]
-        self.energy_highest=self.energy_array_sorted[-1]
-        self.energy_lowest_cm = self.energy_array_sorted_cm[0]
-        self.energy_highest_cm = self.energy_array_sorted_cm[-1]
+        #self.configs_sorted = self.sort(configs)
+        #self.energy_lowest=self.energy_array_sorted[0]
+        #self.energy_highest=self.energy_array_sorted[-1]
+        #self.energy_lowest_cm = self.energy_array_sorted_cm[0]
+        #self.energy_highest_cm = self.energy_array_sorted_cm[-1]
         print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
         print('Configuration check finished!')
         #print('**Status: File reading finshed.\n')
@@ -1037,7 +1037,7 @@ class configs():
         except:
             pass
 
-    def v2b(self,configs=False):
+    def v2b_configs(self,configs=False):
         """It returns configs of two monomers"""
 
         configs = self.configs_check(configs)
@@ -1596,7 +1596,9 @@ class configs():
 
         i = 0
         for config in configs:
+            print(config[1][0][0],'-',configs1[i][1][0][0],'-',configs2[i][1][0][0])
             config[1][0][0] = config[1][0][0]- configs1[i][1][0][0] - configs2[i][1][0][0]
+            print(config[1][0][0])
             i += 1
 
         return configs
