@@ -96,6 +96,7 @@ class configs():
             Notice: consistency error includes the existence error because not existent is also considered as inconsistent.
         '''
         """Constants"""
+        import copy
         self.hartree_to_cm = 219474.63
 
 
@@ -178,14 +179,14 @@ class configs():
 
 
         self.blank_line_count = blank_line_count
-        self.configs = configs
+        self.configs = copy.deepcopy(configs)
         self.dip = dip
         self.configs_count = configs_count
         self.train_x = train_x
         self.molecule_count_total = molecule_count_total
         self.line_count = line_count
 
-        return_configs = self.list()
+
         self.configs_sorted = self.sort(configs)
         self.energy_lowest=self.energy_array_sorted[0]
         self.energy_highest=self.energy_array_sorted[-1]
@@ -226,7 +227,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.34
+                                            Version 0.0.35
 
                                 --A Bowman Group Product
                                     """
