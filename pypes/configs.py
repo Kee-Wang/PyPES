@@ -1931,20 +1931,22 @@ class configs():
             fig.savefig(filename, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(filename))
 
-    def pot_sum(self,configs):
+    def pot_sum(self,configs=None):
         """Add all potentials (for v2b and v3b) for configs in clathrate"""
         configs = self.configs_check(configs)
         pot = 0
         for config in configs:
             pot = pot + config[1][0][0]
         print('Overall potential is {:14.8f}'.format(pot))
-    def pot_avg(self,configs):
+        return pot
+    def pot_avg(self,configs=None):
         """Add all potentials (for v2b and v3b) for configs in clathrate"""
         configs = self.configs_check(configs)
         pot = 0
         for config in configs:
             pot = pot + config[1][0][0]
         print('Overall potential is {:14.8f}'.format(pot/len(configs)))
+        return pot/len(configs)
     def sort_unique(self, configs = False):
         """Sorted out all configs with unique potential"""
         configs = self.configs_check(configs)
