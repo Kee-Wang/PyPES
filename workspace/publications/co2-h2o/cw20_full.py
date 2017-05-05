@@ -50,11 +50,11 @@ def line(file=None, file2=None, data=None, xmin=None, xmax=None, ymin=None, ymax
     ax.set_xlabel(xtitle)
     ax.set_ylabel(ytitle)
     ax.legend(loc=legendloc)
-    ax.annotate(r'${\nu}_{\mathrm{b1}}$ and $\nu_{\mathrm{b2}}$', xy=(co2_bend1, 4.7), xytext=(500-135,6.5),
+    ax.annotate(r'${\nu}_{\mathrm{b}}$ (CO$_2$)', xy=(co2_bend1, 4.7), xytext=(500-135,6.5),
                 arrowprops=dict(arrowstyle="->"))
-    ax.annotate(r'$\nu_1$ ', xy=(co2_sym, 1.1), xytext=(co2_sym-65,2.7),
+    ax.annotate(r'$\nu_{\mathrm{sym}}$(CO$_2$)', xy=(co2_sym, 1.1), xytext=(co2_sym-300,2.7),
                 arrowprops=dict(arrowstyle="->"))
-    ax.annotate(r'$\nu_3$ ', xy=(co2_asym, 1.1), xytext=(co2_asym-65,2.7),
+    ax.annotate(r'$\nu_{\mathrm{asym}}$(CO$_2$)', xy=(co2_asym, 1.1), xytext=(co2_asym-300,2.7),
                 arrowprops=dict(arrowstyle="->"))
     #ax.annotate(' ', xy=(co2_bend2, 4.7), xytext=(500,7),
     #            arrowprops=dict(arrowstyle="->"))

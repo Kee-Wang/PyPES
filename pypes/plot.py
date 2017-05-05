@@ -147,7 +147,7 @@ class plot():
         """The module is to show and save figure"""
 
         import matplotlib.pylab as plt
-
+        #fig.set_tight_layout(True)
         plt.tight_layout()
         fig = plt.gcf()
         plt.show()
@@ -197,10 +197,11 @@ class plot():
 
         X,Y,Z = grid(x,y,z)
 
-        #levels = [100, 1000, 1500, 2000, 3000, 3500]
-        cp = plt.contour(X, Y, Z, 8,colors='black')
-        plt.clabel(cp, inline=1,fmt = '%.1f',
-                   fontsize=12)
+        levels = [50,500, 1500, 2000, 3000, 3500]
+        #cp = plt.contour(X, Y, Z, 6,colors='black')
+        cp = plt.contour(X, Y, Z, levels, colors='black')
+        plt.clabel(cp, inline=1,fmt = '%.0f',
+                   fontsize=10)
         #plt.colorbar(cp)
 
 

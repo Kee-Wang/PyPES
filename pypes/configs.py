@@ -1945,7 +1945,7 @@ class configs():
         pot = 0
         for config in configs:
             pot = pot + config[1][0][0]
-        print('Overall potential is {:14.8f}'.format(pot/len(configs)))
+        print('Average potential is {:14.8f}'.format(pot/len(configs)))
         return pot/len(configs)
     def sort_unique(self, configs = False):
         """Sorted out all configs with unique potential"""
