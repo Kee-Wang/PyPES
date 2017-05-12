@@ -147,6 +147,7 @@ class configs():
                 except:
 
                     print("Type error: energy in line "+str(line_count)+" is : "+str(line)) #Check energy type
+                    energy = [0] 
                     #break
 
 
