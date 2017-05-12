@@ -155,7 +155,7 @@ class configs():
                         dipole = [float(dip) for dip in line.split()[1:]] #Record dipole.
                         print("Dimension error: Dipole dimension in line "+str(line_count)+" is : "+str(len(dipole)))
                 except:
-                    print("Type error: Dipole in line "+str(line_count)+" is: "+line) #Check energy type
+                    print("Type error: Dipole in line "+str(line_count)+" is: "+str(line)) #Check energy type
                     #break
 
 
