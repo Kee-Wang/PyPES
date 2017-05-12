@@ -910,7 +910,10 @@ class configs():
             energy_array = self.energy_array_cm
 
         if ref is True:
-            energy_array = energy_array-energy_array[0]
+            count_array = 0
+            for num in energy_array:
+                energy_array[count_array] = energy_array[count_array]-energy_array[0]
+                count_array = count_array + 1
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
