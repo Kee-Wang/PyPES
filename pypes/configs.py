@@ -903,17 +903,21 @@ class configs():
 
         if configs is not False:
             energy_array = list()
+            configs = self.sort(configs)
             for config in configs:
                 energy_array.append(config[1][0][0]* self.hartree_to_cm)
-            #print(energy_array)
+
         else:
             energy_array = self.energy_array_cm
 
         if ref is True:
-            count_array = 0
-            for num in energy_array:
-                energy_array[count_array] = energy_array[count_array]-energy_array[0]
-                count_array = count_array + 1
+            count_array = len(energy_array)-1
+            for num in energy_array[::-1]:
+                energy_array[count_array] = energy_array[count_array] - energy_array[0]
+                count_array = count_array - 1
+                print(energy_array[count_array])
+
+        print(energy_array)
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
