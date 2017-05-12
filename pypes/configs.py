@@ -133,9 +133,9 @@ class configs():
                 configs_count = configs_count + 1
                 try:
                     if int(line) != molecule_count_total:
-                        print('Consistency error: number of atoms in line: ' + str(line_count)+' is : ' + line) #Check consistency
+                        print('Consistency error: number of atoms in line: ' + str(line_count)+' is : ' + str(line)) #Check consistency
                 except:
-                    print("Type error: number of atoms in line "+line_count+" is : "+line) #Check input
+                    print("Type error: number of atoms in line "+str(line_count)+" is : "+str(line)) #Check input
                     #break
 
             if config_count == 2:
@@ -146,7 +146,7 @@ class configs():
                         energy = [float(line.split()[0])] #Record the energy.
                 except:
 
-                    print("Type error: energy in line "+line_count+" is : "+line) #Check energy type
+                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)) #Check energy type
                     #break
 
 
