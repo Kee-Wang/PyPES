@@ -12,8 +12,11 @@ for line in f:
 
     if line[0] == 'Current':
         line_num.append(count)
+text[line_num[-1]+2] = text[line_num[-1]+2].split('=')[1]
+#print(text[line_num[-1]+2].split('=')[1])
 for num in range(line_num[-1]+1,line_num[-1]+14):
     print(text[num])
+
     g.write(text[num])
 
 f.close()
