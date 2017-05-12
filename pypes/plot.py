@@ -164,7 +164,7 @@ class plot():
 
 
         return None
-    def contour(self,file=None,gridsize=100,bins=None,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None,save=None,linewidths=None,sizex=6,sizey=4):
+    def contour(self,file=None,gridsize=100,bins=None,xtitle='xtitle',ytitle='ytitle',ztitle='ztitle',title=None,save=None,linewidths=None,sizex=6,sizey=4,manual_locations=False):
         """This is to construct 2d contour map. """
         import matplotlib.pyplot as plt
         import numpy as np
@@ -197,11 +197,13 @@ class plot():
 
         X,Y,Z = grid(x,y,z)
 
-        levels = [50,500, 1500, 2000, 3000, 3500]
-        #cp = plt.contour(X, Y, Z, 6,colors='black')
-        cp = plt.contour(X, Y, Z, levels, colors='black')
+        #levels = [500,1000, 1500, 2000, 3000, 3500]
+        cp = plt.contour(X, Y, Z,8,colors='black')
+        #cp = plt.contour(X, Y, Z, levels, colors='black')
+
+
         plt.clabel(cp, inline=1,fmt = '%.0f',
-                   fontsize=10)
+                   fontsize=12,manual = manual_locations)
         #plt.colorbar(cp)
 
 
