@@ -11,10 +11,8 @@ for line in f:
         continue
 
     if line[0] == 'Current':
-        print(line)
         line_num.append(count)
-print(line_num)
-for num in range(line_num[-1]+1,line_num[-1]+15):
+for num in range(line_num[-1]+1,line_num[-1]+14):
     print(text[num])
     g.write(text[num])
 
