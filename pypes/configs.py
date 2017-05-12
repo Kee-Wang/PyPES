@@ -227,7 +227,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.35
+                                            Version 0.0.36
 
                                 --A Bowman Group Product
                                     """
@@ -894,7 +894,7 @@ class configs():
 
         return expansion #This is expansion of alias
 
-    def plot(self,configs = False,binwidth=False):
+    def plot(self,configs = False,binwidth=False,ref=False):
         import numpy as np
         import matplotlib.pyplot as plt
 
@@ -907,6 +907,9 @@ class configs():
             #print(energy_array)
         else:
             energy_array = self.energy_array_cm
+
+        if ref is True:
+            energy_array = energy_array-energy_array[0]
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
