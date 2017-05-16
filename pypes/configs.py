@@ -169,7 +169,8 @@ class configs():
                 try:
                     coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
                 except:
-                    print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line)
+                    print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line +' .Setting to 0')
+                    coordinate = [0, 0, 0]
                 atom_coord = [element,coordinate]
                 molecule_coord.append(atom_coord)
 
