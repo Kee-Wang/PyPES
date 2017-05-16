@@ -165,9 +165,11 @@ class configs():
                 element = line.split()[0]
 
                 if element != element_1[molecule_count-1] and len(element) != 0: # Element check type and existence
-                    print('Consistency error: atom in line: ' + str(line_count)+' is: '+line)
-
-                coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
+                    print('Consistency error: atom in line: ' + str(line_count)+' is: '+str(line))
+                try:
+                    coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
+                except:
+                    print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line)
                 atom_coord = [element,coordinate]
                 molecule_coord.append(atom_coord)
 
@@ -228,7 +230,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.36
+                                            Version 0.0.37
 
                                 --A Bowman Group Product
                                     """
