@@ -116,15 +116,6 @@ class configs():
                 #continue
             line_count = line_count + 1
 
-            if config_count == 2: #Check energy first. If wrong, then skip.
-                if len(line) is 0:
-                    energy = [0]
-                elif line.isdigit():
-                    energy = [float(line.split()[0])] #Record the energy.
-                else:
-                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)+'. Skipping.') #Check energy type
-                    continue
-                    #break
 
 
             if line_count == 1: # This is number of atoms.  #Check type
@@ -135,7 +126,20 @@ class configs():
                 else:
                     print("Type error: molecule number in line "+str(line_count)+" is : "+line)#Check type
 
+
+
             config_count = (line_count - 1) % config_count_totol + 1
+
+            if config_count == 2: #Check energy first. If wrong, then skip.
+                if len(line) is 0:
+                    energy = [0]
+                elif line.isdigit():
+                    energy = [float(line.split()[0])] #Record the energy.
+                else:
+                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)+'. Skipping.') #Check energy type
+                    continue
+                    #break
+
 
             if configs_count == 1 and config_count >= 3 and config_count <= molecule_count_total+2:
                 element_1.append(line.split()[0]) #Read elements in first config
