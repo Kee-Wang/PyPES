@@ -109,6 +109,7 @@ class configs():
         configs = list()
         dipole = list()
         blank_line_count = 0
+        energy = list()
         for line in f:
             line = line.strip() #The delete the newline character
             #if len(line) == 0: #Comment out so that don't can if E is 0
