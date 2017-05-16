@@ -115,6 +115,18 @@ class configs():
                # blank_line_count += 1
                 #continue
             line_count = line_count + 1
+
+            if config_count == 2: #Check energy first. If wrong, then skip.
+                if len(line) is 0:
+                    energy = [0]
+                elif line.isdigit():
+                    energy = [float(line.split()[0])] #Record the energy.
+                else:
+                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)+'. Skipping.') #Check energy type
+                    continue
+                    #break
+
+
             if line_count == 1: # This is number of atoms.  #Check type
                 if line.isdigit():
                     molecule_count_total = int(line)
@@ -138,17 +150,7 @@ class configs():
                     print("Type error: number of atoms in line "+str(line_count)+" is : "+str(line)) #Check input
                     #break
 
-            if config_count == 2:
-                try:
-                    if len(line) is 0:
-                        energy = [0]
-                    else:
-                        energy = [float(line.split()[0])] #Record the energy.
-                except:
 
-                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)) #Check energy type
-                    energy = [0]
-                    #break
 
 
                 try:
@@ -231,7 +233,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.37
+                                            Version 0.0.38
 
                                 --A Bowman Group Product
                                     """
@@ -920,7 +922,7 @@ class configs():
                 count_array = count_array - 1
                 print(energy_array[count_array])
 
-        print(energy_array)
+
         fig = plt.figure()
         ax = fig.add_subplot(111)
 
