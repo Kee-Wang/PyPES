@@ -4,7 +4,7 @@
 class configs():
     '''Read configuraitons and do stuff.
 
-        Input::train_x = file contains configuraitons in format.
+        Input::train_x = file contains configurations in format.
                 1. Sample:
 
                     6
@@ -34,11 +34,11 @@ class configs():
 
                         config = configs[0] =    #Take first configuraiton for example
                             [
-                                [molecule_count_total],    #number of atoms in a molecule
+                                [natm],    #number of atoms in a molecule
                                 [[energy], [dipole]]
                                 [molecule]
                             ]
-                                    #molecule_count_total (int):    configs[0][0] = 6
+                                    #natm (int):    configs[0][0] = 6
                                     #energy (float)(Hartree):    configs[0][1][0] = -0.00476416
                                     #dipole (float)(a.u.): configs[0][1][1][0]=-0.90668842
 
@@ -55,7 +55,7 @@ class configs():
 
     '''
 
-    def __init__(self,train_x,dip = False,first_n_configs=False):
+    def __init__(self,train_x,dip = False,first_n_configs=None, xlim = [-10E10, 10E10]):
         '''Read input file into configs with checks
 
         1. Result:  configs[a][b][c][d][e], type = List
@@ -102,111 +102,159 @@ class configs():
 
         self.logo()
         print('Reading file...\n')
+        
+        
+        #First read number of atoms and elements in the first configuration
         f = open(train_x)
-        configs_count = 0
         line_count = 0
-        element_1 = list()
+        elements = list()
+        for line in f:
+            line = line.strip()  
+            line_count = line_count + 1
+            if line_count == 1:  # This is number of atoms.  #Check type
+                if line.isdigit():
+                    natm = int(line)
+                    block_size = natm + 2
+                else:
+                    print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
+            if line_count  >= 3 and line_count <= block_size:
+                elements.append(line.split()[0])  # Read all elements in first config
+
+
+
+        f.close()
+
+
+
+        line_count = 0
         configs = list()
         dipole = list()
-        blank_line_count = 0
+
         energy = list()
+        molecule_coord = list()
+        config_mark = list()
+        f = open(train_x)
         for line in f:
             line = line.strip() #The delete the newline character
-            #if len(line) == 0: #Comment out so that don't can if E is 0
-               # blank_line_count += 1
-                #continue
+
+
             line_count = line_count + 1
+            block_line = (line_count - 1) % block_size + 1 #Which line in the block
 
 
-
-            if line_count == 1: # This is number of atoms.  #Check type
-                if line.isdigit():
-                    molecule_count_total = int(line)
-                    #break
-                    config_count_totol = molecule_count_total + 2
-                else:
+            if block_line == 1: # This is number of atoms.  #Check type
+                try:
+                    if natm != int(line):
+                        print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
+                        config_mark.append(len(configs))
+                except:
                     print("Type error: molecule number in line "+str(line_count)+" is : "+line)#Check type
+                    config_mark.append(len(configs))
 
-
-
-            config_count = (line_count - 1) % config_count_totol + 1
-
-            if config_count == 2: #Check energy first. If wrong, then skip.
-                if len(line) is 0:
+            if block_line == 2: #Check energy first. If wrong, then skip.
+                if len(line) is 0: #Files that have configurations only
                     energy = [0]
-                elif line.isdigit():
-                    energy = [float(line.split()[0])] #Record the energy.
                 else:
-                    print("Type error: energy in line "+str(line_count)+" is : "+str(line)+'. Skipping.') #Check energy type
-                    continue
-                    #break
+                    try:
+                        energy = [float(line.split()[0])] #Record the energy. #Could be 'Infinity', so need to check
+                        if energy[0] > xlim[1] or energy[0]<xlim[0]:
+                            #print(energy)
+                            config_mark.append(len(configs))
+                            print("Type error: Energy in line " + str(line_count) + " is : " + str(
+                                line) + '. Skipping.')  # Check energy type
+                    except:
+                        print("Type error: Energy in line "+str(line_count)+" is : "+str(line)+'. Skipping.') #Check energy type
+                        config_mark.append(len(configs))
+                        continue #If Energy is not empty or not 'Empty', then skip it.
 
 
-            if configs_count == 1 and config_count >= 3 and config_count <= molecule_count_total+2:
-                element_1.append(line.split()[0]) #Read elements in first config
-
-            if config_count == 1:
-                molecule_coord = list() #Renew molecue_coord each configuration
-                configs_count = configs_count + 1
-                try:
-                    if int(line) != molecule_count_total:
-                        print('Consistency error: number of atoms in line: ' + str(line_count)+' is : ' + str(line)) #Check consistency
-                except:
-                    print("Type error: number of atoms in line "+str(line_count)+" is : "+str(line)) #Check input
-                    #break
-
-
-
-
-                try:
-                    if dip == True and len(dipole) !=3:
-                        dipole = [float(dip) for dip in line.split()[1:]] #Record dipole.
-                        print("Dimension error: Dipole dimension in line "+str(line_count)+" is : "+str(len(dipole)))
-                except:
-                    print("Type error: Dipole in line "+str(line_count)+" is: "+str(line)) #Check energy type
-                    #break
-
-
-            if config_count >= 3 and config_count <= molecule_count_total+2:
-                molecule_count = config_count - 2
-                element = line.split()[0]
-
-                if element != element_1[molecule_count-1] and len(element) != 0: # Element check type and existence
-                    print('Consistency error: atom in line: ' + str(line_count)+' is: '+str(line))
+            if block_line >= 3 and block_line <= block_size:
+                if line.split()[0] != elements[block_line-3]:
+                    print("Type error: Element in line " + str(line_count) + " is : " + str(line) + '. Skipping.')  # Check
+                    config_mark.append(len(configs))
                 try:
                     coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
                 except:
-                    print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line +' .Setting to 0')
-                    coordinate = [0, 0, 0]
-                atom_coord = [element,coordinate]
+                    print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line +'. Skipping.')
+
+                    config_mark.append(len(configs))
+
+                    continue
+                atom_coord = [elements[block_line-3],coordinate]
                 molecule_coord.append(atom_coord)
 
-            if config_count == config_count_totol: #Reset some of the values
-                configs.append([[molecule_count_total],[energy, dipole],molecule_coord])
+            if block_line == block_size:  # Add them into configs after each cycle, also reset molecule_coord
+                configs.append([[natm], [energy, dipole], molecule_coord])
+                molecule_coord = list()
 
 
-                if configs_count == first_n_configs: #Only read first n configs
-                    break
+
+            if len(configs) == first_n_configs:  # Only read first n configs
+
+                break
+
+        #Delete all skipped configs
+        #print(config_mark)
+        config_mark = list(set(config_mark))
+        config_mark.sort()
+        #print(config_mark)
+        #print(len(configs))
+        for config in config_mark[::-1]:
+            #self.prt(configs[config])
+            del configs[config  ]
+        #print(len(configs))
+        #for config in config_mark[::-1]:
+        #    self.prt(configs[config-1])
+
+            # if block_line == 1:
+            #     molecule_coord = list() #Renew molecue_coord each configuration
+            #     configs_count = configs_count + 1
+            #     try:
+            #         if int(line) != natm:
+            #             print('Consistency error: number of atoms in line: ' + str(line_count)+' is : ' + str(line)) #Check consistency
+            #     except:
+            #         print("Type error: number of atoms in line "+str(line_count)+" is : "+str(line)) #Check input
+            #         #break
 
 
-        self.blank_line_count = blank_line_count
+                # try:
+                #     if dip == True and len(dipole) !=3:
+                #         dipole = [float(dip) for dip in line.split()[1:]] #Record dipole.
+                #         print("Dimension error: Dipole dimension in line "+str(line_count)+" is : "+str(len(dipole)))
+                # except:
+                #     print("Type error: Dipole in line "+str(line_count)+" is: "+str(line)) #Check energy type
+                #     #break
+
+
+            # if block_line >= 3 and block_line <= natm+2:
+            #     molecule_count = block_line - 2
+            #     element = line.split()[0]
+            #
+            #     if element != elements[molecule_count-1] and len(element) != 0: # Element check type and existence
+            #         print('Consistency error: atom in line: ' + str(line_count)+' is: '+str(line))
+            #     try:
+            #         coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
+            #     except:
+            #         print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line +' .Setting to 0')
+            #         coordinate = [0, 0, 0]
+
+
+
+        #self.blank_line_count = blank_line_count
         self.configs = copy.deepcopy(configs)
         self.dip = dip
-        self.configs_count = configs_count
+        self.configs_count = len(configs)
         self.train_x = train_x
-        self.molecule_count_total = molecule_count_total
+        self.natm = natm
         self.line_count = line_count
 
 
-        self.configs_sorted = self.sort(configs)
-        self.energy_lowest=self.energy_array_sorted[0]
-        self.energy_highest=self.energy_array_sorted[-1]
-        self.energy_lowest_cm = self.energy_array_sorted_cm[0]
-        self.energy_highest_cm = self.energy_array_sorted_cm[-1]
-        print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
+
+
+        #print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
         print('Configuration check finished!')
         #print('**Status: File reading finshed.\n')
-        print('Number of configurations:    {:<6d}'.format(self.configs_count))
+        print('Number of recorded configurations:    {:<6d}'.format(len(configs)))
 
         print('Reading finished. You can use self.info() or self.help() to start')
         #self.info()
@@ -223,9 +271,6 @@ class configs():
         1. Add feature so that input can be formated string.
         2. Add molden path
                 """)
-
-        #    def read(self,config_string):
-        #for line in string:
 
     def logo(self):
         print("""
@@ -247,13 +292,13 @@ class configs():
 
     def info(self,configs=False):
 
-
+        self.sort()
         print('============================')
         print('||          INFO          ||')
         print('============================')
 
         print('Inputfile:  {}'.format(self.train_x))
-        print('Number of atoms:    {:<2d}'.format(self.molecule_count_total))
+        print('Number of atoms:    {:<2d}'.format(self.natm))
         self.order()
         print('Number of configurations:    {:<6d}'.format(self.configs_count))
 
@@ -376,10 +421,10 @@ class configs():
             configs_count = configs_count + 1
             print('    {:<2d}'.format(config[0][0])) #Number of atoms. Align number of atom to the very left
             print(' '),# To align the colums of energy and coordiante
-            if self.dip:#Print option for having dipole or not
-                print('    {:14.8f}{:14.8f}{:14.8f}{:14.8f}'.format(config[1][0][0],config[1][1][0],config[1][1][1],config[1][1][2]))
-            else:#Print also dipole (if input file has it)
-                print('    {:14.8f}'.format(config[1][0][0]))#Print energy only
+            #if self.dip:#Print option for having dipole or not
+            #    print('    {:14.8f}{:14.8f}{:14.8f}{:14.8f}'.format(config[1][0][0],config[1][1][0],config[1][1][1],config[1][1][2]))
+            #else:#Print also dipole (if input file has it)
+            print('    {:14.8f}'.format(config[1][0][0]))#Print energy only
             for molecule in config[2]:#The atom part: coordiante of atoms
                 print('    {} {:14.8f}{:14.8f}{:14.8f}'.format(molecule[0],molecule[1][0],molecule[1][1],molecule[1][2]))
 
@@ -430,14 +475,15 @@ class configs():
             else: #Default, from low to high.
                 configs.sort(key= lambda item:item[1][0])
                 energy_array_sorted = list()
-                energy_array = list()
+
 
                 for config in configs:
-                    #print(config[1][0][0])
-                    energy_array.append(config[1][0][0])
-                self.energy_array_sorted = energy_array
+                    energy_array_sorted.append(config[1][0][0])
+                self.energy_array_sorted = energy_array_sorted
                 energy_array_sorted_cm = copy.deepcopy(self.energy_array_sorted)
                 self.energy_array_sorted_cm = np.array(energy_array_sorted_cm)* self.hartree_to_cm
+
+
 
         elif key == 'distance': #Reserved for other key expansion in the future.
             print('\n----Sorting by distance...\n')
@@ -457,13 +503,13 @@ class configs():
                 energy_array_sorted_cm = copy.deepcopy(self.energy_array_sorted)
                 self.energy_array_sorted_cm = np.array(energy_array_sorted_cm)* self.hartree_to_cm
 
-
-
+        self.configs_sorted = configs
+        self.energy_lowest = self.energy_array_sorted[0]
+        self.energy_highest = self.energy_array_sorted[-1]
+        self.energy_lowest_cm = self.energy_array_sorted_cm[0]
+        self.energy_highest_cm = self.energy_array_sorted_cm[-1]
         print('\n*Status: sorting finished.\n')
         return configs
-
-    def sort_distance(self,configs=False,reverse=False):
-        return
 
     def list(self,first_n_configs=False):
         """Return a list of reading file.
@@ -507,8 +553,6 @@ class configs():
             print('End of energy_threshold-------------------')
             return configs_new
 
-    def threshold_distance(self,configs,lower=False,upper=False):
-        return
 
     def error_message(self):
         """To show error message and waiting for decision
@@ -556,7 +600,7 @@ class configs():
 
         configs_new = copy.deepcopy(configs)#This is the correct way to create a different list with same value
 
-        while molecule_new_count <= self.molecule_count_total:#Will repeat molecule_count_total times
+        while molecule_new_count <= self.natm:#Will repeat natm times
             configs_new_count = 0
 
             try:
@@ -567,7 +611,7 @@ class configs():
                     configs_new_count = configs_new_count + 1
             except:
                 pass
-            #molecule_count = self.molecule_count_total - molecule_new_count + 1 #Test arguement(reverse order)
+            #molecule_count = self.natm - molecule_new_count + 1 #Test arguement(reverse order)
 
 
 
@@ -578,7 +622,7 @@ class configs():
         print('''New configs are returned as list, please use a.write(configs_new,'ouput') to save configs.''')
         return configs_new
 
-    def configs_check(self,configs,silence=True):
+    def configs_check(self,configs=False,silence=True):
         """To check if give the configs arugment.
 
             Usage: configs=configs_check(configs)
@@ -587,13 +631,13 @@ class configs():
         if configs is False:
             if silence is not True:
                 print('Using original list.')
-            return self.configs
-        else:
-            try:
-                check = configs[0][0][0]#Check if the list has only one configuration but one layer smaller
-                return configs
-            except:#If has to configuration, this makes sure it can be safely iterated in the next statemnt.
-                return [configs]
+            configs = self.configs
+
+        try:
+            check = configs[0][0][0]#Check if the list has only one configuration but one layer smaller
+            return configs
+        except:#If has to configuration, this makes sure it can be safely iterated in the next statemnt.
+            return [configs]
 
     def translate(self,atom_A=False, atom_B=False, dis_new = False, config = False):
         """Give a dimer and designated atom groups, translate in vector AB from previous distance to new distance
@@ -905,27 +949,30 @@ class configs():
 
         return expansion #This is expansion of alias
 
-    def plot(self,configs = False,binwidth=False,ref=False):
+    def plot(self,configs = False,binwidth=False,ref=False,xlim=False,ylim=False):
         import numpy as np
         import matplotlib.pyplot as plt
 
         configs = self.configs_check(configs)
 
-        if configs is not False:
-            energy_array = list()
-            configs = self.sort(configs)
-            for config in configs:
-                energy_array.append(config[1][0][0]* self.hartree_to_cm)
+        if configs is not False: #First sort list to get energy_array
+            #energy_array = list()
+            self.sort(configs)
+            energy_array = self.energy_array_sorted_cm
+            #for config in configs:
+            #    energy_array.append(config[1][0][0]* self.hartree_to_cm)
 
         else:
-            energy_array = self.energy_array_cm
+            self.sort()
+            energy_array = self.energy_array_sorted_cm
 
         if ref is True:
             count_array = len(energy_array)-1
             for num in energy_array[::-1]:
                 energy_array[count_array] = energy_array[count_array] - energy_array[0]
+
+                print(energy_array[count_array],count_array)
                 count_array = count_array - 1
-                print(energy_array[count_array])
 
 
         fig = plt.figure()
@@ -940,13 +987,15 @@ class configs():
         if binwidth is False:
             binwidth = 50
         else:
-            binwidth = int(binwidth)
+            binwidth = float(binwidth)
 
-        print('\nCurrent binwidth is {:d} cm-1\n'.format(binwidth))
+        print('\nCurrent binwidth is {:f} cm-1\n'.format(binwidth))
 
 
         numBins = (self.energy_highest_cm - self.energy_lowest_cm) // binwidth
-        #print(numBins)
+        if numBins == 0:
+            numBins = 1
+        print(numBins)#,self.energy_highest_cm)
         #numBins = 100
         ax.hist(x,numBins,color='green',alpha=0.8)
         #ax.boxplot(x,numBins)#,color='green',alpha=0.8)
@@ -963,6 +1012,11 @@ class configs():
         ax.annotate('E_max:\n{:10.2f}'.format(E_max),xy=(E_max,0),xytext=(E_max-(E_max-E_min)*0.1, count_highest*0.2),arrowprops=dict(arrowstyle="->"))
         #ax.xlabels[-1] = '300+'
         fig = plt.gcf()
+        axes = plt.gca()
+        if xlim is not False:
+            axes.set_xlim(xlim)
+        if ylim is not False:
+            axes.set_ylim(ylim)
         plt.show()
         decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
         if decision is 'y':
