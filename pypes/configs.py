@@ -112,6 +112,9 @@ class configs():
             line = line.strip()  
             line_count = line_count + 1
             if line_count == 1:  # This is number of atoms.  #Check type
+                if len(line) == 0:
+                    print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
+                line = line.split()[0]
                 if line.isdigit():
                     natm = int(line)
                     block_size = natm + 2
