@@ -147,6 +147,7 @@ class configs():
 
             if block_line == 1: # This is number of atoms.  #Check type
                 try:
+                    line = line.split()[0]
                     if natm != int(line):
                         print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
                         config_mark.append(len(configs))
