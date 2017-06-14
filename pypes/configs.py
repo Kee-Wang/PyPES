@@ -267,6 +267,11 @@ class configs():
 
         f.close()
 
+    def aucm(self):
+        return 219474.63
+
+    def auang(self):
+        return 0.52917721
 
     def todo(self):
         print("""
@@ -2043,7 +2048,55 @@ class configs():
 
         return uconfig
 
+    def bond_length(self,config,show=False,full=False):
+        """Get in a configuration and return a bond_length matrix (symmetric without diagonal)
+            bond_length[0][0~-1] is the bond length of first atom to all other atoms
+        """
+        import numpy as np
 
+        dis = list()
+
+        config = self.configs_check(config)
+        natm = config[0][0][0]
+
+        for i in range(1,natm+1):
+            bond = list()
+            for j in range(1,natm+1):
+               # print(i,j)
+                r = self.distance(config[0],atom_A=i,atom_B=j)
+                bond.append(r)
+            #if len(bond) > 0:
+            dis.append(bond)
+
+        #dis = list(itertools.zip_longest(*dis))
+
+        if show is True:
+            print('{:6s}'.format(''),end='')
+            for i in range(1,natm+1):
+                print('{:2d}{:4s}'.format(i,config[0][2][i-1][0]),end='')
+
+            print('')
+
+            for i in range(1,natm+1):
+                print('{:2d}{:3s}'.format(i,config[0][2][i - 1][0]), end='')#Print element
+
+               ## for j in range(1, i):
+                #    print('{:6s}'.format(''), end='')
+                for j in range(1,natm+1):
+                    if (i <= j) and full is False:
+                        continue
+
+                    else:
+                        print('{:5.2f} '.format(dis[i-1][j-1]),end='')
+                print('')
+
+            #print('{:2d}{:3s}'.format(natm, config[0][2][-1][0]))
+
+        lst = np.array(dis)
+
+
+
+        return dis
 
 
 """To keep this script as clean as possible, please use another script for test arguments"""
