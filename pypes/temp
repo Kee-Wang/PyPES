@@ -1,0 +1,4 @@
+                    new_line = line.split()
+
+                    line = new_line[0]
+                    traj = int(new_line[1].split(sep='#')[2])

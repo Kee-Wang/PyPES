@@ -215,3 +215,5 @@ class plot():
         self.save(fig,save)
 
         return None
+
+    def hist(self):

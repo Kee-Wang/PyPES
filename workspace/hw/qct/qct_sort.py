@@ -1,5 +1,8 @@
+from pypes.configsqct import configs_hwww_qct
+import numpy as np
 from pypes.configs import configs
 from itertools import chain
+import matplotlib.pyplot as plt
 
 
 
@@ -25,7 +28,8 @@ def inlist(i,dis):
     return count
 
 #a = configs('HW_WW.xyz')#,first_n_configs=1)
-a = configs('all.xyz')#,first_n_configs=1)
+#a = configs('last_all.xyz')
+a = configs_hwww_qct('last_all.xyz')#,first_n_configs=1)
 
 print('\n Sorting Begin: \n')
 
@@ -127,7 +131,8 @@ for config in al:
         #print('Group assignment for config {:d}:'.format(count))
         #print(dis)
         if len(dis) is 1:
-            print(count, 'Not dissociated')
+            print('Not dissociated! on molecule: ', count)
+            HWWW.append(config)
         elif len(dis) is 2:
             for sublist in dis:
                 if len(sublist) is 1:
@@ -163,24 +168,50 @@ for config in al:
 print('\n ---Soring finished! \n')
 print('\n ---Result for dissociation:')
 print('')
-All = [HWWW, H_WWW, HWW_W, HW_WW, H_W_WW, HW_W_W, H_W_W_W, broken]
-assign = ['HWWW','H + WWW','HWW + W','HW + WW','H + W + WW','HW + W + W','H + W + W + W', 'Blow-up!']
+All = [HWWW, H_WWW, HWW_W, HW_WW, H_W_WW, HW_W_W, H_W_W_W]#, broken]
+assign = ['HWWW','H + WWW','HWW + W','HW + WW','H + W + WW','HW + W + W','H + W + W + W']#, 'Blow-up!']
 count = 0
 num = list()
 for lst in All:
     num.append(len(lst))
     print('{:14s}: {:d}'.format(assign[count],num[count]))
     count = count + 1
+print(a.broke, len(broken))
+num.append((len(broken)+a.broke)) #Add configs that cannot be read in the initial file
+print('{:14s}: {:d}'.format('Blow-up!',num[-1]))
 print('')
 print('{:14s}: {:d}'.format('Total', sum(num)))
+
+
+
+traj = np.array(a.traj)
+step_size=2.5
+au_s = 2.418884326509e-5
+traj = traj * 2.5*au_s
+
+plt.hist(traj,bins='auto')
+#plt.title('Time for ')
+plt.xlabel('Time for dissociation (ps) \n (At least one of atom pairs with distance > 50 a.u)')
+plt.ylabel('Count')
+plt.tight_layout()
+fig = plt.gcf()
+#plt.show()
+#save = 'time_to_diss.eps'
+#fig.savefig(save, format='eps', dpi=1200)
+#print('Plot saved to {}.'.format(save))
+
 #a.molden(H_WWW)
 #a.molden(HWW_W)
 #a.molden(H_W_WW)
 #a.molden(HW_W_W)
 #a.molden(HW_WW)
 #a.molden(H_W_W_W)
-#a.molden(broken)
+#a.molden
+#a.prt(HWWW[0:5])
+#a.molden(HWWW)
 #a.write('HW_WW.xyz',H_W_WW[4])
+
+
 
 
 """Problem: Can't recognize HW + WW correctly?"""

@@ -4,4 +4,5 @@ PyPES.egg-info/dependency_links.txt
 PyPES.egg-info/top_level.txt
 pypes/__init__.py
 pypes/configs.py
+pypes/configs_hwww_qct.py
 pypes/plot.py
