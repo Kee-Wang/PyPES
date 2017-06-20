@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 
 
 
-bond_threshold = 4 #Angstrom, The max covalent bond length for a molecule
+bond_threshold = 3# 4 #Angstrom, The max covalent bond length for a molecule
 rmax = 9 #Angstrom The max distance between two molecules to be interacted
 
 
@@ -29,13 +29,21 @@ def inlist(i,dis):
 
 #a = configs('HW_WW.xyz')#,first_n_configs=1)
 #a = configs('last_all.xyz')
-a = configs_hwww_qct('last_all.xyz')#,first_n_configs=1)
+a = configs_hwww_qct('last_all.xyz',col=9)
+
 
 print('\n Sorting Begin: \n')
 
 
 
 al = a.list()
+
+#print(al)
+#a.prt(al)
+
+
+
+
 HWWW=list()
 H_WWW=list()
 HWW_W=list()
@@ -165,6 +173,9 @@ for config in al:
             H_W_W_W.append(config)
 
 
+
+
+
 print('\n ---Soring finished! \n')
 print('\n ---Result for dissociation:')
 print('')
@@ -176,29 +187,42 @@ for lst in All:
     num.append(len(lst))
     print('{:14s}: {:d}'.format(assign[count],num[count]))
     count = count + 1
-print(a.broke, len(broken))
+#print(a.broke, len(broken))
 num.append((len(broken)+a.broke)) #Add configs that cannot be read in the initial file
 print('{:14s}: {:d}'.format('Blow-up!',num[-1]))
 print('')
 print('{:14s}: {:d}'.format('Total', sum(num)))
 
+#epoch1 = 1497045960
+#epoch2 = 1497966025
+#time = epoch2 - epoch1
 
+#total_step=sum(a.traj)
+#evals = total_step*67 #+ len(a.traj)*11*11*4 #Per core
+#print('Number of total evals: {:d}'.format(evals))
+#print('Time per eval: {:f} ms'.format(time/evals*1000*((64-13))))
 
 traj = np.array(a.traj)
 step_size=2.5
 au_s = 2.418884326509e-5
 traj = traj * 2.5*au_s
 
-plt.hist(traj,bins='auto')
-#plt.title('Time for ')
-plt.xlabel('Time for dissociation (ps) \n (At least one of atom pairs with distance > 50 a.u)')
-plt.ylabel('Count')
-plt.tight_layout()
-fig = plt.gcf()
+#plt.hist(traj,bins='auto')
+#plt.xlabel('Time for dissociation (ps) \n (At least one of atom pairs with distance > 50 a.u)')
+#plt.ylabel('Count')
+#plt.tight_layout()
+#fig = plt.gcf()
 #plt.show()
 #save = 'time_to_diss.eps'
 #fig.savefig(save, format='eps', dpi=1200)
 #print('Plot saved to {}.'.format(save))
+
+assign1 = ['HWWW','H_WWW','HWW_W','HW_WW','H_W_WW','HW_W_W','H_W_W_W']
+
+count=0
+for name in assign1:
+    a.write(''.join(['result_',name,'.xyz']), All[count])
+    count = count + 1
 
 #a.molden(H_WWW)
 #a.molden(HWW_W)
