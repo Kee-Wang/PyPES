@@ -55,7 +55,7 @@ class configs():
 
     '''
 
-    def __init__(self,train_x,dip = False,first_n_configs=None, xlim = [-10E10, 10E10]):
+    def __init__(self,train_x,dip = False,first_n_configs=None, xlim = [-10E10, 10E10], col=3):
         '''Read input file into configs with checks
 
         1. Result:  configs[a][b][c][d][e], type = List
@@ -220,6 +220,8 @@ class configs():
         self.train_x = train_x
         self.natm = natm
         self.line_count = line_count
+
+        self.col = col
 
 
 
@@ -397,6 +399,16 @@ class configs():
         configs_count=0
         configs=self.configs_check(configs)
 
+        # This block create the format for multiple colums
+        form_num = '{:14.8f}'
+        form = ['    {}']
+        col = self.col
+        for i in range(0, col):
+            form.append(form_num)
+            print(i)
+        form = "".join(str(x) for x in form)
+        print(form)
+
         for config in configs: #Write config by config
             configs_count = configs_count + 1
             print('    {:<2d}'.format(config[0][0])) #Number of atoms. Align number of atom to the very left
@@ -406,7 +418,8 @@ class configs():
             #else:#Print also dipole (if input file has it)
             print('    {:14.8f}'.format(config[1][0][0]))#Print energy only
             for molecule in config[2]:#The atom part: coordiante of atoms
-                print('    {} {:14.8f}{:14.8f}{:14.8f}'.format(molecule[0],molecule[1][0],molecule[1][1],molecule[1][2]))
+                print(form.format(molecule[0],*molecule[1]))  # The star(*) before the args is to unfold multiple arugments
+                #print('    {} {:14.8f}{:14.8f}{:14.8f}'.format(molecule[0],molecule[1][0],molecule[1][1],molecule[1][2]))
 
         print('----Printed {} configuration(s).\n'.format(configs_count))
         #print('*Status: printing finished.\n')
@@ -420,7 +433,20 @@ class configs():
         f=open(filename,'w')
         configs_count=0
 
+
         configs=self.configs_check(configs)
+        if len(configs[0]) is 0:
+            print('File: {:s} is empty!'.format(filename))
+            return None
+
+        form_num='{:14.8f}'
+        form = ['    {}']
+        col=self.col
+        for i in range(0,col):
+            form.append(form_num)
+            #print(i)
+        form = "".join(str(x) for x in form)
+
         for config in configs: #Write config by config
             configs_count = configs_count + 1
 
@@ -431,7 +457,8 @@ class configs():
             else:#Print energy only
                 f.write('{:14.8f}'.format(config[1][0][0])+'\n')#Print energy only
             for molecule in config[2]:#The atom part: coordiante of atoms
-                f.write('{} {:14.8f}{:14.8f}{:14.8f}'.format(molecule[0],molecule[1][0],molecule[1][1],molecule[1][2])+'\n')
+                f.write(form.format(molecule[0], *molecule[1]) + '\n')
+                #f.write('{} {:14.8f}{:14.8f}{:14.8f}'.format(molecule[0],molecule[1][0],molecule[1][1],molecule[1][2])+'\n')
         print('----{} configs are written to the file: {}\n'.format(configs_count,filename))
         print('*Status: writting finished.\n')
         f.close()

@@ -437,6 +437,7 @@ class configs_hwww_qct():
         configs = self.configs_check(configs)
         #print(configs[0])
         if len(configs[0]) is 0:
+            print('File: {:s} is empty!'.format(filename))
             return None
 
         for config in configs:  # Write config by config
