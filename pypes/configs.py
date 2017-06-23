@@ -774,7 +774,8 @@ class configs():
         if config is False: #Meaning use the default one
             print('Using default global minimum configuration: ')
 
-            config = self.configs_sorted[0] #Default is global minimum
+            configs = self.sort(self.configs) #Default is global minimum
+            config = configs[0]
             self.prt(config)
 
         if step is False:
