@@ -215,3 +215,21 @@ class plot():
         self.save(fig,save)
 
         return None
+
+
+    def hist(self, file, ,bin='auto', xtitle='xtitle', ytitle='ytitle', title=' '):
+        """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
+        import matplotlib.pyplot as plt
+        import numpy as np
+        self.version()
+        fig = plt.figure()
+        ax = fig.add_subplot(111)
+        data = np.loadtxt(file, unpack=True)
+        plt.hist(data, bins=bin)
+
+
+        ax.set_xlabel(xtitle)
+        ax.set_ylabel(ytitle)
+
+        plt.show()
+        return None
