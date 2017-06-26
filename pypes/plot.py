@@ -227,7 +227,7 @@ class plot():
         data = np.loadtxt(file, unpack=True,usecols=col)
         plt.hist(data, bins=bin)
 
-
+        ax.set_title(title)
         ax.set_xlabel(xtitle)
         ax.set_ylabel(ytitle)
         self.save(fig, save)
