@@ -183,10 +183,15 @@ All = [HWWW, H_WWW, HWW_W, HW_WW, H_W_WW, HW_W_W, H_W_W_W]#, broken]
 assign = ['HWWW','H + WWW','HWW + W','HW + WW','H + W + WW','HW + W + W','H + W + W + W']#, 'Blow-up!']
 count = 0
 num = list()
+all_configs= list()
+
 for lst in All:
     num.append(len(lst))
+    for config in lst:
+        all_configs.append(config)
     print('{:14s}: {:d}'.format(assign[count],num[count]))
     count = count + 1
+a.write('result_all.xyz',all_configs)
 #print(a.broke, len(broken))
 num.append((len(broken)+a.broke)) #Add configs that cannot be read in the initial file
 print('{:14s}: {:d}'.format('Blow-up!',num[-1]))
