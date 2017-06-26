@@ -29,7 +29,7 @@ def inlist(i,dis):
 
 #a = configs('HW_WW.xyz')#,first_n_configs=1)
 #a = configs('last_all.xyz')
-a = configs_hwww_qct('all_0622.xyz', col=9)
+a = configs_hwww_qct('all.xyz', col=9)
 
 
 print('\n Sorting Begin: \n')

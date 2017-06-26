@@ -217,7 +217,7 @@ class plot():
         return None
 
 
-    def hist(self, file,col=[0], bin='auto', xtitle='xtitle', ytitle='ytitle', title=' '):
+    def hist(self, file,col=[0], bin='auto', xtitle='xtitle', ytitle='ytitle', title=' ',save=None):
         """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
         import matplotlib.pyplot as plt
         import numpy as np
@@ -230,6 +230,6 @@ class plot():
 
         ax.set_xlabel(xtitle)
         ax.set_ylabel(ytitle)
-
-        plt.show()
+        self.save(fig, save)
+        #plt.show()
         return None
