@@ -27,15 +27,18 @@ def inlist(i,dis):
     count = -1
     return count
 
-#a = configs('HW_WW.xyz')#,first_n_configs=1)
-#a = configs('last_all.xyz')
+
+#Use this to fist sort out duplicates
+#a = configs('last_all.xyz', col=9,duplicate=True)
+
+# Then use this modified module to do calculation.
 a = configs_hwww_qct('all.xyz', col=9)
 
 
 print('\n Sorting Begin: \n')
 
 
-
+#raise Exception('stopped')
 al = a.list()
 
 #print(al)

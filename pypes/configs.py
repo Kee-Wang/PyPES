@@ -55,7 +55,7 @@ class configs():
 
     '''
 
-    def __init__(self,train_x,dip = False,first_n_configs=None, xlim = [-10E10, 10E10], col=3):
+    def __init__(self,train_x,dip = False,first_n_configs=None, xlim = [-10E10, 10E10], col=3, duplicate = False):
         '''Read input file into configs with checks
 
         1. Result:  configs[a][b][c][d][e], type = List
@@ -97,13 +97,13 @@ class configs():
         '''
         """Constants"""
         import copy
-        self.hartree_to_cm = 219474.63
+        import numpy as np
 
+        self.hartree_to_cm = 219474.63
 
         self.logo()
         print('Reading file...\n')
-        
-        
+
         #First read number of atoms and elements in the first configuration
         f = open(train_x)
         line_count = 0
@@ -122,12 +122,7 @@ class configs():
                     print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
             if line_count  >= 3 and line_count <= block_size:
                 elements.append(line.split()[0])  # Read all elements in first config
-
-
-
         f.close()
-
-
 
         line_count = 0
         configs = list()
@@ -140,10 +135,8 @@ class configs():
         for line in f:
             line = line.strip() #The delete the newline character
 
-
             line_count = line_count + 1
             block_line = (line_count - 1) % block_size + 1 #Which line in the block
-
 
             if block_line == 1: # This is number of atoms.  #Check type
                 try:
@@ -177,7 +170,8 @@ class configs():
                     print("Type error: Element in line " + str(line_count) + " is : " + str(line) + '. Skipping.')  # Check
                     config_mark.append(len(configs))
                 try:
-                    coordinate = [float(coor) for coor in line.split()[1:]]#Read cooridnates and turns into float
+                    coordinate = [float(coor) for coor in line.split()[1:col+1]]#Read cooridnates and turns into float.
+                    # Be warned, will read all numbers in that line. So can be used to get velocity vector.
                 except:
                     print('Consistency error: coordinate in line: ' + str(line_count) + ' is: ' + line +'. Skipping.')
 
@@ -190,40 +184,34 @@ class configs():
             if block_line == block_size:  # Add them into configs after each cycle, also reset molecule_coord
                 configs.append([[natm], [energy, dipole], molecule_coord])
                 molecule_coord = list()
-
-
-
             if len(configs) == first_n_configs:  # Only read first n configs
-
                 break
-
-        #Delete all skipped configs
-        #print(config_mark)
+        # Delete all skipped configs
         config_mark = list(set(config_mark))
         config_mark.sort()
-        #print(config_mark)
-        #print(len(configs))
+
+        num1 = len(configs)
         for config in config_mark[::-1]:
-            #self.prt(configs[config])
-            del configs[config  ]
+            del configs[config]
+        num2 = len(configs)
+        self.broke = num1 - num2
 
+        self.natm = natm
+        if duplicate == True:
+            configs = self.duplicate(configs)
 
-
-
-
-
-
-        #self.blank_line_count = blank_line_count
         self.configs = copy.deepcopy(configs)
         self.dip = dip
         self.configs_count = len(configs)
         self.train_x = train_x
-        self.natm = natm
         self.line_count = line_count
-
         self.col = col
 
 
+
+
+
+        # self.blank_line_count = blank_line_count
 
 
         #print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
@@ -232,13 +220,52 @@ class configs():
         print('Total config: {:d}'.format(len(configs)+len(config_mark)))
         print('Broken config: {:d}'.format(len(config_mark)))
         print('Number of recorded configurations:    {:<6d}'.format(len(configs)))
-
         print('Reading finished. You can use self.info() or self.help() to start')
-        #self.info()
-        #self.help()
-
-
         f.close()
+
+    def duplicate(self,configs):
+        """
+        Find duplicate configurations and get them deleted.
+        :return: configs
+        """
+        import numpy as np
+        natm = self.natm
+        print('Searching Duplicate...\n')
+        count = 0
+        mark = list()
+        for config in configs:
+            ntotal = len(configs)
+            print("Config {:d} / {:d}".format(count+1, ntotal))
+
+            count_compare = count
+            for compare in configs[count+1:]:
+                count_compare += 1
+
+                if np.allclose(config[2][1][1],
+                               compare[2][1][1]) is True:  # First atom at the same location, compare rest
+                    score = 1
+                    for i in range(natm - 1):
+                        #print(config[2][i + 1][1], compare[2][i + 1][1])
+                        # Notice, can not sort out correctly the permutated coordiante.
+                        if np.allclose(config[2][i + 1][1],
+                                       compare[2][i + 1][1]) is True:  # Will skip if any of the line does not match.
+
+                            score += 1
+                    if score == natm:
+                        mark.append(count_compare)
+            count += 1
+        print("\nLists of duplicates (begin with 0):")
+
+        #Delete duplicate marks
+        mark = list(set(mark))
+        mark.sort()
+        print(mark)
+
+        for config in mark[::-1]:
+            del configs[config]
+        print("\nNumber of deleted duplicates: {:d}".format(len(mark)))
+
+        return configs
 
     def aucm(self):
         return 219474.63
@@ -265,7 +292,7 @@ class configs():
         ##           ##    ##        ##       ##    ##
         ##           ##    ##        ########  ######
 
-                                            Version 0.0.38
+                                            Version 0.0.40
 
                                 --A Bowman Group Product
                                     """
@@ -2098,5 +2125,10 @@ class configs():
         return dis
 
 
-"""To keep this script as clean as possible, please use another script for test arguments"""
+
+if __name__ == "__main__":
+    print("Using Default testing files")
+    filename = "../tests/test_configs.xyz"
+    a = configs(filename,duplicate = True, first_n_configs=10)
+
 
