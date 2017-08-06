@@ -32,20 +32,15 @@ def inlist(i,dis):
 #a = configs('last_all.xyz', col=9,duplicate=True)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('all.xyz', col=9)
-
+a = configs_hwww_qct('./0805/last_0805.xyz', col=9)
 
 print('\n Sorting Begin: \n')
-
 
 #raise Exception('stopped')
 al = a.list()
 
 #print(al)
 #a.prt(al)
-
-
-
 
 HWWW=list()
 H_WWW=list()
@@ -55,12 +50,6 @@ H_W_WW=list()
 HW_W_W=list()
 H_W_W_W=list()
 broken = list()
-
-
-
-
-
-
 
 count = 0
 for config in al:
@@ -128,7 +117,6 @@ for config in al:
 
                             dis.pop(locj) #Notice i<j
                         #print('t')
-
 
     lst = list(chain.from_iterable(dis))
     lst.sort()
