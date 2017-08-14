@@ -32,7 +32,7 @@ def inlist(i,dis):
 #a = configs('last_all.xyz', col=9,duplicate=True)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./0805/last_0805.xyz', col=9,first_n_configs=100)
+a = configs_hwww_qct('./0805/last_0805.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
