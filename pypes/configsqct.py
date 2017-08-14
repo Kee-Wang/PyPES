@@ -577,47 +577,25 @@ class configs_hwww_qct():
         dis = math.sqrt(np.sum(np.square(atom_A - atom_B)))
         return dis
 
-    def switch(self, configs=False):
+    def switch(self, configs=False, neworder=[]):
         import copy
-        print('Switching order:\nThe origianl numbering of given configs is:')
-        self.order(configs)
-        molecule_count = 1
-        molecule_new_count = 1
 
-        if configs is False:  # Default input check module
-            configs = self.configs
-            print('Switching using orignial configuraitons')
+        if len(neworder) == 0:
+            raise Exception("`neworder` list cannot be empty!")
 
-        print('\nWhat new order do you what?\n')
-
-        try:
-            temp = configs[0][0][0]
-        except:  # If has to configuration, this makes sure it can be safely iterated in the next statemnt.
-            configs = [configs]
-
+        configs = self.configs_check(configs)
         configs_new = copy.deepcopy(configs)  # This is the correct way to create a different list with same value
+        natm = configs[0][0][0]
+        configs_new_count = 0
 
-        while molecule_new_count <= self.natm:  # Will repeat natm times
-            configs_new_count = 0
-
-            try:
-                molecule_count = int(
-                    input('I want new atom ({:d}) to be the old atom number: '.format(molecule_new_count)))
-                for config_new in configs_new:
-                    configs_new[configs_new_count][2][molecule_new_count - 1] = configs[configs_new_count][2][
-                        molecule_count - 1]
-                    configs_new_count = configs_new_count + 1
-            except:
-                pass
-            # molecule_count = self.natm - molecule_new_count + 1 #Test arguement(reverse order)
-
-
-
-            molecule_new_count = molecule_new_count + 1
-            #        self.prt(configs_new)
-        print('New numbering:')
-        self.order(configs_new)
-        print('''New configs are returned as list, please use a.write(configs_new,'ouput') to save configs.''')
+        for config in configs:
+            #print('before:')
+            #self.prt(config)
+            for i in range(natm):
+                configs_new[configs_new_count][2][i] = configs[configs_new_count][2][neworder[i]]
+            configs_new_count = configs_new_count + 1
+            #print('after:')
+            #self.prt(configs_new)
         return configs_new
 
     def configs_check(self, configs=False, silence=True):
@@ -2062,3 +2040,11 @@ class configs_hwww_qct():
 
 """To keep this script as clean as possible, please use another script for test arguments"""
 
+if __name__ == "__main__":
+    print("Using Default testing files")
+    filename = "../tests/test_configs.xyz"
+    a = configs_hwww_qct(filename, first_n_configs=1)
+    #Test order switch
+    alist = a.list()
+    neworder = [10,8,8,10,10,5,6,7,1,9,0]
+    a.switch(alist,neworder=neworder)

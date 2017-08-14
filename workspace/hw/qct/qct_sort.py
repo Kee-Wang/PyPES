@@ -32,7 +32,7 @@ def inlist(i,dis):
 #a = configs('last_all.xyz', col=9,duplicate=True)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./0805/last_0805.xyz', col=9)
+a = configs_hwww_qct('./0805/last_0805.xyz', col=9,first_n_configs=100)
 
 print('\n Sorting Begin: \n')
 
@@ -123,25 +123,33 @@ for config in al:
 
 
     if lst != [7,8,9,11]:
+
         print('Error for list', count)
 
-        print(dis)
     else:
-        #print('Group assignment for config {:d}:'.format(count))
-        #print(dis)
+
+
         if len(dis) is 1:
             print('Not dissociated! on molecule: ', count)
             HWWW.append(config)
         elif len(dis) is 2:
             for sublist in dis:
-                if len(sublist) is 1:
+                if len(sublist) is 1:#the `1` could be H or W
                     if sublist[0] is 11:
-                        #print(dis)
-                        #print(count,'H + WWW')
                         H_WWW.append(config)
-                    else:
-                        #print(dis)
-                        #print(count,'W + HWW')
+                    else: #Else is `W`
+
+                        if sublist[0] is 8:#`W` is not the first `W` Bubble up that water
+                            config = a.switch(config,neworder=[2,3,0,1,4,5,7,6,8,9,10])[0]
+
+                        elif sublist[0] is 9:#`W` is not the first `W`
+                            #print('before')
+                            #a.prt(config)
+                            config = a.switch(config,neworder=[4,5,0,1,2,3,8,6,7,9,10])[0]
+                            #print('after')
+                            #a.prt(config)
+
+                        #print(sublist[0])
                         HWW_W.append(config)
                 elif len(sublist) is 2 and (sublist[0] is 11 or sublist[1] is 11):
                     #print(dis)
@@ -151,17 +159,22 @@ for config in al:
             for sublist in dis:
                 if len(sublist) is 2:
                     if sum(sublist) >= (11 + 7): #Meaning 11 is inside 2-element list
-                        #print(dis)
+
                         #print(count,'HW + W + W')
                         HW_W_W.append(config)
                     else:
-                        #print(dis)
+                        if sum(sublist) == (7+8):# water 9 is out
+                            config = a.switch(config, neworder=[4, 5, 0, 1, 2, 3, 8, 6, 7, 9, 10])[0]
+                        elif sum(sublist) == (7+9): #water 8 is out
+                            config = a.switch(config, neworder=[2, 3, 0, 1, 4, 5, 7, 6, 8, 9, 10])[0]
                         #print(count,'WW + W + H')
                         H_W_WW.append(config)
+
         else: #This is all separated
             #print(dis)
             #print(count, 'H + W + W + W')
             H_W_W_W.append(config)
+
 
 
 

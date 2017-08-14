@@ -231,5 +231,5 @@ class plot():
         ax.set_xlabel(xtitle)
         ax.set_ylabel(ytitle)
         self.save(fig, save)
-        #plt.show()
+        plt.show()
         return None
