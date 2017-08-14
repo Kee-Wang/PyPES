@@ -251,6 +251,7 @@ class configs():
                                        compare[2][i + 1][1]) is True:  # Will skip if any of the line does not match.
 
                             score += 1
+                            print('Duplicate found.')
                     if score == natm:
                         mark.append(count_compare)
             count += 1
