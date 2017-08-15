@@ -29,10 +29,11 @@ def inlist(i,dis):
 
 
 #Use this to fist sort out duplicates
-#a = configs('./0805/last_0805.xyz', col=9,duplicate=True)
-#stop
+#b = configs('./0814/last_0814.xyz', col=9,duplicate=True)
+#blist = b.list()
+#b.write('./0814/last_0814_no_dup.xyz',blist)
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./0814/last_0814.xyz', col=9)
+a = configs_hwww_qct('./0814/last_0814_no_dup.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 

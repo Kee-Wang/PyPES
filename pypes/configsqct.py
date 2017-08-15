@@ -143,7 +143,7 @@ class configs_hwww_qct():
                     new_line = line.split()
 
                     line = new_line[0]
-                    traj = int(new_line[1].split(sep='#')[2])
+                    #traj = int(new_line[1].split(sep='#')[2])
                     #print(traj)
                     line = line.split()[0]
                     if natm != int(line):
@@ -188,7 +188,7 @@ class configs_hwww_qct():
 
             if block_line == block_size:  # Add them into configs after each cycle, also reset molecule_coord
                 configs.append([[natm], [energy, dipole], molecule_coord])
-                traj_info.append(traj)
+                #traj_info.append(traj)
                 molecule_coord = list()
 
             if len(configs) == first_n_configs:  # Only read first n configs
