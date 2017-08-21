@@ -27,13 +27,16 @@ def inlist(i,dis):
     count = -1
     return count
 
+# last_0626.xyz not duplicates
 
 #Use this to fist sort out duplicates
-#b = configs('./0814/last_0814.xyz', col=9,duplicate=True)
+#b = configs('./0817/last_0817.xyz', col=9,duplicate=True)
 #blist = b.list()
-#b.write('./0814/last_0814_no_dup.xyz',blist)
+
+#b.write('./0817/last_0817_no_dup.xyz',blist)
+
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./0814/last_0814_no_dup.xyz', col=9)
+a = configs_hwww_qct('./0817/last_0817_no_dup.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
@@ -128,7 +131,6 @@ for config in al:
         print('Error for list', count)
 
     else:
-
 
         if len(dis) is 1:
             print('Not dissociated! on molecule: ', count)
