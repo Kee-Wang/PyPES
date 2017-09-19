@@ -27,16 +27,16 @@ def inlist(i,dis):
     count = -1
     return count
 
-# last_0626.xyz not duplicates
 
-#Use this to fist sort out duplicates
-#b = configs('./0817/last_0817.xyz', col=9,duplicate=True)
+#Use this to first sort out duplicates
+#b = configs('./0918/0918.xyz', col=9,duplicate=True)
+#a = configs('./0817/last_0817.xyz', col=9,duplicate=True)
 #blist = b.list()
 
-#b.write('./0817/last_0817_no_dup.xyz',blist)
+#b.write('./0918/0918_no_dup.xyz',blist)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./0817/last_0817_no_dup.xyz', col=9)
+a = configs_hwww_qct('./0918/0918_no_dup.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
@@ -208,6 +208,7 @@ print('{:14s}: {:d}'.format('Total', sum(num)))
 #epoch1 = 1497045960
 #epoch2 = 1497966025
 #time = epoch2 - epoch1
+#0817time = 1502126137
 
 #total_step=sum(a.traj)
 #evals = total_step*67 #+ len(a.traj)*11*11*4 #Per core

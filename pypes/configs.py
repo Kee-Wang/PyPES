@@ -196,6 +196,7 @@ class configs():
         num2 = len(configs)
         self.broke = num1 - num2
 
+        self.col = col
         self.natm = natm
         if duplicate == True:
             configs = self.duplicate(configs)
@@ -205,7 +206,6 @@ class configs():
         self.configs_count = len(configs)
         self.train_x = train_x
         self.line_count = line_count
-        self.col = col
 
 
 
@@ -231,11 +231,21 @@ class configs():
         import numpy as np
         natm = self.natm
         print('Searching Duplicate...\n')
+
+        #f = open('duplicates.temp','w')
+
         count = 0
         mark = list()
+        f = open('temp.dat','w')
+        f.write('Duplicates: \n')
+
+
         for config in configs:
             ntotal = len(configs)
             print("Config {:d} / {:d}".format(count+1, ntotal))
+            if count < 1686:
+                count += 1
+                continue
 
             count_compare = count
             for compare in configs[count+1:]:
@@ -251,7 +261,11 @@ class configs():
                                        compare[2][i + 1][1]) is True:  # Will skip if any of the line does not match.
 
                             score += 1
-                            print('Duplicate found.')
+                            print('Duplicate found. Config: {:d}'.format(count+1))
+                            f.write('Config: {:d} compare: {:d} \n'.format(count+1, count_compare))
+                            self.prt(config)
+                            print('Compare config: {:d}'.format(count_compare))
+                            self.prt(compare)
                     if score == natm:
                         mark.append(count_compare)
             count += 1

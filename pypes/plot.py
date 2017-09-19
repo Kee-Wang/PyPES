@@ -58,7 +58,7 @@ class plot():
         self.save(fig,save)
 
         return None
-    def scatter(self,file,col=[0,1],xtitle='xtitle',ytitle='ytitle',title=' '):
+    def scatter(self,file,col=[0,1],min=0,max=-1,ymax=None,xtitle='xtitle',ytitle='ytitle',title=' ',save=None):
         """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
         import matplotlib.pyplot as plt
         import numpy as np
@@ -67,14 +67,17 @@ class plot():
         ax = fig.add_subplot(111)
         data = np.loadtxt(file, unpack=True)
         for i in col:
-            if i == 0:
+            if i == col[0]:
                 continue
-            plt.scatter(data[0],data[i])
+            plt.scatter(data[col[0]][min:max],data[i][min:max])
+            print(col[0],i)
         #ax.set_title(title)
         ax.set_xlabel(xtitle)
         ax.set_ylabel(ytitle)
-
-        plt.show()
+        if ymax is not None:
+            ax.set_ylim([0, ymax])
+        self.save(fig, save)
+        #plt.show()
         return None
     def line_backup(self,file,col=[0,1],xtitle='xtitle',ytitle='ytitle',title=' ',save=None,linewidth=2):
         """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
@@ -151,14 +154,16 @@ class plot():
         plt.tight_layout()
         fig = plt.gcf()
         plt.show()
-        if save is None:
-            decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
-            if decision is 'y':
-                filename = input('Please specify .eps (1200 dpi) filename: ').strip()
-
-                fig.savefig(filename, format='eps', dpi=1200)
-                print('Plot saved to {}.'.format(save))
+        if save is 'No':
+            pass
         else:
+            if save is None:
+                decision = input("Do you want to save the file? (Enter 'y' to save, enter others to skip)")
+                if decision is 'y':
+                    filename = input('Please specify .eps (1200 dpi) filename: ').strip()
+
+                    fig.savefig(filename, format='eps', dpi=1200)
+                    print('Plot saved to {}.'.format(save))
             fig.savefig(save, format='eps', dpi=1200)
             print('Plot saved to {}.'.format(save))
 
@@ -215,8 +220,6 @@ class plot():
         self.save(fig,save)
 
         return None
-
-
     def hist(self, file,col=[0], bin='auto', xtitle='xtitle', ytitle='ytitle', title=' ',save=None):
         """This is to plot simple scatter plot for n columns. order in the first column will be take as x, all other columns are taken as y"""
         import matplotlib.pyplot as plt
@@ -233,3 +236,4 @@ class plot():
         self.save(fig, save)
         plt.show()
         return None
+
