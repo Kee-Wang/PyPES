@@ -48,7 +48,7 @@ def j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1
     ax2.set_ylabel(ytitle2)
     for i in range(len(file2)):
         data2 = np.loadtxt(file2[i], unpack=True)
-        y, binEdges = np.histogram(data2, bins=bin)
+        y, binEdges = np.histogram(data2, bins=bin[i])
         bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
         plt.plot(bincenters,y,'-',linewidth=3,label = label[i])
 
@@ -62,12 +62,12 @@ file2 = ['../result_H_WWW.s1_j4','../result_H_WWW.s2_j4','../result_H_WWW.s3_j4'
 
 save = 'j=4.eps'
 ymax1 = 150
-ymax2 = 50
+ymax2 = 90
 xtitle='Velocity (m/s)'
 ytitle1='Experiment signal intensity'
 ytitle2='Trajectory count'
 linewidth=1
-bin = 20
+bin = [20,15,15,10]
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
 note = ['J=4',900,140]
 #j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label, index1=2)
@@ -77,12 +77,12 @@ file2 = ['../result_H_WWW.s1_j6','../result_H_WWW.s2_j6','../result_H_WWW.s3_j6'
 
 save = 'j=6.eps'
 ymax1 = 150
-ymax2 = 30
+ymax2 = 60
 xtitle='Velocity (m/s)'
 ytitle1='Experiment signal intensity'
 ytitle2='Trajectory count'
 linewidth=1
-bin = 20
+bin = [20,10,10,10]
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
 note = ['J=6',900,140]
 #j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1=1)
@@ -101,10 +101,10 @@ def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
     y = [1, 0.6, 0.4, 0.09, 0.034, 0.02]
     yerr = [0.07, 0.072, 0.1, 0.08, 0.02, 0.012]
     ax = ax.twinx()
-    ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2,label='Exp')
+    #ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2,label='Exp')
     #plt.plot(x,y,'k-',linewidth=linewidth)
 
-    ax.legend()
+
     ax2 = ax.twinx()
     ax2.set_ylim([0, ymax2])
     ax2.set_ylabel(ytitle2)
@@ -116,8 +116,8 @@ def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
     max = list()
     for i in range(len(file2)):
         data2 = np.loadtxt(file2[i], unpack=True)
-        x = np.array(data2[0])
-        unique[i], counts[i] = np.unique(x, return_counts=True)
+        x1 = np.array(data2[0])
+        unique[i], counts[i] = np.unique(x1, return_counts=True)
 
         count = 0
         for j in unique[i]:
@@ -133,10 +133,13 @@ def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
         #counts[i] = counts[i] * counts[0][loc[0]] / counts[i][loc[i]]
         #print(counts[i])
 
-        plt.plot(unique[i],counts[i]/counts[i][loc[i]],'-',linewidth=3,label = label[i])
-        plt.scatter(unique[i], counts[i]/counts[i][loc[i]])
+        plt.plot(unique[i],counts[i]/counts[i][loc[i]],'-',linewidth=2,label = label[i])
+        #plt.scatter(unique[i], counts[i]/counts[i][loc[i]])
 
     ax2.legend(loc=7)
+    ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2, label='Exp')
+    ax.legend()
+
     a = plot()
     a.save(fig=fig, save=save)
 
@@ -155,7 +158,7 @@ bin = 10
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
 #j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label)
 
-def j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,note,label,index1):
+def j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,label,index1,index2):
     fig = plt.figure(figsize=(6, 9))
 
 
@@ -181,7 +184,7 @@ def j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,note,label,index1):
         plt.plot(bincenters,y,'-',linewidth=3)
         ax.set_xlim(xlim)
         ymax = ax.get_ylim()
-        ax.text(4000, ymax[1]*0.8, note[i][1], fontsize=18)
+        ax.text(index2, ymax[1]*0.8, label[i], fontsize=15)
         ax.legend()
 
 
@@ -205,14 +208,13 @@ linewidth=1
 bin = [100, 100, 100, 20]
 xtitle='HCl Internal Energy (cm$^{-1}$)'
 label = ['No Constraint','Hard ZPE on HCl','Soft ZPE on both','Hard ZPE on both']
-note =[[80,'No Constraint'],[25,'Hard ZPE on HCl'],[40,'Soft ZPE on both'],[14,'Hard ZPE on both']]
-#j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,note,label, index1=2)
+#j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,label, index1=2, index2 = 4000)
 
 xlim=[10000,20000]
 bin = [100, 100, 100, 50]
 save = 'WWW_internal.eps'
 xtitle='(H$_2$O)$_3$ Internal Energy (cm$^{-1}$)'
-#j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,note,label, index1=3)
+#j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,label, index1=3, index2=10150)
 
 
 
@@ -238,7 +240,7 @@ def j_w_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label):
 
     for i in range(len(file2)):
         print(file2[i])
-        f = open('water_j_distribution_s{:d}.dat'.format(i+1), 'w')
+        f = open('water_j_distribution_s{:d}.txt'.format(i+1), 'w')
         data2 = np.loadtxt(file2[i], unpack=True)
         y, binEdges = np.histogram(data2[1], bins=bin[i])
         bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
@@ -259,9 +261,45 @@ file2 = ['../result_HWW_W.s1','../result_HWW_W.s2','../result_HWW_W.s3','../resu
 save = 'water_j_distribution.eps'
 label = ['No Constraint','Hard ZPE on monomer','Soft ZPE on both','Hard ZPE on both']
 xtitle = 'J(water monomer)'
-j_w_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label)
+#j_w_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label)
 
 
+def w_erot_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label):
+    plt.rc('xtick', labelsize=20)  # fontsize of the axes title
+    fig = plt.figure()
+    ax2 = fig.add_subplot(111)
+
+    ax2.set_xlabel(xtitle)
+
+    bin = [50,50,50,20]
+    ax2.set_ylabel(ytitle2)
+    ax2.set_xlim([0,0.008])
+
+    for i in range(len(file2)):
+        #f = open('water_j_distribution_s{:d}.txt'.format(i+1), 'w')
+        data2 = np.loadtxt(file2[i], unpack=True)
+        y, binEdges = np.histogram(data2[1], bins=bin[i])
+        bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
+        plt.plot(bincenters,y,'-',linewidth=3,label = label[i])
+        count = 0
+
+        #f.write('#Bin center    #Number of count \n')
+        #for num in y:
+        #    f.write('{:f},{:d} \n'.format(binEdges[count],num))
+        #    count = count + 1
+
+
+        #f.close()
+    plt.ticklabel_format(style='sci', axis='x', scilimits=(0, 0))
+
+    ax2.legend(loc=7)
+    a = plot()
+    a.save(fig=fig, save=save)
+file2 = ['../result/result_HWW_W.s1','../result/result_HWW_W.s2','../result/result_HWW_W.s3','../result/result_HWW_W.s4']
+save = 'water_j_distribution.eps'
+label = ['No Constraint','Hard ZPE on monomer','Soft ZPE on both','Hard ZPE on both']
+xtitle = 'Water monomer rotational energy (a.u.)'
+w_erot_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label)
 
 
 

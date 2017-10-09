@@ -30,17 +30,17 @@ def inlist(i,dis):
 
 #Use this to first sort out duplicates
 #b = configs('./0918/0918.xyz', col=9,duplicate=True)
-b = configs('./1003_all/1003_all.xyz', col=9,duplicate=True)
-blist = b.list()
+#b = configs('./1008/1008_all.xyz', col=9,duplicate=True)
+#blist = b.list()
 
-b.write('1003_all_no_dup',blist)
+#b.write('1003_all_no_dup',blist)
 
 # Then use this modified module to do calculation.
-#a = configs_hwww_qct('./0918/0918_no_dup.xyz', col=9)
+a = configs_hwww_qct('./1008/1008.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
-raise Exception('stopped')
+#raise Exception('stopped')
 al = a.list()
 
 #print(al)
