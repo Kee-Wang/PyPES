@@ -36,7 +36,7 @@ def inlist(i,dis):
 #b.write('1003_all_no_dup',blist)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./1008/1008.xyz', col=9)
+a = configs_hwww_qct('./1017/1017.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
