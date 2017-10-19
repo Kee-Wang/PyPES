@@ -1,4 +1,4 @@
-f = open('qstatntemp')
+f = open('nodetemp')
 cores = list()
 nodes = list()
 for iter in range(26):
@@ -30,14 +30,14 @@ for iter in range(26):
         continue
     ava = 17-len(nodes[iter])
     if ava is 16:
-        print('Node{:>2d}: {:<2d} (Full node <<<)\n'.format(iter, ava))
+        print('Node{:>2d}: {:<2d} (Full node <<<)'.format(iter, ava))
         node_count[0] = node_count[0] + 1
     elif ava is 0:
-        print('Node{:>2d}: {:<2d} (NA)\n'.format(iter, ava))
+        print('Node{:>2d}: {:<2d} (NA)'.format(iter, ava))
         node_count[1] = node_count[1] + 1
 
     else:
-        print('Node{:>2d}: {:<2d}\n '.format(iter, ava))
+        print('Node{:>2d}: {:<2d}'.format(iter, ava))
         node_count[2] = node_count[2] + 1
         core_count = core_count + ava
 
