@@ -1,4 +1,4 @@
-f = open('nodetemp')
+f = open('/home/kee/github/PyPES/workspace/que/nodetemp')
 cores = list()
 nodes = list()
 for iter in range(26):
