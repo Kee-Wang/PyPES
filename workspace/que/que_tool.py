@@ -1,4 +1,4 @@
-f = open('nodetemp')
+f = open('/home/kee/github/PyPES/workspace/que/nodetemp')
 cores = list()
 nodes = list()
 for iter in range(26):
@@ -30,20 +30,20 @@ for iter in range(26):
         continue
     ava = 17-len(nodes[iter])
     if ava is 16:
-        print('Node{:>2d}: {:<2d} (Full node <<<)'.format(iter, ava))
+        print('Node{0:>2d}: {1:<2d} (Full node <<<)'.format(iter, ava))
         node_count[0] = node_count[0] + 1
     elif ava is 0:
-        print('Node{:>2d}: {:<2d} (NA)'.format(iter, ava))
+        print('Node{0:>2d}: {1:<2d} (NA)'.format(iter, ava))
         node_count[1] = node_count[1] + 1
 
     else:
-        print('Node{:>2d}: {:<2d}'.format(iter, ava))
+        print('Node{0:>2d}: {1:<2d}'.format(iter, ava))
         node_count[2] = node_count[2] + 1
         core_count = core_count + ava
 
 
 print('Availability Summary: \n')
-print('Full nodes: {:>2d}  (={:3d} cores)'.format(node_count[0],node_count[0]*16 ))
-print('Partial nodes: {:>2d} (={:3d} cores)'.format(node_count[2], core_count))
-print('Total available cores: {:>3d}'.format(node_count[0]*16+core_count))
+print('Full nodes: {0:>2d}  (={1:3d} cores)'.format(node_count[0],node_count[0]*16 ))
+print('Partial nodes: {0:>2d} (={1:3d} cores)'.format(node_count[2], core_count))
+print('Total available cores: {0:>3d}'.format(node_count[0]*16+core_count))
 
