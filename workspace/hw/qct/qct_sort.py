@@ -3,7 +3,7 @@ import numpy as np
 from pypes.configs import configs
 from itertools import chain
 import matplotlib.pyplot as plt
-
+import sys
 
 
 
@@ -36,13 +36,17 @@ def inlist(i,dis):
 #b.write('1003_all_no_dup',blist)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./1017/1017.xyz', col=9)
+a = configs_hwww_qct('./1022/1022.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
 #raise Exception('stopped')
-al = a.list()
-
+temp = a.list()
+al = temp[0]
+steps = temp[1] #All the steps associate with each trajectory
+h_steps = list()
+w_steps = list()
+#stop
 #print(al)
 #a.prt(al)
 
@@ -55,8 +59,12 @@ HW_W_W=list()
 H_W_W_W=list()
 broken = list()
 
+
+
 count = 0
+count_step = -1
 for config in al:
+    count_step = count_step + 1
     broke = False
 
     bonds = a.bond_length(config)#,show=True,full=True)
@@ -140,6 +148,8 @@ for config in al:
                 if len(sublist) is 1:#the `1` could be H or W
                     if sublist[0] is 11:
                         H_WWW.append(config)
+                        h_steps.append(steps[count_step])
+
                     else: #Else is `W`
 
                         if sublist[0] is 8:#`W` is not the first `W` Bubble up that water
@@ -154,6 +164,9 @@ for config in al:
 
                         #print(sublist[0])
                         HWW_W.append(config)
+                        w_steps.append(steps[count_step])
+                        #print(count_step, steps[count_step])
+
                 elif len(sublist) is 2 and (sublist[0] is 11 or sublist[1] is 11):
                     #print(dis)
                     #print(count,'HW + WW')
@@ -198,7 +211,7 @@ for lst in All:
         all_configs.append(config)
     print('{:14s}: {:d}'.format(assign[count],num[count]))
     count = count + 1
-a.write('result_all.xyz',all_configs)
+#a.write('result_all.xyz',all_configs)
 #print(a.broke, len(broken))
 num.append((len(broken)+a.broke)) #Add configs that cannot be read in the initial file
 print('{:14s}: {:d}'.format('Blow-up!',num[-1]))
@@ -214,11 +227,17 @@ print('{:14s}: {:d}'.format('Total', sum(num)))
 #evals = total_step*67 #+ len(a.traj)*11*11*4 #Per core
 #print('Number of total evals: {:d}'.format(evals))
 #print('Time per eval: {:f} ms'.format(time/evals*1000*((64-13))))
-
-traj = np.array(a.traj)
 step_size=2.5
-au_s = 2.418884326509e-5
-traj = traj * 2.5*au_s
+au_s = 2.418884326509e-5 #unit ps
+
+h_steps = np.array(h_steps)
+w_steps = np.array(w_steps)
+#print('Average step for H_WWW: {:f} pm {:f}'.format(h_steps.mean(), h_steps.std()))
+print('Average time for H_WWW: {:f}  pm {:f} (ps)'.format(h_steps.mean() * 2.5*au_s, h_steps.std() * 2.5*au_s))
+#print('Average step for W_WWW: {:f}'.format(w_steps.mean()))
+print('Average time for W_WWW: {:f}  pm {:f} (ps)'.format(w_steps.mean() * 2.5*au_s, w_steps.std() * 2.5*au_s))
+#print(len(h_steps),len(w_steps))#traj = np.array(a.traj)
+
 
 #plt.hist(traj,bins='auto')
 #plt.xlabel('Time for dissociation (ps) \n (At least one of atom pairs with distance > 50 a.u)')
@@ -234,7 +253,8 @@ assign1 = ['HWWW','H_WWW','HWW_W','HW_WW','H_W_WW','HW_W_W','H_W_W_W']
 
 count=0
 for name in assign1:
-    a.write(''.join(['result_',name,'.xyz']), All[count])
+    if count == 1 or count == 2:
+        a.write(''.join(['result_',name,'.xyz']), All[count])
     count = count + 1
 
 #a.molden(H_WWW)

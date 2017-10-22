@@ -123,6 +123,8 @@ class configs_hwww_qct():
 
         f.close()
 
+        steps = list() #The termination step number of that trajectory
+
         line_count = 0
         configs = list()
         dipole = list()
@@ -143,8 +145,9 @@ class configs_hwww_qct():
                     new_line = line.split()
 
                     line = new_line[0]
-                    #traj = int(new_line[1].split(sep='#')[2])
-                    #print(traj)
+                    steps.append(int(new_line[1].split(sep='#')[2]))
+                    #print(self.steps)
+
                     line = line.split()[0]
                     if natm != int(line):
                         print("Type error: molecule number in line " + str(line_count) + " is : " + line)  # Check type
@@ -208,6 +211,7 @@ class configs_hwww_qct():
         num2 = len(configs)
 
         # self.blank_line_count = blank_line_count
+        self.steps = steps
         self.broke = num1-num2
         self.configs = copy.deepcopy(configs)
         self.dip = dip
@@ -218,6 +222,7 @@ class configs_hwww_qct():
         self.traj = traj_info
 
         self.col = col
+        #print(steps)
 
         # print('Number of blank lines in file:    {:<2d}'.format(self.blank_line_count))
         print('Configuration check finished!')
@@ -516,9 +521,9 @@ class configs_hwww_qct():
         """
 
         if first_n_configs == False:
-            return self.configs
+            return [self.configs, self.steps]
         else:
-            return self.configs[0:int(first_n_configs)]
+            return [self.configs[0:int(first_n_configs)], self.steps]
 
     def threshold_energy(self, configs, lower=False, upper=False):
         """First sort the list then select the configs based on energy threshold
