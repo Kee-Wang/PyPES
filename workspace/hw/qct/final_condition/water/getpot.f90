@@ -32,7 +32,7 @@ real,dimension(9)::v_w
 real,dimension(24)::x_hww
 real,dimension(24)::v_hww
 real,dimension(3,3)::xxw
-integer::j221c,j321c, D0count(4)
+integer::j221c,j321c, D0count(4), iter
 real:: D0, red_w, red_hww, kin_hwww, x_hwww(33), v_hwww(33), com_velc(3)
 real:: Ekine, Ekine_hww
 
@@ -120,8 +120,12 @@ mass = mass*emass
 
 
 !Initialize HCl fragment
+!nhcl = 1
+!nwat = 3
+!call pes_init()
 call hclwat_init(1,2) !Init hww
-call wat_init(1) !Init w
+!call hcl_init(1)
+call wat_init(2) !Init w
 
 mass_w(1:2) = mass(1:2)
 mass_w(3) = mass(7)
@@ -190,14 +194,24 @@ call fin_cond(mass_hww,x_hww,v_hww,speed_hww,Ekine_hww,Erot_hww,j_hww,abc_hww,ev
 !calculate vibrational energy, so that to determin if zpe violated
 nwat = 1
 nhcl = 0
+!call hclwat_init(nhcl,nwat) !Init hww
+!call hcl_init(nhcl)
+!call wat_init(nwat) !Init w
 Evib = calc_kine(mass_w,v_w)- Erot 
-Evib = Evib*aucm + (f(xxw)*aucm - E_w_ref ) !Evib for water
-
+Evib = Evib*aucm + (f(xxw,1)*aucm - E_w_ref ) !Evib for water
+write(*,*) f(xxw,1)*aucm, '****'
 nwat = 2
 nhcl = 1
+!call hclwat_init(nhcl,nwat) !Init hww
+!call hcl_init(nhcl)
+!call wat_init(nwat) !Init w
 Evib_hww = calc_kine(mass_hww,v_hww)- Erot_hww
-Evib_hww = Evib_hww*aucm + (f(xxhww)*aucm - E_hww_ref ) !Evib for hww
+Evib_hww = Evib_hww*aucm + (f(xxhww,0)*aucm - E_hww_ref ) !Evib for hww
 
+write(*,*) f(xxhww,0)*aucm 
+!if (k .eq. 3) then
+!stop
+!end if
 
 
 !Classification

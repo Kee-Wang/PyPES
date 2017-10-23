@@ -180,14 +180,18 @@ call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 nwat = 0
 nhcl = 1!Calculate 1 hcl only
 Evib =calc_kine(mass(10:11),v_hcl) - Erot
-Evib = Evib*aucm + (f(xx(:,10:11))*aucm - E_hcl_ref)
-
+Evib = Evib*aucm + (f(xx(:,10:11),0)*aucm - E_hcl_ref)
+write(*,*) f(xx(:,10:11),0)*aucm
 !For www
 nwat = 3!Calculate water trimer
 nhcl = 0
 Evib_www =calc_kine(mass(1:9),v_www) - Erot_www
-Evib_www = Evib_www*aucm + (f(xx(:,1:9))*aucm - E_www_ref)
+Evib_www = Evib_www*aucm + (f(xx(:,1:9),0)*aucm - E_www_ref)
 
+write(*,*) f(xx(:,1:9),0)*aucm
+!if (k .eq. 3) then
+!stop
+!end if
 ! Calculate the rotation constant |J|
 J1 = Erot*aucm/Be_HCl
 J1 = nint(sqrt(0.25 + J1)-0.5)
