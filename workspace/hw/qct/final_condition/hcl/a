@@ -1,0 +1,10 @@
+#!/bin/bash
+
+#ifort final_condition.f90 getpot.f90
+#./a.out result_H_WWW.xyz
+#rm a.out
+make 
+
+./xget.x result_H_WWW.xyz
+#./xget.x hcl_channel.xyz
+
