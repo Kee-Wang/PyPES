@@ -14,10 +14,9 @@ real,parameter::aums=2187695.176776!1au = aums m/s
 real,parameter::zpe_w= 4713.0629051 !HO=4713.0629051 !DMC = 4637.098762
 real,parameter::zpe_hww= 12528.93462455! HO = !DMC = 12220.164040
 real,parameter::zpe_hwww = 17683.110522 !DMC = 17683.110522
-real,parameter::E_w_ref =8462.8673097354421770
-real,parameter::E_hww_ref = 3537.7663972273066975
-real,parameter::E_given =  21233.1103893624
-real:: E_tot
+real,parameter::E_w_ref =8462.8673097354421770 !Ref to min
+real,parameter::E_hww_ref = 3537.7663972273066975 !Ref to min
+real,parameter::E_given =  21233.1103893624 !Total energy
 real,dimension(:,:),allocatable::xx,gradd,velo
 character(len=2),dimension(:),allocatable::sym
 character(len=2),dimension(3)::sym_w
@@ -60,16 +59,16 @@ real::Erot_hww
 integer:: iflag(4), jmoi(3), jall,jsum(4),jcount(4),jac(3)
 real::J1(3),J1_hww(3),vsum(4), Jall_real_sum(4)
 real::Jall_real,jmoi_real(3)
-Jall_real_sum = 0
-D0count = 0
-vio = 0
-j221c=0
-j321c=0
+real::pot_w, pot_hww
 
   call getarg(1,filename)
+open(19, status='old',file='watpot/result_HWW_W.wat') !Read water potential
+open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   open(21,status='old',file=filename)
   i=index(filename,'.',.true.)
   filename=filename(1:i-1)
+
+!These files are for recording
   open(22,status='unknown',file=trim(filename)//".s1")!No restriction
   open(23,status='unknown',file=trim(filename)//".s2")!water restriction
   open(24,status='unknown',file=trim(filename)//".s3")!Soft restriction
@@ -87,8 +86,13 @@ write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) - E_COM
 write(21+j,*) 
 write(21+j,'(7A15,A2)')  '#Erot(W)','#Erot(HWW)',&
 '#Dvib(W)', '#Dvib(HWW)','D0', '#Speed'!,'#J'
-
 end do
+
+
+!Process begins here
+!initialize
+Jall_real_sum = 0
+D0count = 0
 
   read(21,*) natm
   read(21,*) 
@@ -101,7 +105,7 @@ end do
   allocate(x(natm*3))
 
   do i=1,natm
-     read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)!(i*3-2:i*3)
+     read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)
        select case(sym(i))
        case("C")
           mass(i)=c_mass
@@ -115,23 +119,13 @@ end do
     end do
   rewind(21)
 mass = mass*emass
-
-
-
-
-!Initialize HCl fragment
-!nhcl = 1
-!nwat = 3
-!call pes_init()
-call hclwat_init(1,2) !Init hww
-!call hcl_init(1)
-call wat_init(2) !Init w
-
 mass_w(1:2) = mass(1:2)
 mass_w(3) = mass(7)
-
 mass_hww(1:4) = mass(3:6)
 mass_hww(5:8) = mass(8:11)
+
+
+!Loop throught all configurations
 
   k = 0!record total number of configs
 do
@@ -140,23 +134,18 @@ do
      k = k + 1
      read(21,*)
      do i=1,natm
-        read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)!(i*3-2:i*3)
+        read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)
      end do
      xx = xx/auang !xx in Bohr
 
-!For whole
+
+!For whole HWWW, Flaten to 1D
 do j=1,11
 x_hwww(3*j-2:3*j) = xx(:,j)
 v_hwww(3*j-2:3*j) = velo(:,j)
 end do
-!For potential
-xxw(:,1:2) = xx(:,1:2)
-xxw(:,3) = xx(:,7)
-xxhww(:,1:4) = xx(:,3:6)
-xxhww(:,5:8) = xx(:,8:11)
 
-
-!Kinetic energy of HWWW, this hould be 0
+!Kinetic energy of HWWW, verify this hould be 0
 com_velc=0
     do i=1,natm
        com_velc=com_velc+mass(i)*v_hwww(3*i-2:3*i)
@@ -186,35 +175,22 @@ end do
 
 !To this point, x_w, x_hww, v_w, v_www are all in COM frame.
 
-!Calculate rotational energy
+!Calculate rotational energy Erot and translational energy Ekine
 !For water
 call fin_cond(mass_w,x_w,v_w,speed,Ekine,Erot,j_w,abc,evect)
 call fin_cond(mass_hww,x_hww,v_hww,speed_hww,Ekine_hww,Erot_hww,j_hww,abc_hww,evect)
 
 !calculate vibrational energy, so that to determin if zpe violated
-nwat = 1
-nhcl = 0
-!call hclwat_init(nhcl,nwat) !Init hww
-!call hcl_init(nhcl)
-!call wat_init(nwat) !Init w
+read(19,*) pot_w
 Evib = calc_kine(mass_w,v_w)- Erot 
-Evib = Evib*aucm + (f(xxw,1)*aucm - E_w_ref ) !Evib for water
-write(*,*) f(xxw,1)*aucm, '****'
-nwat = 2
-nhcl = 1
-!call hclwat_init(nhcl,nwat) !Init hww
-!call hcl_init(nhcl)
-!call wat_init(nwat) !Init w
+Evib = Evib*aucm + pot_w 
+
+read(20,*) pot_hww
 Evib_hww = calc_kine(mass_hww,v_hww)- Erot_hww
-Evib_hww = Evib_hww*aucm + (f(xxhww,0)*aucm - E_hww_ref ) !Evib for hww
-
-write(*,*) f(xxhww,0)*aucm 
-!if (k .eq. 3) then
-!stop
-!end if
+Evib_hww = Evib_hww*aucm + pot_hww 
 
 
-!Classification
+!Classification for different ZPE condition
 iflag = 0
 iflag(1) = 1
 if (Evib > zpe_w) then !Only water
@@ -231,41 +207,31 @@ end if
 Erot = Erot * aucm
 Erot_hww = Erot_hww * aucm
 
-!Excessive vibrational energy
+!Excessive vibrational energy, red=redundent
 red_hww = Evib_hww - zpe_hww
 red_w = Evib - zpe_w
 
 
 !D0 according to current result
-D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
+!De
+D0 = (E_given) - (Erot + Erot_hww) - (Evib + Evib_hww)&
 -(Ekine + Ekine_hww)
+!D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
+!-(Ekine + Ekine_hww)
 
 
-do i = 1,4 
-if (iflag(i) .eq. 1)  then!not violate zpe of hcl
+do i = 1,4 !Record according to different ZPE conditon
+if (iflag(i) .eq. 1)  then
+
 Jsum(i) = Jsum(i) + jall
 Jcount(i) = Jcount(i) + 1
 vsum(i) = vsum(i) + speed*aums
 Jall_real_sum(i) = Jall_real_sum(i) + Jall_real
 D0count(i) = D0count(i) + D0
 
-!write(21+i,*) Jall_real, Erot
 write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
-Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums!jall
-!write(21+i,'(I2,8(F12.2))') int(jall), Erot, Erot_hww, &
-!Evib, Evib_hww, speed*aums, kin_hwww, E_tot, D0
+Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums
 
-
-!Check J321 state for soft and no constraint
-!if (i .eq. 4 .or. i .eq. 1) then
-
-!For j=321
-!if ( (abs(Jall-3) .lt. 1e-5) .and. (abs(Jmoi(1)-2) .lt. 1e-5) .and. (abs(Jmoi(3)-1) .lt.1e-5)) then
-!write(25+i,*) speed*aums, Erot
-!write(25+i,*) Jall_real, Erot
-!end if
-
-!For j=505
 
 end if
 end do

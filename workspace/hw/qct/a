@@ -1,0 +1,7 @@
+#!/bin/bash
+
+make 
+
+./xget.x result_H_WWW.xyz
+#./xget.x hcl_channel.xyz
+

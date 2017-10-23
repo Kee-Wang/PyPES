@@ -1,12 +1,17 @@
 #!/bin/bash
 
-#ifort final_condition.f90 getpot.f90
-#./a.out result_H_WWW.xyz
-#rm a.out
+#Frist generate potential files 
+cp result_HWW_W.xyz watpot
+cd watpot
+./a
+cd ../
+cp result_HWW_W.xyz hwwpot
+cd hwwpot
+./a
+cd ../
+
+#Then start to analyze result
 make 
-#./xget.x all.xyz
-#./xget.x result_all.xyz
 ./xget.x  result_HWW_W.xyz 
-#./xget.x result_HWW_W.xyz
 
 
