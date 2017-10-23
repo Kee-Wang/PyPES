@@ -214,10 +214,10 @@ red_w = Evib - zpe_w
 
 !D0 according to current result
 !De
-D0 = (E_given) - (Erot + Erot_hww) - (Evib + Evib_hww)&
--(Ekine + Ekine_hww)
-!D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
+!D0 = (E_given) - (Erot + Erot_hww) - (Evib + Evib_hww)&
 !-(Ekine + Ekine_hww)
+D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
+-(Ekine + Ekine_hww)
 
 
 do i = 1,4 !Record according to different ZPE conditon
