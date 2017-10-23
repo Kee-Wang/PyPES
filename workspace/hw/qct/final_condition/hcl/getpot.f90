@@ -20,9 +20,10 @@ real,dimension(:,:),allocatable::xx,gradd,velo
 character(len=2),dimension(:),allocatable::sym
 character(len=32)::filename
 integer::k,i,natm,ierr,j,vio
-real::pot,diss, E_trans,E_T, E_V, ab_j, M_hcl, E_rot, speed, Evib
+real::pot,diss, E_trans,E_T, E_V,  M_hcl, E_rot, speed, Evib
 real::speed_www, Erot_www,Evib_www
 real,dimension(:),allocatable::mass
+integer::ab_j
 real,dimension(:),allocatable::x
 real,dimension(27)::x_www
 real,dimension(27)::v_www
@@ -88,8 +89,8 @@ write(21+j,*) '#Dvib = Evib - ZPE'
 write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) -E_COM,&
  E_COM=0"
 write(21+j,*)
-write(21+j,'(7A15,A2)')  '#Erot(HCl)','#Erot(WWW)',&
-'#Dvib(HCl)', '#Dvib(WWW)','D0', '#Speed'
+write(21+j,'(8A15,A2)')  '#Erot(HCl)','#Erot(WWW)',&
+'#Dvib(HCl)', '#Dvib(WWW)','D0', '#Speed','#J'
 end do
 
   do i=1,4
@@ -180,15 +181,13 @@ call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 nwat = 0
 nhcl = 1!Calculate 1 hcl only
 Evib =calc_kine(mass(10:11),v_hcl) - Erot
-Evib = Evib*aucm + (f(xx(:,10:11),0)*aucm - E_hcl_ref)
-write(*,*) f(xx(:,10:11),0)*aucm
+Evib = Evib*aucm + (f(xx(:,10:11))*aucm - E_hcl_ref)
 !For www
 nwat = 3!Calculate water trimer
 nhcl = 0
 Evib_www =calc_kine(mass(1:9),v_www) - Erot_www
-Evib_www = Evib_www*aucm + (f(xx(:,1:9),0)*aucm - E_www_ref)
+Evib_www = Evib_www*aucm + (f(xx(:,1:9))*aucm - E_www_ref)
 
-write(*,*) f(xx(:,1:9),0)*aucm
 !if (k .eq. 3) then
 !stop
 !end if
@@ -233,26 +232,22 @@ Jcount(i) = Jcount(i) + 1
 vsum(i) = vsum(i) + speed*aums
 D0count(i) = D0count(i) + D0
 
-
 !Record
 ! Record overal speed distrubtion and j distribution
-!write(21+i,*) int(ab_j), speed*aums, Evib_www
-!write(21+i,'(I2,8(F12.2))') int(ab_j), Erot, Erot_www, &
-!Evib, Evib_www, speed*aums, kin_hwww, E_tot, D0
-write(21+i,'(6(F15.2))')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums
+write(21+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 
 !For J=4 configs
 if (abs(ab_j-4.0) <=1d-5) then
-write(25+i,'(6(F15.2))')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums
+write(25+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 !write(25+i,*) speed*aums
 end if
 
 !For J=6 configs
 if (abs(ab_j-6.0) <=1d-5) then
-write(29+i,'(6(F15.2))')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums
+write(29+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 !write(29+i,*) speed*aums
 end if
 
