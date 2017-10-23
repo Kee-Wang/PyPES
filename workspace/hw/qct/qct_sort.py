@@ -36,7 +36,7 @@ def inlist(i,dis):
 #b.write('1003_all_no_dup',blist)
 
 # Then use this modified module to do calculation.
-a = configs_hwww_qct('./1022/1022.xyz', col=9)
+a = configs_hwww_qct('./1023/1023.xyz', col=9)
 
 print('\n Sorting Begin: \n')
 
@@ -151,7 +151,7 @@ for config in al:
                         h_steps.append(steps[count_step])
 
                     else: #Else is `W`
-
+                    #"This part is important because we have to put the fist water as the dissociated wter"
                         if sublist[0] is 8:#`W` is not the first `W` Bubble up that water
                             config = a.switch(config,neworder=[2,3,0,1,4,5,7,6,8,9,10])[0]
 
