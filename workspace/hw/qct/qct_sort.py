@@ -251,11 +251,14 @@ print('Average time for W_WWW: {:f}  pm {:f} (ps)'.format(w_steps.mean() * 2.5*a
 
 assign1 = ['HWWW','H_WWW','HWW_W','HW_WW','H_W_WW','HW_W_W','H_W_W_W']
 
-count=0
-for name in assign1:
-    if count == 1 or count == 2:
-        a.write(''.join(['result_',name,'.xyz']), All[count])
-    count = count + 1
+a.write('./final_condition/water/result_HWW_W.xyz', All[2])
+a.write('./final_condition/hcl/result_H_WWW.xyz', All[1])
+
+#count=0
+#for name in assign1:
+#    if count == 1 or count == 2:
+#        a.write(''.join(['./final_condition/result_',name,'.xyz']), All[count])
+#    count = count + 1
 
 #a.molden(H_WWW)
 #a.molden(HWW_W)
