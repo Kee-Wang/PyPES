@@ -64,19 +64,19 @@ D0count = 0
   open(21,status='old',file=filename)
   i=index(filename,'.',.true.)
   filename=filename(1:i-1)
-  open(22,status='unknown',file=trim(filename)//".s1")!No restriction
-  open(23,status='unknown',file=trim(filename)//".s2")!HCl restriction
-  open(24,status='unknown',file=trim(filename)//".s3")!Soft restriction
-  open(25,status='unknown',file=trim(filename)//".s4")!Hard restriction
+  open(22,status='unknown',file=trim(filename)//"_s1.txt")!No restriction
+  open(23,status='unknown',file=trim(filename)//"_s2.txt")!HCl restriction
+  open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
+  open(25,status='unknown',file=trim(filename)//"_s4.txt")!Hard restriction
 
-  open(26,status='unknown',file=trim(filename)//".s1_j4")!J=4
-  open(27,status='unknown',file=trim(filename)//".s2_j4")
-  open(28,status='unknown',file=trim(filename)//".s3_j4")
-  open(29,status='unknown',file=trim(filename)//".s4_j4")
-  open(30,status='unknown',file=trim(filename)//".s1_j6")!J=6
-  open(31,status='unknown',file=trim(filename)//".s2_j6")
-  open(32,status='unknown',file=trim(filename)//".s3_j6")
-  open(33,status='unknown',file=trim(filename)//".s4_j6")
+  open(26,status='unknown',file=trim(filename)//"_s1_j4.txt")!J=4
+  open(27,status='unknown',file=trim(filename)//"_s2_j4.txt")
+  open(28,status='unknown',file=trim(filename)//"_s3_j4.txt")
+  open(29,status='unknown',file=trim(filename)//"_s4_j4.txt")
+  open(30,status='unknown',file=trim(filename)//"_s1_j6.txt")!J=6
+  open(31,status='unknown',file=trim(filename)//"_s2_j6.txt")
+  open(32,status='unknown',file=trim(filename)//"_s3_j6.txt")
+  open(33,status='unknown',file=trim(filename)//"_s4_j6.txt")
 
 write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s)'
 write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'

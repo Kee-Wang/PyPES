@@ -69,10 +69,10 @@ open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   filename=filename(1:i-1)
 
 !These files are for recording
-  open(22,status='unknown',file=trim(filename)//".s1")!No restriction
-  open(23,status='unknown',file=trim(filename)//".s2")!water restriction
-  open(24,status='unknown',file=trim(filename)//".s3")!Soft restriction
-  open(25,status='unknown',file=trim(filename)//".s4")!Hard restriction
+  open(22,status='unknown',file=trim(filename)//"_s1.txt")!No restriction
+  open(23,status='unknown',file=trim(filename)//"_s2.txt")!water restriction
+  open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
+  open(25,status='unknown',file=trim(filename)//"_s4.txt")!Hard restriction
 write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s).'
 write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
 write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
