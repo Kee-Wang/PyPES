@@ -89,8 +89,14 @@ write(21+j,*) '#Dvib = Evib - ZPE'
 write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) -E_COM,&
  E_COM=0"
 write(21+j,*)
-write(21+j,'(8A15,A2)')  '#Erot(HCl)','#Erot(WWW)',&
-'#Dvib(HCl)', '#Dvib(WWW)','D0', '#Speed','#J'
+!For self readiing
+!write(21+j,'(8A15,A2)')  '#Erot(HCl)','#Erot(WWW)',&
+!'#Dvib(HCl)', '#Dvib(WWW)','D0', '#Speed','#J'
+!For export
+write(21+j,'(3A15)')  '#Erot(HCl)cm-1','#J','#Speed(m/s)'
+!write(21+j,'(3A15)')  '#Erot(HCl) (cm-1)','#J','#Speed(m/s)'
+
+
 end do
 
   do i=1,4
@@ -234,26 +240,30 @@ D0count(i) = D0count(i) + D0
 
 !Record
 ! Record overal speed distrubtion and j distribution
-write(21+i,'(6(F15.2),I15)')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
+!write(21+j,'(3A15)')  '#Erot(HCl) (cm-1)','#J','#Speed(m/s)'
+!For export
+write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+
+!For selfuse
+!write(21+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+!Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 
 !For J=4 configs
 if (abs(ab_j-4.0) <=1d-5) then
-write(25+i,'(6(F15.2),I15)')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
-!write(25+i,*) speed*aums
+write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+!write(25+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+!Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 end if
 
 !For J=6 configs
 if (abs(ab_j-6.0) <=1d-5) then
-write(29+i,'(6(F15.2),I15)')  Erot, Erot_www, &
-Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
-!write(29+i,*) speed*aums
+write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+!write(29+i,'(6(F15.2),I15)')  Erot, Erot_www, &
+!Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 end if
 
 end if
 end do
-!write(*,'(I5)') int(ab_j)
 end do
 
 write(*,*) 'Jcount,no/hard on hcl/soft/hard',Jcount

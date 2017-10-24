@@ -84,8 +84,10 @@ write(21+j,*) '#Dvib = Evib - ZPE'
 write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) - E_COM,&
  E_COM=0"
 write(21+j,*) 
-write(21+j,'(7A15,A2)')  '#Erot(W)','#Erot(HWW)',&
-'#Dvib(W)', '#Dvib(HWW)','D0', '#Speed'!,'#J'
+
+write(21+j,'(2A15)')  '#Erot(W)cm-1', '#Speed(m/s)'
+!write(21+j,'(7A15,A2)')  '#Erot(W)','#Erot(HWW)',&
+!'#Dvib(W)', '#Dvib(HWW)','D0', '#Speed'!,'#J'
 end do
 
 
@@ -229,8 +231,11 @@ vsum(i) = vsum(i) + speed*aums
 Jall_real_sum(i) = Jall_real_sum(i) + Jall_real
 D0count(i) = D0count(i) + D0
 
-write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
-Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums
+
+write(21+i,'(2(F15.2))')  Erot, speed*aums
+!write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
+!Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums
+
 
 
 end if
