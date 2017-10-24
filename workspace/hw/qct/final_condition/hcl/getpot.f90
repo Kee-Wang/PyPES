@@ -250,14 +250,14 @@ write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 
 !For J=4 configs
 if (abs(ab_j-4.0) <=1d-5) then
-write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+write(25+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !write(25+i,'(6(F15.2),I15)')  Erot, Erot_www, &
 !Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 end if
 
 !For J=6 configs
 if (abs(ab_j-6.0) <=1d-5) then
-write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+write(29+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !write(29+i,'(6(F15.2),I15)')  Erot, Erot_www, &
 !Evib - zpe_hcl, Evib_www-zpe_www, D0, speed*aums, ab_j
 end if
