@@ -73,17 +73,17 @@ open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   open(23,status='unknown',file=trim(filename)//"_s2.txt")!water restriction
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
   open(25,status='unknown',file=trim(filename)//"_s4.txt")!Hard restriction
-write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s).'
-write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
-write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
-write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
+!write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s).'
+!write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
+!write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
+!write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
 do j=1,4
-write(21+j,*) '#Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455'
-write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
-write(21+j,*) '#Dvib = Evib - ZPE'
-write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) - E_COM,&
- E_COM=0"
-write(21+j,*) 
+!write(21+j,*) '#Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455'
+!write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
+!write(21+j,*) '#Dvib = Evib - ZPE'
+!write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) - E_COM,&
+! E_COM=0"
+!write(21+j,*)
 
 write(21+j,'(2A15)')  '#Erot(W)cm-1', '#Speed(m/s)'
 !write(21+j,'(7A15,A2)')  '#Erot(W)','#Erot(HWW)',&

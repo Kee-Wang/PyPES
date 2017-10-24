@@ -1,9 +1,3 @@
- # No ZPE restriction, Energy (cm-1), speed (m/s).
- #Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455
- #E_given = DMC ZPE + 3550 =21233.1103893624.
- #Dvib = Evib - ZPE
- #D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) - E_COM,E_COM=0
- 
    #Erot(W)cm-1    #Speed(m/s)
          178.54         423.10
           76.94         315.64

@@ -78,17 +78,17 @@ D0count = 0
   open(32,status='unknown',file=trim(filename)//"_s3_j6.txt")
   open(33,status='unknown',file=trim(filename)//"_s4_j6.txt")
 
-write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s)'
-write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
-write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
-write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
+!write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s)'
+!write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
+!write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
+!write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
 do j=1,12
-write(21+j,*) '#HCl ZPE (DMC): 1483.743446, WWW ZPE (DMC): 15602.536472'
-write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
-write(21+j,*) '#Dvib = Evib - ZPE'
-write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) -E_COM,&
- E_COM=0"
-write(21+j,*)
+!write(21+j,*) '#HCl ZPE (DMC): 1483.743446, WWW ZPE (DMC): 15602.536472'
+!write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
+!write(21+j,*) '#Dvib = Evib - ZPE'
+!write(21+j,*) "#D0 = E_given - Erot(W) - Erot(HWW) - Evib(W) + Evib(HWW) -E_COM,&
+! E_COM=0"
+!write(21+j,*)
 !For self readiing
 !write(21+j,'(8A15,A2)')  '#Erot(HCl)','#Erot(WWW)',&
 !'#Dvib(HCl)', '#Dvib(WWW)','D0', '#Speed','#J'
