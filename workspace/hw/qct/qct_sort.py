@@ -8,7 +8,7 @@ import sys
 
 
 bond_threshold = 3# 4 #Angstrom, The max covalent bond length for a molecule
-rmax = 9 #Angstrom The max distance between two molecules to be interacted
+rmax = 6.5 #Angstrom The max distance between two molecules to be interacted
 
 
 def inlist(i,dis):

@@ -30,7 +30,7 @@ def j_plot_back(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note):
     a.save(fig=fig, save=save)
 
 
-def j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1):
+def hcl_j_speed_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1):
     fig = plt.figure()
     ax = fig.add_subplot(111)
     ax.text(note[1], note[2], note[0], fontsize=18)
@@ -48,7 +48,7 @@ def j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1
     ax2.set_ylabel(ytitle2)
     for i in range(len(file2)):
         data2 = np.loadtxt(file2[i], unpack=True)
-        y, binEdges = np.histogram(data2, bins=bin[i])
+        y, binEdges = np.histogram(data2[5], bins=bin[i])
         bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
         plt.plot(bincenters,y,'-',linewidth=3,label = label[i])
 
@@ -56,11 +56,11 @@ def j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1
     a = plot()
     a.save(fig=fig, save=save)
 
-"Overall speed distribution for HCl"
-file1 = 'j=4.prn'
-file2 = ['./result_hcl/result_H_WWW.s1_j4','./result_hcl/result_H_WWW.s2_j4','./result_hcl/result_H_WWW.s3_j4','./result_hcl/result_H_WWW.s4_j4']
-
-save = 'j=4.eps'
+"J selected speed distribution for HCl"
+file1 = 'plot/j=4.prn'
+file2 = ['./final_condition/hcl/result_H_WWW.s1_j4', './final_condition/hcl/result_H_WWW.s2_j4',
+         './final_condition/hcl/result_H_WWW.s3_j4', './final_condition/hcl/result_H_WWW.s4_j4']
+save = './result_hcl/j4speed.eps'
 ymax1 = 150
 ymax2 = 90
 xtitle='Velocity (m/s)'
@@ -70,12 +70,12 @@ linewidth=1
 bin = [20,15,15,10]
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
 note = ['J=4',900,140]
-#j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label, index1=2)
+hcl_j_speed_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label, index1=2)
 
-file1 = 'j=6.prn'
-file2 = ['./result_hcl/result_H_WWW.s1_j6','./result_hcl/result_H_WWW.s2_j6','./result_hcl/result_H_WWW.s3_j6','./result_hcl/result_H_WWW.s4_j6']
-
-save = 'j=6.eps'
+file1 = 'plot/j=6.prn'
+file2 = ['./final_condition/hcl/result_H_WWW.s1_j6', './final_condition/hcl/result_H_WWW.s2_j6',
+         './final_condition/hcl/result_H_WWW.s3_j6', './final_condition/hcl/result_H_WWW.s4_j6']
+save = './result_hcl/j6speed.eps'
 ymax1 = 150
 ymax2 = 60
 xtitle='Velocity (m/s)'
@@ -85,7 +85,7 @@ linewidth=1
 bin = [20,10,10,10]
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
 note = ['J=6',900,140]
-#j_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1=1)
+hcl_j_speed_plot(file1,file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label,index1=1)
 
 
 def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
@@ -100,10 +100,9 @@ def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
     x = [3, 4, 5, 6, 7, 8]
     y = [1, 0.6, 0.4, 0.09, 0.034, 0.02]
     yerr = [0.07, 0.072, 0.1, 0.08, 0.02, 0.012]
-    ax = ax.twinx()
-    #ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2,label='Exp')
-    #plt.plot(x,y,'k-',linewidth=linewidth)
 
+    ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2, label='Exp')
+    ax.legend()
 
     ax2 = ax.twinx()
     ax2.set_ylim([0, ymax2])
@@ -116,38 +115,23 @@ def j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label):
     max = list()
     for i in range(len(file2)):
         data2 = np.loadtxt(file2[i], unpack=True)
-        x1 = np.array(data2[0])
+        x1 = np.array(data2[6])
         unique[i], counts[i] = np.unique(x1, return_counts=True)
-
         count = 0
         for j in unique[i]:
 
             if j == 3:
                 loc.append(count)
             count = count + 1
-        print(loc)
-
-
-
-        #print(counts[0][loc[0]],counts[i][loc[i]])
-        #counts[i] = counts[i] * counts[0][loc[0]] / counts[i][loc[i]]
-        #print(counts[i])
-
         plt.plot(unique[i],counts[i]/counts[i][loc[i]],'-',linewidth=2,label = label[i])
-        #plt.scatter(unique[i], counts[i]/counts[i][loc[i]])
-
     ax2.legend(loc=7)
-    ax.errorbar(x, y, yerr=yerr, fmt='ko', capsize=5, elinewidth=3, markeredgewidth=2, label='Exp')
-    ax.legend()
-
     a = plot()
     a.save(fig=fig, save=save)
-
     return None
 
-file2 = ['./result_hcl/result_H_WWW.s1','./result_hcl/result_H_WWW.s2','./result_hcl/result_H_WWW.s3','./result_hcl/result_H_WWW.s4']
-
-save = 'j_distribution.eps'
+file2 = ['./final_condition/hcl/result_H_WWW.s1', './final_condition/hcl/result_H_WWW.s2',
+         './final_condition/hcl/result_H_WWW.s3', './final_condition/hcl/result_H_WWW.s4']
+save = './result_hcl/hcl_j_distribution.eps'
 ymax1 = 1.2
 ymax2 = 1.2
 xtitle='J(HCl)'
@@ -156,7 +140,7 @@ ytitle2='Theory (aligned at J=3)'
 linewidth=1
 bin = 10
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
-#j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label)
+j_distribution(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,label)
 
 def j_plot2(file1,file2,save,xlim,xtitle,ytitle1,ytitle2,label,index1,index2):
     fig = plt.figure(figsize=(6, 9))
@@ -218,7 +202,7 @@ xtitle='(H$_2$O)$_3$ Internal Energy (cm$^{-1}$)'
 
 
 
-a =  np.loadtxt('./result_water/result_HWW_W.s1', unpack=True)
+#a =  np.loadtxt('./result_water/result_HWW_W.s1', unpack=True)
 def j_w_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label):
     plt.rc('xtick', labelsize=20)  # fontsize of the axes title
     fig = plt.figure()
@@ -300,7 +284,7 @@ file2 = ['./final_condition/water/result_HWW_W.s1','./final_condition/water/resu
 save = './result_water/water_erot_distribution.eps'
 label = ['No Constraint','Hard ZPE on monomer','Soft ZPE on both','Hard ZPE on both']
 xtitle = 'Water monomer rotational energy (cm$^{-1}$)'
-w_erot_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label)
+#w_erot_plot(file2,save,ymax1,ymax2,xtitle,ytitle1,ytitle2,note,label)
 
 
 
@@ -341,7 +325,7 @@ file2 = ['./final_condition/hcl/result_H_WWW.s1', './final_condition/hcl/result_
 save = './result_hcl/hcl_erot_distribution.eps'
 label = ['No Constraint', 'Hard ZPE on monomer', 'Soft ZPE on both', 'Hard ZPE on both']
 xtitle = 'HCl monomer rotational energy (cm$^{-1}$)'
-hcl_erot_plot(file2, save, ymax1, ymax2, xtitle, ytitle1, ytitle2, note, label)
+#hcl_erot_plot(file2, save, ymax1, ymax2, xtitle, ytitle1, ytitle2, note, label)
 
 
 
