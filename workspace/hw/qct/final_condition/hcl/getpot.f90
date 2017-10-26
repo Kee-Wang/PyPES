@@ -257,7 +257,7 @@ write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !For J=4 configs
 if (abs(ab_j-4.0) <=1d-5) then
 write(25+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
-if (iflag(4) .eq. 1) then
+if (iflag(4) .eq. 1 .and. i .eq. 4) then
 !Find one of the good ZPE result
 write(*,*) k, ab_j
 write(34,*) 11
