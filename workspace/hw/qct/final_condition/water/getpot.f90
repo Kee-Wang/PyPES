@@ -69,6 +69,7 @@ open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   filename=filename(1:i-1)
 
 !These files are for recording
+  open(34,status='unknown',file=trim(filename)//"_s4.geom")!Hard restriction
   open(22,status='unknown',file=trim(filename)//"_s1.txt")!No restriction
   open(23,status='unknown',file=trim(filename)//"_s2.txt")!water restriction
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
@@ -203,6 +204,14 @@ iflag(3) = 1
 end if
 if (Evib > zpe_w .and. Evib_hww > zpe_hww) then !Hard ZPE
 iflag(4) = 1
+!Print ZPE configs
+write(34,*) 11
+write(34,*) k
+do i=1,natm
+write(34,*) sym(i),xx(:,i)*auang
+end do
+
+
 end if
 
 !Rotational energy

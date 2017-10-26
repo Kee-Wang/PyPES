@@ -64,6 +64,9 @@ D0count = 0
   open(21,status='old',file=filename)
   i=index(filename,'.',.true.)
   filename=filename(1:i-1)
+  open(34,status='unknown',file=trim(filename)//"_s4.geom")!Hard restriction
+
+
   open(22,status='unknown',file=trim(filename)//"_s1.txt")!No restriction
   open(23,status='unknown',file=trim(filename)//"_s2.txt")!HCl restriction
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
@@ -79,6 +82,7 @@ D0count = 0
   open(33,status='unknown',file=trim(filename)//"_s4_j6.txt")
 
 !write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s)'
+
 !write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
 !write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
 !write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
@@ -215,6 +219,15 @@ iflag(3) = 1
 end if
 if (Evib > zpe_hcl .and. Evib_www > zpe_www) then !Hard ZPE
 iflag(4) = 1
+
+!Find one of the good ZPE result
+write(*,*) k
+write(34,*) 11
+write(34,*) k
+do i=1,natm
+write(34,*) sym(i),xx(:,i)*auang
+end do
+
 end if
 
 !Rotational energy
