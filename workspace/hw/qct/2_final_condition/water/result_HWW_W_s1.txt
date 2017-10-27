@@ -1,4 +1,4 @@
- #No Constraint         #J all              #
+ #No_Constraint #No_Constraint
    #Erot(W)cm-1    #Speed(m/s)
          178.54         423.10
           76.94         315.64

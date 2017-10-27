@@ -1,4 +1,4 @@
- #No Constraint           #J=6              #              #
+ #No_Constraint #No_Constraint #No_Constraint
  #Erot(HCl)cm-1             #J    #Speed(m/s)
          482.24              6         151.61
          428.63              6         443.15

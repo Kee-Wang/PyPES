@@ -1,4 +1,4 @@
-   #Hard on HCl         #J all              #
+    #Hard_water    #Hard_water
    #Erot(W)cm-1    #Speed(m/s)
          438.74         504.63
           52.41         628.63

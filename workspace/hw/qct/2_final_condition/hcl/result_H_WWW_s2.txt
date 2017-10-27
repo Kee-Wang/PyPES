@@ -1,4 +1,4 @@
-   #Hard on HCl         #J all              #              #
+   #Hard_on_HCl   #Hard_on_HCl   #Hard_on_HCl
  #Erot(HCl)cm-1             #J    #Speed(m/s)
          530.00              7         259.68
           53.10              2         222.00

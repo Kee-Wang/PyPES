@@ -1,4 +1,4 @@
-      #Soft ZPE           #J=4              #              #
+      #Soft_ZPE      #Soft_ZPE      #Soft_ZPE
  #Erot(HCl)cm-1             #J    #Speed(m/s)
          258.73              4         249.56
          193.39              4         462.32

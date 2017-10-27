@@ -1,4 +1,4 @@
-      #Hard ZPE         #J all              #
+      #Hard_ZPE      #Hard_ZPE
    #Erot(W)cm-1    #Speed(m/s)
           62.61         332.20
           50.86         444.42
