@@ -1,5 +1,6 @@
 #!/bin/bash
-file='/home/kee/github/PyPES/workspace/hw/qct/1_extract/1027.xyz'
+
+file='/home/kee/github/PyPES/workspace/hw/qct/1_extract/1027_15.xyz'
 tempfile='/home/kee/github/PyPES/workspace/hw/qct/1_extract/node_copy_all.bash'
 
 #These are for local files
@@ -58,4 +59,4 @@ chmod +x $tempfile
 rsh node$n $tempfile $n
 rm $tempfile
 done
-
+python qct_sort.py $file
