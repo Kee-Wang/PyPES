@@ -1,0 +1,61 @@
+#!/bin/bash
+file='/home/kee/github/PyPES/workspace/hw/qct/extract/1027.xyz'
+tempfile='/home/kee/github/PyPES/workspace/hw/qct/extract/node_copy_all.bash'
+
+#These are for local files
+for n in {1..300}
+do
+echo $n
+cat /home/visitor/apurba/kee-traj/1018nms/$n/hwww.last >> $file
+done
+
+for n in {1..128} 
+do
+echo $n
+cat /home/bowman/kee-qct/1018nms/$n/hwww.last >> $file
+done
+
+for n in {1..5000}
+do
+echo $n
+cat /home/kee/hcl-3h2o/qct/1018nms/$n/hwww.last >> $file
+done
+
+
+#These are for cluster files
+for n in {2..25}
+do
+if [ $n -eq 18 ]
+then 
+echo '		n=' $n 'skipped'
+continue
+fi
+
+cat <<EOF >$tempfile
+#!/bin/bash
+echo '		Node' $n
+
+for n in /scratch/visitor/hwww.inp.*
+do
+echo \$n
+cat \$n/hwww.last >> $file
+done
+
+for n in /scratch/bowman/hwww.inp.*
+do
+echo \$n
+cat \$n/hwww.last >> $file
+done
+
+for n in /scratch/kee/hwww.inp.*
+do
+echo \$n
+cat \$n/hwww.last >> $file
+done
+
+EOF
+chmod +x $tempfile
+rsh node$n $tempfile $n
+rm $tempfile
+done
+
