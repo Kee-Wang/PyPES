@@ -252,8 +252,8 @@ print('Average time for W_WWW: {:f}  pm {:f} (ps)'.format(w_steps.mean() * 2.5*a
 
 assign1 = ['HWWW','H_WWW','HWW_W','HW_WW','H_W_WW','HW_W_W','H_W_W_W']
 
-a.write('../final_condition/water/result_HWW_W.xyz', All[2])
-a.write('../final_condition/hcl/result_H_WWW.xyz', All[1])
+a.write('../2_final_condition/water/result_HWW_W.xyz', All[2])
+a.write('../2_final_condition/hcl/result_H_WWW.xyz', All[1])
 
 
 """Problem: Can't recognize HW + WW correctly?"""
