@@ -6,6 +6,9 @@
 make 
 
 ./xget.x result_H_WWW.xyz
-paste result_H_WWW_s1.txt result_H_WWW_s1_j4.txt result_H_WWW_s1_j6.txt  result_H_WWW_s2.txt    result_H_WWW_s2_j4.txt result_H_WWW_s2_j6.txt result_H_WWW_s3.txt    result_H_WWW_s3_j4.txt result_H_WWW_s3_j6.txt result_H_WWW_s4.txt    result_H_WWW_s4_j4.txt result_H_WWW_s4_j6.txt | column -s $'\t' -t >> ../3_results/excel/hcl_excel.txt
+
+rm ../../3_results/excel/hcl_excel.txt
+paste result_H_WWW_s1.txt result_H_WWW_s1_j4.txt result_H_WWW_s1_j6.txt  result_H_WWW_s2.txt    result_H_WWW_s2_j4.txt result_H_WWW_s2_j6.txt result_H_WWW_s3.txt    result_H_WWW_s3_j4.txt result_H_WWW_s3_j6.txt result_H_WWW_s4.txt    result_H_WWW_s4_j4.txt result_H_WWW_s4_j6.txt | column -s $'\t' -t >> ../../3_results/excel/hcl_excel.txt
+echo 'hcl_excel.txt updated in ../../3_results/excel/'
 #./xget.x hcl_channel.xyz
 

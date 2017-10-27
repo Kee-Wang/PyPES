@@ -74,10 +74,11 @@ open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   open(23,status='unknown',file=trim(filename)//"_s2.txt")!water restriction
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
   open(25,status='unknown',file=trim(filename)//"_s4.txt")!Hard restriction
-!write(22,*) '# No ZPE restriction, Energy (cm-1), speed (m/s).'
-!write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
-!write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
-!write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
+
+write(22,'(3A15)')  '#No Constraint','#J all','#'
+write(23,'(3A15)')  '#Hard on HCl','#J all','#'
+write(24,'(3A15)')  '#Soft ZPE','#J all','#'
+write(25,'(3A15)')  '#Hard ZPE','#J all','#'
 do j=1,4
 !write(21+j,*) '#Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455'
 !write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'

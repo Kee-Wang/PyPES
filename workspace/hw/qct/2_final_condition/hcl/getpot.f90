@@ -86,6 +86,21 @@ D0count = 0
 !write(23,*) '# HCl ZPE restriction,  Energy (cm-1), speed (m/s)'
 !write(24,*) '# Soft ZPE restriction, Energy (cm-1), speed (m/s)'
 !write(25,*) '# Hard ZPE restriction,  Energy (cm-1), speed (m/s)'
+write(22,'(4A15)')  '#No Constraint','#J all','#','#'
+write(23,'(4A15)')  '#Hard on HCl','#J all','#','#'
+write(24,'(4A15)')  '#Soft ZPE','#J all','#','#'
+write(25,'(4A15)')  '#Hard ZPE','#J all','#','#'
+
+write(26,'(4A15)')  '#No Constraint','#=4','#','#'
+write(27,'(4A15)')  '#Hard on HCl','#J=4','#','#'
+write(28,'(4A15)')  '#Soft ZPE','#J=4','#','#'
+write(29,'(4A15)')  '#Hard ZPE','#J=4','#','#'
+
+write(30,'(4A15)')  '#No Constraint','#J=6','#','#'
+write(31,'(4A15)')  '#Hard on HCl','#J=6','#','#'
+write(32,'(4A15)')  '#Soft ZPE','#J=6','#','#'
+write(33,'(4A15)')  '#Hard ZPE','#J=6','#','#'
+
 do j=1,12
 !write(21+j,*) '#HCl ZPE (DMC): 1483.743446, WWW ZPE (DMC): 15602.536472'
 !write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
@@ -259,7 +274,7 @@ if (abs(ab_j-4.0) <=1d-5) then
 write(25+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 if (iflag(4) .eq. 1 .and. i .eq. 4) then
 !Find one of the good ZPE result
-write(*,*) k, ab_j
+!write(*,*) k, ab_j
 write(34,*) 11
 write(34,*) k
 do j=1,natm
