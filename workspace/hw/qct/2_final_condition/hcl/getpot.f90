@@ -7,7 +7,7 @@ use final_condition
   use constants
   use angular
   implicit none
-real,parameter::Be_HCl=10.59341
+real,parameter::Be_HCl=10.59341 !cm-1
 real,parameter::aums=2187695.176776!1au = aums m/s
 real,parameter::zpe_hcl=1483.743446 !From DMC
 real,parameter::zpe_www=15602.536472 !From DMC
@@ -46,8 +46,8 @@ real,dimension(3)::www_com_r, www_com_v!Vectos to define com coord and velocity
 real,dimension(3)::j_www, omega_www !Angular momentum of www
 
 real,dimension(3)::hcl_com_r, hcl_com_v!Vectos to define com coord and velocity
-real,dimension(3)::j_hcl, omega !Angular momentum of HCl
-
+real,dimension(3)::j_hcl, omega, j_hcl_calc !Angular momentum of HCl
+real::j_calc
 real,dimension(2,3)::xxx,vv
 real::Erot,J1,J1_sum,J2,J2_sum,J3,J3_sum,com_velc(3), kine_h, kine_www
 integer::count1,count2,count3
@@ -203,7 +203,12 @@ end do
 call fin_cond(mass(10:11),x_hcl,v_hcl,speed,kine_h, Erot,j_hcl,abc)
 call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 
-write(*,*) j_hcl, vec_cross(x_hcl,v_hcl*mass(10:11))
+j_hcl_calc = &
+vec_cross(x_hcl(1:3),v_hcl(1:3)*mass(10))+vec_cross(x_hcl(4:6),v_hcl(4:6)*mass(11))
+j_calc = sqrt(sum(j_hcl_calc**2))
+!write(*,*) '1', Erot*aucm
+!write(*,*) '2', (j_calc+1)*j_calc*Be_HCl
+!Be_HCl
 
 
 
@@ -222,11 +227,14 @@ Evib_www = Evib_www*aucm + (f(xx(:,1:9))*aucm - E_www_ref)
 !stop
 !end if
 ! Calculate the rotation constant |J|
-J1 = Erot*aucm/Be_HCl
-J1 = nint(sqrt(0.25 + J1)-0.5)
 
 ab_j = j_hcl(1)**2 + j_hcl(2)**2 + j_hcl(3)**2
 ab_j = nint(sqrt(0.25 + ab_j)-0.5)
+!j_calc = sqrt(0.25 + ab_j)-0.5
+!write(*,*) 'compare', ab_j
+Erot = ab_j*(ab_j+1)*Be_HCl 
+!write(*,*) Erot*aucm,j_calc*(j_calc+1)*Be_HCl
+
 
 !Claasification
 iflag = 0
@@ -244,7 +252,7 @@ iflag(4) = 1
 end if
 
 !Rotational energy
-Erot = Erot * aucm
+!Erot = Erot * aucm
 Erot_www = Erot_www * aucm
 
 !Excessive vibrational energy
