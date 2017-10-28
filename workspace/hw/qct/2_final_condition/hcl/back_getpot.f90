@@ -202,11 +202,6 @@ end do
 
 call fin_cond(mass(10:11),x_hcl,v_hcl,speed,kine_h, Erot,j_hcl,abc)
 call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
-
-write(*,*) j_hcl, vec_cross(x_hcl,v_hcl*mass(10:11))
-
-
-
 !calculate vibrational energy, so that to determin if zpe violat
 nwat = 0
 nhcl = 1!Calculate 1 hcl only
