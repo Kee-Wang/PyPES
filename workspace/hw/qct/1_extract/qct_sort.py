@@ -9,7 +9,7 @@ import sys
 b = str(sys.argv)
 path = b.split("'")[3]
 print('path:', path)
-bond_threshold = 3# 4 #Angstrom, The max covalent bond length for a molecule
+bond_threshold = 2#  #Angstrom, The max covalent bond length for a molecule
 rmax = 6.5 #Angstrom The max distance between two molecules to be interacted
 #stop
 
