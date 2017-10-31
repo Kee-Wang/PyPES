@@ -153,7 +153,7 @@ def w_erot_plot(file2,save):
     a.save(fig=fig, save=save)
 
 
-#w_erot_plot(file_w,save = './result_water/water_erot_distribution.eps')
+w_erot_plot(file_w,save = './result_water/water_erot_distribution.eps')
 
 
 

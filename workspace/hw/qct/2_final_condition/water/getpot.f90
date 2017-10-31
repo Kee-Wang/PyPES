@@ -228,10 +228,11 @@ red_w = Evib - zpe_w
 !De
 !D0 = (E_given) - (Erot + Erot_hww) - (Evib + Evib_hww)&
 !-(Ekine + Ekine_hww)
+
 D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
 -(Ekine + Ekine_hww)
 
-
+end if
 do i = 1,4 !Record according to different ZPE conditon
 if (iflag(i) .eq. 1)  then
 
@@ -240,7 +241,6 @@ Jcount(i) = Jcount(i) + 1
 vsum(i) = vsum(i) + speed*aums
 Jall_real_sum(i) = Jall_real_sum(i) + Jall_real
 D0count(i) = D0count(i) + D0
-
 
 write(21+i,'(2(F15.2))')  Erot, speed*aums
 !write(21+i,'(6(F15.2))')  Erot, Erot_hww, &

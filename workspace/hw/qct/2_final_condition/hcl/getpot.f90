@@ -210,12 +210,19 @@ j_calc = sqrt(sum(j_hcl_calc**2))
 !write(*,*) '2', (j_calc+1)*j_calc*Be_HCl
 !Be_HCl
 
+! Calculate the rotation constant |J|
+ab_j = j_hcl(1)**2 + j_hcl(2)**2 + j_hcl(3)**2
+ab_j = nint(sqrt(0.25 + ab_j)-0.5)
+!j_calc = sqrt(0.25 + ab_j)-0.5
+!write(*,*) 'compare', ab_j
+Erot = ab_j*(ab_j+1)*Be_HCl 
+!write(*,*) Erot*aucm,j_calc*(j_calc+1)*Be_HCl
 
 
 !calculate vibrational energy, so that to determin if zpe violat
 nwat = 0
 nhcl = 1!Calculate 1 hcl only
-Evib =calc_kine(mass(10:11),v_hcl) - Erot
+Evib =calc_kine(mass(10:11),v_hcl) - Erot/aucm
 Evib = Evib*aucm + (f(xx(:,10:11))*aucm - E_hcl_ref)
 !For www
 nwat = 3!Calculate water trimer
@@ -226,14 +233,6 @@ Evib_www = Evib_www*aucm + (f(xx(:,1:9))*aucm - E_www_ref)
 !if (k .eq. 3) then
 !stop
 !end if
-! Calculate the rotation constant |J|
-
-ab_j = j_hcl(1)**2 + j_hcl(2)**2 + j_hcl(3)**2
-ab_j = nint(sqrt(0.25 + ab_j)-0.5)
-!j_calc = sqrt(0.25 + ab_j)-0.5
-!write(*,*) 'compare', ab_j
-Erot = ab_j*(ab_j+1)*Be_HCl 
-!write(*,*) Erot*aucm,j_calc*(j_calc+1)*Be_HCl
 
 
 !Claasification
@@ -264,6 +263,7 @@ red_h = Evib - zpe_hcl
 !E_tot = Erot+Erot_www+Evib+Evib_www+kin_hwww
 D0 = E_given-zpe_hwww   - red_h - red_w-Erot-Erot_www&
 -kine_h-kine_www
+write(*,*) D0
 ! Write files for different J condition
 do i = 1,4
 if (iflag(i) .eq. 1)  then!not violate zpe of hcl
