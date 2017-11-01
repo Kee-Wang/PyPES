@@ -120,7 +120,7 @@ hcl_j_distribution(file_hcl,save = './result_hcl/hcl_j_distribution.eps')
 
 
 def w_erot_plot(file2,save):
-
+    ytitle2 = 'Trajectory count'
     xtitle = 'Water monomer rotational energy (cm$^{-1}$)'
     plt.rc('xtick', labelsize=12)  # fontsize of the axes title
     fig = plt.figure()
