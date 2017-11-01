@@ -207,14 +207,14 @@ call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 !j_hcl_calc = &
 !vec_cross(x_hcl(1:3),v_hcl(1:3)*mass(10))+vec_cross(x_hcl(4:6),v_hcl(4:6)*mass(11))
 !j_calc = sqrt(sum(j_hcl_calc**2))
-!write(*,*) '1', Erot*aucm
-!write(*,*) '2', (j_calc+1)*j_calc*Be_HCl
 !Be_HCl
 
 ! Calculate the rotation constant |J|
 
 !ab_j = nint(sqrt(0.25 + ab_j)-0.5)
 ab_j = nint(sqrt(sum(j_hcl**2))-0.5) !Another way to get ab_j
+!j_calc = sqrt(0.25 + sum(j_hcl**2))-0.5
+!write(*,*) ab_j,j_calc
 
 
 !j_calc = sqrt(0.25 + ab_j)-0.5
@@ -267,7 +267,6 @@ red_h = Evib - zpe_hcl
 !E_tot = Erot+Erot_www+Evib+Evib_www+kin_hwww
 D0 = E_given-zpe_hwww   - red_h - red_w-Erot-Erot_www&
 -kine_h-kine_www
-write(*,*) D0
 ! Write files for different J condition
 do i = 1,4
 if (iflag(i) .eq. 1)  then!not violate zpe of hcl
