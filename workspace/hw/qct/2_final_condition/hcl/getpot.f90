@@ -213,7 +213,7 @@ call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 
 !ab_j = nint(sqrt(0.25 + ab_j)-0.5)
 ab_j = nint(sqrt(sum(j_hcl**2))-0.5) !Another way to get ab_j
-!j_calc = sqrt(0.25 + sum(j_hcl**2))-0.5
+ab_j = nint(sqrt(0.25 + sum(j_hcl**2))-0.5) !A way to get quntum J
 !write(*,*) ab_j,j_calc
 
 
