@@ -25,6 +25,7 @@ real::speed_www, Erot_www,Evib_www
 real,dimension(:),allocatable::mass
 integer::ab_j
 real,dimension(:),allocatable::x
+real::j_temp
 real,dimension(27)::x_www
 real,dimension(27)::v_www
 real,dimension(6)::x_hcl
@@ -203,16 +204,19 @@ end do
 call fin_cond(mass(10:11),x_hcl,v_hcl,speed,kine_h, Erot,j_hcl,abc)
 call fin_cond(mass(1:9),x_www,v_www,speed_www, kine_www, Erot_www,j_www,abc_www)
 
-j_hcl_calc = &
-vec_cross(x_hcl(1:3),v_hcl(1:3)*mass(10))+vec_cross(x_hcl(4:6),v_hcl(4:6)*mass(11))
-j_calc = sqrt(sum(j_hcl_calc**2))
+!j_hcl_calc = &
+!vec_cross(x_hcl(1:3),v_hcl(1:3)*mass(10))+vec_cross(x_hcl(4:6),v_hcl(4:6)*mass(11))
+!j_calc = sqrt(sum(j_hcl_calc**2))
 !write(*,*) '1', Erot*aucm
 !write(*,*) '2', (j_calc+1)*j_calc*Be_HCl
 !Be_HCl
 
 ! Calculate the rotation constant |J|
-ab_j = j_hcl(1)**2 + j_hcl(2)**2 + j_hcl(3)**2
-ab_j = nint(sqrt(0.25 + ab_j)-0.5)
+
+!ab_j = nint(sqrt(0.25 + ab_j)-0.5)
+ab_j = nint(sqrt(sum(j_hcl**2))-0.5) !Another way to get ab_j
+
+
 !j_calc = sqrt(0.25 + ab_j)-0.5
 !write(*,*) 'compare', ab_j
 Erot = ab_j*(ab_j+1)*Be_HCl 
