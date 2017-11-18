@@ -59,11 +59,11 @@ real::Erot_hww
 integer:: iflag(4), jmoi(3), jall,jsum(4),jcount(4),jac(3)
 real::J1(3),J1_hww(3),vsum(4), Jall_real_sum(4)
 real::Jall_real,jmoi_real(3)
-real::pot_w, pot_hww
+real::pot_w, pot_hww, pot_hwww
 
   call getarg(1,filename)
 open(19, status='old',file='watpot/result_HWW_W.wat') !Read water potential
-open(20, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
+open(18, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   open(21,status='old',file=filename)
   i=index(filename,'.',.true.)
   filename=filename(1:i-1)
@@ -128,6 +128,10 @@ mass_w(3) = mass(7)
 mass_hww(1:4) = mass(3:6)
 mass_hww(5:8) = mass(8:11)
 
+  call clust_break(sym)
+  call pes_init()
+
+
 
 !Loop throught all configurations
 
@@ -142,12 +146,15 @@ do
      end do
      xx = xx/auang !xx in Bohr
 
-
 !For whole HWWW, Flaten to 1D
 do j=1,11
 x_hwww(3*j-2:3*j) = xx(:,j)
 v_hwww(3*j-2:3*j) = velo(:,j)
 end do
+pot_hwww = f(xx) * aucm
+!D0 = f(xx) * aucm + calc_kine(mass,v_hwww)*aucm
+!write(*,*) D0
+!Total energy using full potential!Checked this is conserved
 
 !Kinetic energy of HWWW, verify this hould be 0
 com_velc=0
@@ -155,8 +162,8 @@ com_velc=0
        com_velc=com_velc+mass(i)*v_hwww(3*i-2:3*i)
     end do
 com_velc=com_velc/sum(mass)
-kin_hwww = calc_kine(mass,com_velc)
-
+!kin_hwww = calc_kine(mass,com_velc)
+kin_hwww = calc_kine(mass,v_hwww)*aucm
 call xcom(mass,x_hwww)
 call vcom(mass,v_hwww)
 
@@ -189,9 +196,11 @@ read(19,*) pot_w
 Evib = calc_kine(mass_w,v_w)- Erot 
 Evib = Evib*aucm + pot_w 
 
-read(20,*) pot_hww
+read(18,*) pot_hww
 Evib_hww = calc_kine(mass_hww,v_hww)- Erot_hww
 Evib_hww = Evib_hww*aucm + pot_hww 
+
+
 
 
 !Classification for different ZPE condition
@@ -229,10 +238,13 @@ red_w = Evib - zpe_w
 !D0 = (E_given) - (Erot + Erot_hww) - (Evib + Evib_hww)&
 !-(Ekine + Ekine_hww)
 
-D0 = (E_given - zpe_hwww) - (Erot + Erot_hww) - (red_w + red_hww)&
--(Ekine + Ekine_hww)
+D0 =  pot_hwww - pot_w - pot_hww
+!D0 = E_given - ( kin_hwww + pot_w + pot_hww)
 
-end if
+
+write(*,*) D0
+
+
 do i = 1,4 !Record according to different ZPE conditon
 if (iflag(i) .eq. 1)  then
 

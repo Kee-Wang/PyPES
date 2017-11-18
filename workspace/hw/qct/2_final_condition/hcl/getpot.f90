@@ -31,7 +31,7 @@ real,dimension(27)::v_www
 real,dimension(6)::x_hcl
 real,dimension(6)::v_hcl
 real::x_hwww(33), v_hwww(33), kin_hwww, E_tot, D0
-real::abc(3), abc_www(3), D0count(4), red_w, red_h
+real::abc(3), abc_www(3), D0count(4), red_w, red_h, pot_h, pot_www
 
 !For HCl fragment
 real,dimension(2)::mass_hcl !Redefine mass for hcl
@@ -178,7 +178,8 @@ com_velc=0
        com_velc=com_velc+mass(i)*v_hwww(3*i-2:3*i)
     end do
 com_velc=com_velc/sum(mass)
-kin_hwww = calc_kine(mass,com_velc)
+!kin_hwww = calc_kine(mass,com_velc)
+kin_hwww = calc_kine(mass, v_hwww) * aucm
 
 call xcom(mass,x_hwww)
 call vcom(mass,v_hwww)
@@ -226,13 +227,15 @@ Erot = ab_j*(ab_j+1)*Be_HCl
 !calculate vibrational energy, so that to determin if zpe violat
 nwat = 0
 nhcl = 1!Calculate 1 hcl only
+pot_h = f(xx(:,10:11))*aucm - E_hcl_ref
 Evib =calc_kine(mass(10:11),v_hcl) - Erot/aucm
-Evib = Evib*aucm + (f(xx(:,10:11))*aucm - E_hcl_ref)
+Evib = Evib*aucm + pot_h!(f(xx(:,10:11))*aucm - E_hcl_ref)
 !For www
 nwat = 3!Calculate water trimer
 nhcl = 0
+pot_www = f(xx(:,1:9))*aucm - E_www_ref
 Evib_www =calc_kine(mass(1:9),v_www) - Erot_www
-Evib_www = Evib_www*aucm + (f(xx(:,1:9))*aucm - E_www_ref)
+Evib_www = Evib_www*aucm + pot_www!(f(xx(:,1:9))*aucm - E_www_ref)
 
 !if (k .eq. 3) then
 !stop
@@ -264,9 +267,10 @@ red_h = Evib - zpe_hcl
 
 
 !ikin_hwww = kin_hwww * aucm
-!E_tot = Erot+Erot_www+Evib+Evib_www+kin_hwww
-D0 = E_given-zpe_hwww   - red_h - red_w-Erot-Erot_www&
--kine_h-kine_www
+D0 = E_given - pot_h - pot_www -  kin_hwww
+write(*,*) D0
+!D0 = E_given-zpe_hwww   - red_h - red_w-Erot-Erot_www&
+!-kine_h-kine_www
 ! Write files for different J condition
 do i = 1,4
 if (iflag(i) .eq. 1)  then!not violate zpe of hcl
