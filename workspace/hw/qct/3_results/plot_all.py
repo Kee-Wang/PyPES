@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 import numpy as np
 from pypes.plot import plot
+from matplotlib import rc
+#rc('font',**{'family':'sans-serif','sans-serif':['Helvetica']})
+#rc('font',**{'family':'serif','serif':['Times']})
+#rc('text', usetex=True)
+#plt.rcParams.update({'font.family': 'Times'})
+plt.rc('font', family='serif')
+plt.rc('font', serif='Times New Roman')
 
 ph = '../2_final_condition/hcl/result_H_WWW'
 ph2 = '../2_final_condition/hcl/result_H_WWW'
@@ -11,16 +18,29 @@ file_expj4 = './expdata/hcl_speed_j=4.prn'
 file_expj6 = './expdata/hcl_speed_j=6.prn'
 ph = '../2_final_condition/water/result_HWW_W'
 file_w = [ph+'_s1.txt',ph+'_s2.txt',ph+'_s3.txt',ph+'_s4.txt']
+f = open('../3_results/excel/HCl_bin.txt','w')
+
 
 def hcl_j_speed_plot(file1,file2,save,ymax2,bin,index):
+    SMALL_SIZE = 12
+    MEDIUM_SIZE = 14
+    BIGGER_SIZE = 16
+    plt.rc('font', size=SMALL_SIZE)  # controls default text sizes
+    plt.rc('axes', titlesize=SMALL_SIZE)  # fontsize of the axes title
+    plt.rc('axes', labelsize=BIGGER_SIZE)  # fontsize of the x and y labels
+    plt.rc('xtick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+    plt.rc('ytick', labelsize=SMALL_SIZE)  # fontsize of the tick labels
+    plt.rc('legend', fontsize=SMALL_SIZE)  # legend fontsize
+    plt.rc('figure', titlesize=BIGGER_SIZE)  # fontsize of the figure title
+
     label = ['No Constraint', 'HCl only ZPE', 'Soft ZPE', 'Hard ZPE']
-    xtitle = 'Velocity (m/s)'
+    xtitle = 'Speed (m/s)\n\n'+note[0]
     ytitle1 = 'Experiment signal intensity'
     ytitle2 = 'Trajectory count'
     ymax1 = 150
     fig = plt.figure()
     ax = fig.add_subplot(111)
-    ax.text(note[1], note[2], note[0], fontsize=18)
+    #ax.text(note[1], note[2], note[0], fontsize=18)
     #ax.set_title(ax_title)
     data1 = np.loadtxt(file1, unpack=True)
     ax.set_xlabel(xtitle)
@@ -38,6 +58,9 @@ def hcl_j_speed_plot(file1,file2,save,ymax2,bin,index):
         y, binEdges = np.histogram(data2[2], bins=bin[i])
         bincenters = 0.5 * (binEdges[1:] + binEdges[:-1])
         plt.plot(bincenters,y,'-',linewidth=3,label = label[i])
+        for j in range(len(y)):
+            f.write("{:5d}   {:6.2f}\n".format(y[j],bincenters[j]))
+        f.write("\n")
 
     ax2.legend(loc=7)
     a = plot()
@@ -47,15 +70,15 @@ def hcl_j_speed_plot(file1,file2,save,ymax2,bin,index):
 
 save = './result_hcl/j4speed.eps'
 ymax2 = 200
-bin = [20,15,15,10]
-note = ['J=4',900,120]
+bin = [40,40,40,40]
+note = ['(a)',800,140]
 hcl_j_speed_plot(file_expj4,file_hclj4,save,ymax2,bin,index=2)
 
 save = './result_hcl/j6speed.eps'
 ymax2 = 120
-bin = [20,10,10,10]
+#bin = [20,10,10,10]
 label = ['No Constraint','HCl only ZPE','Soft ZPE','Hard ZPE']
-note = ['J=6',900,120]
+note = ['(b)',800,140]
 hcl_j_speed_plot(file_expj6,file_hclj6,save,ymax2, bin,index=1)
 
 
@@ -99,15 +122,14 @@ def hcl_j_distribution(file2,save):
     for i in range(len(file2)):
         data2 = np.loadtxt(file2[i], unpack=True)
         #print(data2[0])
-        x1 = np.array(data2[0])
+        #x1 = np.array(data2[0])
+        x1 = np.array(data2[1])
         unique[i], counts[i] = np.unique(x1, return_counts=True)
         count = 0
-        #for j in unique[i]:
-         #   if j == 3:
-          #      loc.append(count)
-         #   count = count + 1
+
+
         print(unique[i],counts[i])
-        plt.plot(unique[i],counts[i]/counts[i][3],'-',linewidth=2,label = label[i])
+        plt.plot((unique[i]*(unique[i]+1)*Be_HCl),counts[i]/counts[i][3],'-',linewidth=2,label = label[i])
     ax2.legend(loc=7)
     a = plot()
     a.save(fig=fig, save=save)
@@ -115,7 +137,7 @@ def hcl_j_distribution(file2,save):
 
 
 
-hcl_j_distribution(file_hcl,save = './result_hcl/hcl_j_distribution.eps')
+#hcl_j_distribution(file_hcl,save = './result_hcl/hcl_j_distribution.eps')
 
 
 
@@ -153,7 +175,7 @@ def w_erot_plot(file2,save):
     a.save(fig=fig, save=save)
 
 
-w_erot_plot(file_w,save = './result_water/water_erot_distribution.eps')
+#w_erot_plot(file_w,save = './result_water/water_erot_distribution.eps')
 
 
 
