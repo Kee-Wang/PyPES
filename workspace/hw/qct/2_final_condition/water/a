@@ -14,5 +14,5 @@ cd ../
 make 
 ./xget.x  result_HWW_W.xyz 
 rm ../../3_results/excel/water_excel.txt
-paste result_HWW_W_s1.txt result_HWW_W_s2.txt result_HWW_W_s3.txt result_HWW_W_s4.txt  | column -s $'\t' -t >> ../../3_results/excel/water_excel.txt 
+paste result_HWW_W_s1.txt result_HWW_W_s1_j221.txt result_HWW_W_s1_j321.txt result_HWW_W_s2.txt  result_HWW_W_s2_j221.txt  result_HWW_W_s2_j321.txt  result_HWW_W_s3.txt result_HWW_W_s3_j221.txt result_HWW_W_s3_j321.txt result_HWW_W_s4.txt  result_HWW_W_s4_j221.txt  result_HWW_W_s4_j321.txt  | column -s $'\t' -t >> ../../3_results/excel/water_excel.txt 
 echo 'hcl_excel.txt updated in ../../3_results/excel/'

@@ -22,7 +22,7 @@ character(len=2),dimension(:),allocatable::sym
 character(len=2),dimension(3)::sym_w
 character(len=32)::filename
 integer::k,i,natm,ierr,j,vio
-real::pot,diss, E_trans,E_T, E_V, ab_j, M_w, E_rot, speed, Evib
+real::pot,diss, E_trans,E_T, E_V, M_w, E_rot, speed, Evib
 real::Evib_hww, speed_hww
 real,dimension(:),allocatable::mass
 real,dimension(:),allocatable::x
@@ -31,7 +31,7 @@ real,dimension(9)::v_w
 real,dimension(24)::x_hww
 real,dimension(24)::v_hww
 real,dimension(3,3)::xxw
-integer::j221c,j321c, D0count(4), iter
+integer::j221c,j321c, D0count(4), iter, ab_j
 real:: D0, red_w, red_hww, kin_hwww, x_hwww(33), v_hwww(33), com_velc(3)
 real:: Ekine, Ekine_hww
 
@@ -75,11 +75,20 @@ open(18, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
   open(25,status='unknown',file=trim(filename)//"_s4.txt")!Hard restriction
 
-write(22,'(2A15)')  '#No_Constraint','#No_Constraint'
-write(23,'(2A15)')  '#Hard_water','#Hard_water'
-write(24,'(2A15)')  '#Soft_ZPE', '#Soft_ZPE'
-write(25,'(2A15)')  '#Hard_ZPE','#Hard_ZPE'
-do j=1,4
+  open(26,status='unknown',file=trim(filename)//"_s1_j221.txt")!J=221
+  open(27,status='unknown',file=trim(filename)//"_s2_j221.txt")
+  open(28,status='unknown',file=trim(filename)//"_s3_j221.txt")
+  open(29,status='unknown',file=trim(filename)//"_s4_j221.txt")
+  open(30,status='unknown',file=trim(filename)//"_s1_j321.txt")!J=321
+  open(31,status='unknown',file=trim(filename)//"_s2_j321.txt")
+  open(32,status='unknown',file=trim(filename)//"_s3_j321.txt")
+  open(33,status='unknown',file=trim(filename)//"_s4_j321.txt")
+
+write(22,'(3A15)')  '#No_Constraint','#No_Constraint','#No_Constraint'
+write(23,'(3A15)')  '#Hard_water','#Hard_water','#Hard_water'
+write(24,'(3A15)')  '#Soft_ZPE', '#Soft_ZPE', '#Soft_ZPE'
+write(25,'(3A15)')  '#Hard_ZPE','#Hard_ZPE','#Hard_ZPE'
+do j=1,12
 !write(21+j,*) '#Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455'
 !write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
 !write(21+j,*) '#Dvib = Evib - ZPE'
@@ -87,7 +96,7 @@ do j=1,4
 ! E_COM=0"
 !write(21+j,*)
 
-write(21+j,'(2A15)')  '#Erot(W)cm-1', '#Speed(m/s)'
+write(21+j,'(3A15)')  '#Erot(W)cm-1','#J',  '#Speed(m/s)'
 !write(21+j,'(7A15,A2)')  '#Erot(W)','#Erot(HWW)',&
 !'#Dvib(W)', '#Dvib(HWW)','D0', '#Speed'!,'#J'
 end do
@@ -189,6 +198,7 @@ end do
 !Calculate rotational energy Erot and translational energy Ekine
 !For water
 call fin_cond(mass_w,x_w,v_w,speed,Ekine,Erot,j_w,abc,evect)
+ab_j = nint(sqrt(0.25 + sum(j_w**2))-0.5)
 call fin_cond(mass_hww,x_hww,v_hww,speed_hww,Ekine_hww,Erot_hww,j_hww,abc_hww,evect)
 
 !calculate vibrational energy, so that to determin if zpe violated
@@ -242,11 +252,18 @@ D0 =  pot_hwww - pot_w - pot_hww
 !D0 = E_given - ( kin_hwww + pot_w + pot_hww)
 
 
-write(*,*) D0
-
-
 do i = 1,4 !Record according to different ZPE conditon
+
 if (iflag(i) .eq. 1)  then
+!For J221
+if ((abs(ab_j-2.0) <=1d-5) .and. (115.669905 < Erot) .and. (Erot < 135.532765) )then
+write(25+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+end if
+!For J321
+if ((abs(ab_j-3.0) <=1d-5) .and. (209.22888 < Erot) .and. (Erot < 248.78747) )then
+write(29+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+end if
+
 
 Jsum(i) = Jsum(i) + jall
 Jcount(i) = Jcount(i) + 1
@@ -254,7 +271,7 @@ vsum(i) = vsum(i) + speed*aums
 Jall_real_sum(i) = Jall_real_sum(i) + Jall_real
 D0count(i) = D0count(i) + D0
 
-write(21+i,'(2(F15.2))')  Erot, speed*aums
+write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
 !Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums
 
