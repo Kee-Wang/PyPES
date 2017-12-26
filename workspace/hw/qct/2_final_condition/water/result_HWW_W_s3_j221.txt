@@ -1,3 +1,4 @@
+      #Soft_ZPE      #Soft_ZPE      #Soft_ZPE
    #Erot(W)cm-1             #J    #Speed(m/s)
          120.55              2         473.38
          129.08              2         348.22

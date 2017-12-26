@@ -1,3 +1,4 @@
+    #Hard_water    #Hard_water    #Hard_water
    #Erot(W)cm-1             #J    #Speed(m/s)
          126.11              2        1114.45
          129.08              2         348.22

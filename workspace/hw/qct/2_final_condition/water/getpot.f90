@@ -88,6 +88,17 @@ write(22,'(3A15)')  '#No_Constraint','#No_Constraint','#No_Constraint'
 write(23,'(3A15)')  '#Hard_water','#Hard_water','#Hard_water'
 write(24,'(3A15)')  '#Soft_ZPE', '#Soft_ZPE', '#Soft_ZPE'
 write(25,'(3A15)')  '#Hard_ZPE','#Hard_ZPE','#Hard_ZPE'
+
+write(26,'(3A15)')  '#No_Constraint','#No_Constraint','#No_Constraint'
+write(27,'(3A15)')  '#Hard_water','#Hard_water','#Hard_water'
+write(28,'(3A15)')  '#Soft_ZPE', '#Soft_ZPE', '#Soft_ZPE'
+write(29,'(3A15)')  '#Hard_ZPE','#Hard_ZPE','#Hard_ZPE'
+
+write(30,'(3A15)')  '#No_Constraint','#No_Constraint','#No_Constraint'
+write(31,'(3A15)')  '#Hard_water','#Hard_water','#Hard_water'
+write(32,'(3A15)')  '#Soft_ZPE', '#Soft_ZPE', '#Soft_ZPE'
+write(33,'(3A15)')  '#Hard_ZPE','#Hard_ZPE','#Hard_ZPE'
+
 do j=1,12
 !write(21+j,*) '#Water ZPE (DMC): 4713.0629051, HWW ZPE (DMC): 12528.93462455'
 !write(21+j,*) '#E_given = DMC ZPE + 3550 =21233.1103893624.'
