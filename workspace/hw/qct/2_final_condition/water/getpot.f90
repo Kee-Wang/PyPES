@@ -21,7 +21,7 @@ real,dimension(:,:),allocatable::xx,gradd,velo
 character(len=2),dimension(:),allocatable::sym
 character(len=2),dimension(3)::sym_w
 character(len=32)::filename
-integer::k,i,natm,ierr,j,vio
+integer::k,i,natm,ierr,j,vio, ii
 real::pot,diss, E_trans,E_T, E_V, M_w, E_rot, speed, Evib
 real::Evib_hww, speed_hww
 real,dimension(:),allocatable::mass
@@ -69,7 +69,7 @@ open(18, status='old',file='hwwpot/result_HWW_W.hww') !Read HWW potential
   filename=filename(1:i-1)
 
 !These files are for recording
-  open(34,status='unknown',file=trim(filename)//"_s4.geom")!Hard restriction
+  open(34,status='unknown',file=trim(filename)//"_s4_j221.geom")!Hard restriction
   open(22,status='unknown',file=trim(filename)//"_s1.txt")!No restriction
   open(23,status='unknown',file=trim(filename)//"_s2.txt")!water restriction
   open(24,status='unknown',file=trim(filename)//"_s3.txt")!Soft restriction
@@ -235,12 +235,6 @@ iflag(3) = 1
 end if
 if (Evib > zpe_w .and. Evib_hww > zpe_hww) then !Hard ZPE
 iflag(4) = 1
-!Print ZPE configs
-write(34,*) 11
-write(34,*) k
-do i=1,natm
-write(34,*) sym(i),xx(:,i)*auang
-end do
 
 
 end if
@@ -269,7 +263,16 @@ if (iflag(i) .eq. 1)  then
 !For J221
 if ((abs(ab_j-2.0) <=1d-5) .and. (115.669905 < Erot) .and. (Erot < 135.532765) )then
 write(25+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
+!Print ZPE configs
+ if (iflag(4) .eq. 1) then
+write(*,*) 'found',k
+write(34,*) 11
+write(34,*) k
+  do ii=1,natm
+    write(34,*) sym(ii),xx(:,ii)*auang
+  end do
 end if
+ end if
 !For J321
 if ((abs(ab_j-3.0) <=1d-5) .and. (209.22888 < Erot) .and. (Erot < 248.78747) )then
 write(29+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
@@ -285,6 +288,7 @@ D0count(i) = D0count(i) + D0
 write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
 !Evib - zpe_w, Evib_hww-zpe_hww, D0, speed*aums
+
 
 
 
