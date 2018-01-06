@@ -11,8 +11,8 @@ real,parameter::Be_HCl=10.59341
 real,parameter::aums=2187695.176776!1au = aums m/s
 !ZPE calcualted use our own PES
 !HO ZPE using John's calcualtion
-real,parameter::zpe_w= 4713.0629051 !HO=4713.0629051 !DMC = 4637.098762
-real,parameter::zpe_hww= 12528.93462455! HO = !DMC = 12220.164040
+real,parameter::zpe_w= 4637.098762 !HO=4713.0629051 !DMC = 4637.098762
+real,parameter::zpe_hww= 12220.164040! HO =12528.93462455 !DMC = 12220.164040
 real,parameter::zpe_hwww = 17683.110522 !DMC = 17683.110522
 real,parameter::E_w_ref =8462.8673097354421770 !Ref to min
 real,parameter::E_hww_ref = 3537.7663972273066975 !Ref to min
