@@ -1,6 +1,6 @@
 #!/bin/bash
 
-file='/home/kee/github/PyPES/workspace/hw/qct-mode24/1_extract/0408.xyz'
+file='/home/kee/github/PyPES/workspace/hw/qct-mode24/1_extract/0411.xyz'
 tempfile='/home/kee/github/PyPES/workspace/hw/qct-mode24/1_extract/node_copy_all.bash'
 
 #These are for local files
