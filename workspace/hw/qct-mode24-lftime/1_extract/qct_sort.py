@@ -178,6 +178,7 @@ for config in al:
                         t = steps[count_step] * step_size * au_s
                         w_steps.append(t)
                         config[1][0][0] = t
+                        HWW_W.append(config)
                         #print(count_step, steps[count_step])
 
                 elif len(sublist) is 2 and (sublist[0] is 11 or sublist[1] is 11):
