@@ -420,7 +420,7 @@ class configs_hwww_qct():
         print('----Printed {} configuration(s).\n'.format(configs_count))
         # print('*Status: printing finished.\n')
 
-    def write(self, filename, configs=False):  # Default value has to be after non-default value.
+    def write(self, filename, configs=False, lifetime=None):  # Default value has to be after non-default value.
         """Write formated configurations into filename.
 
         """

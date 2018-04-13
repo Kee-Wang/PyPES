@@ -44,9 +44,14 @@ a = configs_hwww_qct(path, col=9)
 print('\n Sorting Begin: \n')
 
 #raise Exception('stopped')
+
+
 temp = a.list()
 al = temp[0]
-steps = temp[1] #All the steps associate with each trajectory
+step_size=2.5
+au_s = 2.418884326509e-5 #unit ps
+
+steps = temp[1] #*  step_size * au_s#All the steps associate with each trajectory
 h_steps = list()
 w_steps = list()
 
@@ -148,8 +153,13 @@ for config in al:
             for sublist in dis:
                 if len(sublist) is 1:#the `1` could be H or W
                     if sublist[0] is 11:
+                        #H_WWW.append(config)
+                        t = steps[count_step] * step_size * au_s
+                        h_steps.append(t)
+                        config[1][0][0] = t
+
                         H_WWW.append(config)
-                        h_steps.append(steps[count_step])
+
 
                     else: #Else is `W`
                     #"This part is important because we have to put the fist water as the dissociated wter"
@@ -164,8 +174,10 @@ for config in al:
                             #a.prt(config)
 
                         #print(sublist[0])
-                        HWW_W.append(config)
-                        w_steps.append(steps[count_step])
+
+                        t = steps[count_step] * step_size * au_s
+                        w_steps.append(t)
+                        config[1][0][0] = t
                         #print(count_step, steps[count_step])
 
                 elif len(sublist) is 2 and (sublist[0] is 11 or sublist[1] is 11):
@@ -219,6 +231,7 @@ print('{:14s}: {:d}'.format('Blow-up!',num[-1]))
 print('')
 print('{:14s}: {:d}'.format('Total', sum(num)))
 
+
 #epoch1 = 1497045960
 #epoch2 = 1497966025
 #time = epoch2 - epoch1
@@ -228,15 +241,14 @@ print('{:14s}: {:d}'.format('Total', sum(num)))
 #evals = total_step*67 #+ len(a.traj)*11*11*4 #Per core
 #print('Number of total evals: {:d}'.format(evals))
 #print('Time per eval: {:f} ms'.format(time/evals*1000*((64-13))))
-step_size=2.5
-au_s = 2.418884326509e-5 #unit ps
 
-h_steps = np.array(h_steps)
-w_steps = np.array(w_steps)
+
+h_steps = np.array(h_steps)# * 2.5*au_s
+w_steps = np.array(w_steps) #* 2.5*au_s
 #print('Average step for H_WWW: {:f} pm {:f}'.format(h_steps.mean(), h_steps.std()))
-print('Average time for H_WWW: {:f}  pm {:f} (ps)'.format(h_steps.mean() * 2.5*au_s, h_steps.std() * 2.5*au_s))
+print('Average time for H_WWW: {:f}  pm {:f} (ps)'.format(h_steps.mean() , h_steps.std()))
 #print('Average step for W_WWW: {:f}'.format(w_steps.mean()))
-print('Average time for W_WWW: {:f}  pm {:f} (ps)'.format(w_steps.mean() * 2.5*au_s, w_steps.std() * 2.5*au_s))
+print('Average time for W_WWW: {:f}  pm {:f} (ps)'.format(w_steps.mean() , w_steps.std() ))
 #print(len(h_steps),len(w_steps))#traj = np.array(a.traj)
 
 
