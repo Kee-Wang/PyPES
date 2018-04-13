@@ -1,0 +1,62 @@
+#!/bin/bash
+
+file='/home/kee/github/PyPES/workspace/hw/qct-mode24/1_extract/0411.xyz'
+tempfile='/home/kee/github/PyPES/workspace/hw/qct-mode24/1_extract/node_copy_all.bash'
+
+#These are for local files
+for n in {1..300}
+do
+echo $n
+cat /home/visitor/apurba/kee-traj/mode24_apurba/$n/hwww.last >> $file
+done
+
+#for n in {1..128} 
+#do
+#echo $n
+#cat /home/bowman/kee-qct/1018nms/$n/hwww.last >> $file
+#done
+
+for n in {1..300}
+do
+echo $n
+cat /home/kee/hcl-3h2o/qct/mode24/$n/hwww.last >> $file
+done
+
+
+#These are for cluster files
+for n in {2..25}
+do
+if [ $n -eq 18 ]
+then 
+echo '		n=' $n 'skipped'
+continue
+fi
+
+cat <<EOF >$tempfile
+#!/bin/bash
+echo '		Node' $n
+
+for n in /scratch/visitor/hwww.inp.*
+do
+echo \$n
+cat \$n/hwww.last >> $file
+done
+
+#for n in /scratch/bowman/hwww.inp.*
+#do
+#echo \$n
+#cat \$n/hwww.last >> $file
+#done
+
+for n in /scratch/kee/hwww.inp.*
+do
+echo \$n
+cat \$n/hwww.last >> $file
+done
+
+EOF
+chmod +x $tempfile
+rsh node$n $tempfile $n
+rm $tempfile
+done
+python qct_sort.py $file
