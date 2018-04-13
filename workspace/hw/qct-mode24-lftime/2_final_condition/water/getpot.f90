@@ -60,6 +60,9 @@ integer:: iflag(4), jmoi(3), jall,jsum(4),jcount(4),jac(3)
 real::J1(3),J1_hww(3),vsum(4), Jall_real_sum(4)
 real::Jall_real,jmoi_real(3)
 real::pot_w, pot_hww, pot_hwww
+real::lifetime, lftime(4)
+
+lftime = 0
 
   call getarg(1,filename)
 open(19, status='old',file='watpot/result_HWW_W.wat') !Read water potential
@@ -160,7 +163,7 @@ do
      read(21,*,iostat=ierr) natm
      if (ierr.ne.0) exit
      k = k + 1
-     read(21,*)
+     read(21,*) lifetime
      do i=1,natm
         read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)
      end do
@@ -284,6 +287,7 @@ Jcount(i) = Jcount(i) + 1
 vsum(i) = vsum(i) + speed*aums
 Jall_real_sum(i) = Jall_real_sum(i) + Jall_real
 D0count(i) = D0count(i) + D0
+lftime(i) = lftime(i) + lifetime
 
 write(21+i,'(F15.2,I15,F15.2)')  Erot,ab_j, speed*aums
 !write(21+i,'(6(F15.2))')  Erot, Erot_hww, &
@@ -303,6 +307,7 @@ write(*,'(A20,4F8.2)') 'Rejection Rate:',1-real(Jcount)/real(Jcount(1))
 write(*,'(A20,4F8.2)') 'Average J: ',Jsum(:)/real(Jcount(:))
 write(*,'(A20,4F8.2)') 'Average Speed (m/s): ',vsum(:)/real(Jcount(:))
 write(*,'(A20,4F8.2)') 'Average D0 (cm-1): ',D0count(:)/real(Jcount(:))
+write(*,*) 'Life time: ', lftime(:)/real(Jcount(:))
 
 
 end program main

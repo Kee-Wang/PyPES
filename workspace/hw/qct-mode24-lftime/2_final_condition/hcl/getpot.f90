@@ -56,6 +56,8 @@ integer::count1,count2,count3
 integer::Jcount(4),iflag(4),Jrot(4),Jsum(4),vsum(4),J4count, J6count
 real::miu,Et,Etsum(4), Etj4, Etj6, speedj4,speedj6,Et2,Et3,ecom_h,ecom_www,Et4
 real::Et4j4, Et4j6
+real::lftime(4),lifetime
+
 !real::speed(4)
 Jcount = 0
 Jsum = 0
@@ -67,6 +69,7 @@ J4count =0
 j6count = 0
 speedj4 = 0
 speedj6= 0
+lftime = 0
 
   call getarg(1,filename)
   open(21,status='old',file=filename)
@@ -162,7 +165,7 @@ call wat_init(3)
      read(21,*,iostat=ierr) natm
      if (ierr.ne.0) exit
      k = k + 1
-     read(21,*)
+     read(21,*)  lifetime
      do i=1,natm
         read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)!(i*3-2:i*3)
      end do
@@ -229,7 +232,7 @@ Evib_www =calc_kine(mass(1:9),v_www) - Erot_www
 Evib_www = Evib_www*aucm + pot_www!(f(xx(:,1:9))*aucm - E_www_ref)
 
 Et4 = E_given - (kine_h+kine_www)*aucm - pot_h - pot_www - 2796.7
-write(*,'(4F12.3)') Et, Et2, Et3, Et4, Et4-Et3
+!write(*,'(4F12.3)') Et, Et2, Et3, Et4, Et4-Et3
 
 
 !Clasification
@@ -262,6 +265,7 @@ Jcount(i) = Jcount(i) + 1
 vsum(i) = vsum(i) + speed*aums
 D0count(i) = D0count(i) + D0
 Etsum(i) = Etsum(i) + Et
+lftime(i) = lftime(i) + lifetime
 
 !Record
 ! Record overal speed distrubtion and j distribution
@@ -312,6 +316,7 @@ write(*,*) 'Et (j=4),4 soft ZPE:', Et4j4/real(J4count)
 write(*,*) 'Et (j=6),4soft ZPE:', Et4j6/real(J6count)
 write(*,*) 'Speed (j=4), spft ZPE:', speedj4/real(J4count)
 write(*,*) 'Speed (j=6), spft ZPE:', speedj6/real(J6count)
+write(*,*) 'Lifetime: ', lftime(:)/real(Jcount(:))
 write(*,*) J4count,J6count
 
 end program main

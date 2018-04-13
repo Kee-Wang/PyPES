@@ -1,0 +1,193 @@
+program main
+! This program is for HWWW -> H + WWW reaction. |J| for HCl will be calculated
+! and ZPE will be checked.
+
+use final_condition
+  use pes_shell
+  use constants
+  use angular
+  implicit none
+real,parameter::Be_HCl=10.59341
+real,parameter::aums=2187695.176776!1au = aums m/s
+real,parameter::zpe_hcl=1483.743446 !From DMC
+real,parameter::zpe_www=15602.536472 !From DMC
+real,parameter::E_hcl_ref =8463.2867115594708594 
+real,dimension(:,:),allocatable::xx,gradd,velo
+character(len=2),dimension(:),allocatable::sym
+character(len=32)::filename
+integer::k,i,natm,ierr,j,vio
+real::pot,diss, E_trans,E_T, E_V, ab_j, M_hcl, E_rot, speed, Evib
+real::speed_www, Erot_www
+real,dimension(:),allocatable::mass
+real,dimension(:),allocatable::x
+real,dimension(9)::x_www
+real,dimension(9)::v_www
+real,dimension(6)::x_hcl
+real,dimension(6)::v_hcl
+real::abc(3), abc_www(3)
+
+!For HCl fragment
+real,dimension(2)::mass_hcl !Redefine mass for hcl
+real,dimension(9)::mass_www !Redefine mass for www
+
+real,dimension(3,9)::www_r, www_v !Coordiante for hcl and velocity for hcl
+real,dimension(3,9)::www_r_prime, www_v_prime !Coordiante and velocity in com
+
+real,dimension(3,2)::hcl_r, hcl_v !Coordiante for hcl and velocity for hcl
+real,dimension(3,2)::hcl_r_prime, hcl_v_prime !Coordiante and velocity in com
+
+real,dimension(3)::www_com_r, www_com_v!Vectos to define com coord and velocity
+real,dimension(3)::j_www, omega_www !Angular momentum of www
+
+real,dimension(3)::hcl_com_r, hcl_com_v!Vectos to define com coord and velocity
+real,dimension(3)::j_hcl, omega !Angular momentum of HCl
+
+real,dimension(2,3)::xxx,vv
+real::Erot,J1
+integer::iflag !To indicate if violate ZPE
+vio = 0
+
+  call getarg(1,filename)
+  open(21,status='old',file=filename)
+  i=index(filename,'.',.true.)
+  filename=filename(1:i-1)
+  open(22,status='unknown',file=trim(filename)//".data")
+  open(23,status='unknown',file=trim(filename)//".j4")
+  open(24,status='unknown',file=trim(filename)//".j6")
+  open(25,status='unknown',file=trim(filename)//".zpe_data")
+  open(26,status='unknown',file=trim(filename)//".zpe_j4")
+  open(27,status='unknown',file=trim(filename)//".zpe_j6")
+  write(22,*) '#Speed(m/s)      #J'
+  read(21,*) natm
+  read(21,*) 
+
+  allocate(xx(3,natm))
+  allocate(gradd(3,natm))
+  allocate(velo(3,natm))
+  allocate(sym(natm))
+  allocate(mass(natm))
+  allocate(x(natm*3))
+
+  do i=1,natm
+     read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)!(i*3-2:i*3)
+       select case(sym(i))
+       case("C")
+          mass(i)=c_mass
+       case("H")
+          mass(i)=h_mass
+       case("O")
+          mass(i)=o_mass
+       case("Cl")
+          mass(i)=cl_mass
+       end select
+    end do
+  rewind(21)
+mass = mass*emass
+
+
+mass_www = mass(1:9)
+mass_hcl = mass(10:11)
+!M_hcl = sum(mass_hcl)
+!M_www = sum(mass_www)
+
+!Initialize HCl fragment
+call hcl_init(1)
+call wat_init(3)
+
+  k = 0!record total number of configs
+  do
+     read(21,*,iostat=ierr) natm
+     if (ierr.ne.0) exit
+     k = k + 1
+     read(21,*)
+     do i=1,natm
+        read(21,*) sym(i),xx(:,i),gradd(:,i),velo(:,i)!(i*3-2:i*3)
+     end do
+     xx = xx/auang !xx in Bohr
+
+!Assign cooridnate and velocity to hcl, as 1d
+
+do j=1,2
+x_hcl(3*j-2:3*j) = xx(:,9+j)
+v_hcl(3*j-2:3*j) = velo(:,9+j)
+end do
+
+do j=1,9
+x_www(3*j-2:3*j) = xx(:,j)
+v_www(3*j-2:3*j) = velo(:,j)
+end do
+
+!Calculate final condition of HCl
+!write(*,*) mass,mass_hcl,'test'
+!write(*,*) mass_hcl,x_hcl,v_hcl,speed,Erot,j_hcl,abc
+call fin_cond(mass(10:11),x_hcl,v_hcl,speed,Erot,j_hcl,abc)
+
+nwat = 0
+nhcl = 1!Calculate 1 hcl only
+!calculate vibrational energy, so that to determin if zpe violat
+Evib =calc_kine(mass(10:11),v_hcl) - Erot
+Evib = Evib*aucm + (f(xx(:,10:11))*aucm - E_hcl_ref)
+!Evib = calc_kine(mass_hcl,v_hcl) - Erot 
+write(*,*) Evib
+!stop
+!nwat = 3!Calculate water trimer
+!nhcl = 0
+call fin_cond(mass_www,x_www,v_www,speed_www,Erot_www,j_www,abc_www)
+!call fin_cond(mass_hcl,x_hcl,v_hcl,speed,Erot,j_hcl,abc)
+!Initialize WWW fragment
+!call clust_break(sym(1:9))
+!call pes_init()
+
+
+
+iflag = 1
+if (Evib < zpe_hcl) then
+vio = vio + 1
+iflag = 0
+end if
+
+! Calculate the rotation constant |J|
+J1 = Erot*aucm/Be_HCl
+J1 = nint(sqrt(0.25 + J1)-0.5)
+
+ab_j = j_hcl(1)**2 + j_hcl(2)**2 + j_hcl(3)**2
+ab_j = nint(sqrt(0.25 + ab_j)-0.5)
+
+
+
+
+
+
+
+
+! Write files for different J condition
+if (iflag .eq. 1)  then!not violate zpe of hcl
+write(25,*) speed*aums, ab_j, J1
+
+if (abs(ab_j-4.0) <=1d-5) then
+write(26,*) speed*aums
+end if
+
+if (abs(ab_j-6.0) <=1d-5) then
+write(27,*) speed*aums
+end if
+
+end if
+
+
+
+write(22,*) speed*aums, ab_j, J1
+
+if (abs(ab_j-4.0) <=1d-5) then
+write(23,*) speed*aums
+end if
+
+if (abs(ab_j-6.0) <=1d-5) then
+write(24,*) speed*aums
+end if
+
+enddo
+write(*,*) 'Total number of configs/ZPE violation: ', k, ' / ', vio
+
+
+end program main
