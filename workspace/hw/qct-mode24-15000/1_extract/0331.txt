@@ -1,0 +1,12 @@
+HWWW          : 1
+H + WWW       : 271
+HWW + W       : 368
+HW + WW       : 90
+H + W + WW    : 63
+HW + W + W    : 36
+H + W + W + W : 4
+Blow-up!      : 92
+
+Total         : 925
+Average time for H_WWW: 7.445157  pm 3.278987 (ps)
+Average time for W_WWW: 7.855740  pm 3.450185 (ps)
